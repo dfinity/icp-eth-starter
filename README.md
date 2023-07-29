@@ -41,8 +41,8 @@ When ready, run `dfx deploy` to build and deploy your application.
 
 **Back-end Canister:**
 - [Motoko](https://github.com/dfinity/motoko#readme): a safe and simple programming language for the Internet Computer
+- [Mops](https://j4mwm-bqaaa-aaaam-qajbq-cai.ic0.app/): an on-chain community package manager for Motoko
 - [mo-dev](https://github.com/dfinity/motoko-dev-server#readme): a live reload development server for Motoko
-- [MOPS](https://j4mwm-bqaaa-aaaam-qajbq-cai.ic0.app/): an on-chain community package manager for Motoko
 
 **Ethereum Integration:**
 - [Rust](https://www.rust-lang.org/): a secure, high-performance canister programming language
@@ -56,7 +56,7 @@ When ready, run `dfx deploy` to build and deploy your application.
 - [Internet Computer docs](https://internetcomputer.org/docs/current/developer-docs/ic-overview)
 - [`dfx.json` reference schema](https://internetcomputer.org/docs/current/references/dfx-json-reference/)
 - [Motoko developer docs](https://internetcomputer.org/docs/current/developer-docs/build/cdks/motoko-dfinity/motoko/)
-- [MOPS usage instructions](https://j4mwm-bqaaa-aaaam-qajbq-cai.ic0.app/#/docs/install)
+- [Mops usage instructions](https://j4mwm-bqaaa-aaaam-qajbq-cai.ic0.app/#/docs/install)
 - [Rust canister guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
 - [MetaMask developer docs](https://docs.metamask.io/)
 
