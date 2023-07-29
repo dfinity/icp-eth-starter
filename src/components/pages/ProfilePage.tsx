@@ -1,18 +1,36 @@
 import { FaSignOutAlt } from 'react-icons/fa';
 import useIdentity, { logout } from '../../services/userService';
 import { handlePromise } from '../../utils/handlers';
-import { FormContainer } from '../JobForm';
 import LoginArea, { LoginAreaButton } from '../LoginArea';
 import WalletArea from '../WalletArea';
 import Page from '../utils/Page';
 import 'twin.macro';
+import tw from 'twin.macro';
+import styled from 'styled-components/macro';
+
+const ProfileContainer = styled.form`
+  ${tw`space-y-4`}
+
+  label {
+    ${tw`flex flex-col gap-2 w-full text-xl font-semibold`}
+    > * {
+      ${tw`text-lg font-normal`}
+    }
+  }
+
+  input[type='text'],
+  input[type='number'],
+  textarea {
+    ${tw`w-full border-2 p-2 rounded-lg`}
+  }
+`;
 
 export default function ProfilePage() {
   const user = useIdentity();
 
   return (
     <Page>
-      <FormContainer>
+      <ProfileContainer>
         <div>
           {user ? (
             <>
@@ -46,7 +64,7 @@ export default function ProfilePage() {
             <LoginArea />
           )}
         </div>
-      </FormContainer>
+      </ProfileContainer>
     </Page>
   );
 }
