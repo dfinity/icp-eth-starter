@@ -2,7 +2,7 @@
   "dfx": "0.14.3",
   "canisters": {
     "frontend": {
-      "dependencies": ["backend", "utils", "internet_identity"],
+      "dependencies": ["backend", "ic_eth", "internet_identity"],
       "type": "assets",
       "frontend": {
         "entrypoint": "dist/index.html"
@@ -13,10 +13,10 @@
       "type": "motoko",
       "main": "canisters/backend/Main.mo"
     },
-    "utils": {
+    "ic_eth": {
       "type": "rust",
-      "candid": "canisters/utils/utils.did",
-      "package": "utils"
+      "candid": "canisters/ic_eth/ic_eth.did",
+      "package": "ic_eth"
     },
     "internet_identity": {
       "type": "custom",

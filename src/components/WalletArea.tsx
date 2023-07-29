@@ -6,7 +6,7 @@ import {
   FaLongArrowAltRight,
 } from 'react-icons/fa';
 import tw from 'twin.macro';
-import { getBackend, getNetwork } from '../services/backendService';
+import { getNetwork } from '../services/backendService';
 import useIdentity, { refreshUser } from '../services/userService';
 import {
   depositCycles,
@@ -14,10 +14,9 @@ import {
   useWalletBalance,
   withdrawCycles,
 } from '../services/walletService';
-import { handleError, handlePromise } from '../utils/handlers';
-import { wrap } from '../utils/unwrap';
-import CyclesAmount from './CyclesAmount';
 import { displayCycles } from '../utils/cycles';
+import { handleError } from '../utils/handlers';
+import CyclesAmount from './CyclesAmount';
 
 export const WalletAreaButton = tw.div`px-4 py-2 border-2 text-lg rounded-full cursor-pointer select-none bg-[#fff8] hover:bg-gray-100`;
 
@@ -79,11 +78,11 @@ export default function WalletArea(/* {}: WalletAreaProps */) {
               'Updating wallet:',
               walletPrincipal && String(walletPrincipal),
             );
-            handlePromise(
-              getBackend().update_wallet(wrap(walletPrincipal)),
-              undefined,
-              'Error while updating wallet!',
-            );
+            // handlePromise(
+            //   getBackend().update_wallet(wrap(walletPrincipal)),
+            //   undefined,
+            //   'Error while updating wallet!',
+            // );
           }}
         />
       </label>
