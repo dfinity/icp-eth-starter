@@ -73,7 +73,6 @@ const finishLoginIC = async (client: AuthClient) => {
 
 const loadUserDetail = async (): Promise<UserDetail> => {
   try {
-    // TODO: return optional value from canister
     const account = await getBackend().get_account();
     return {
       jobIds: [...account.job_ids].map((n) => String(n)),
