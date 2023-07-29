@@ -1,6 +1,6 @@
 # IC 🔗 ETH
 
-> #### Canister code for interacting with the [Ethereum](https://ethereum.org/) blockchain from the [Internet Computer](https://internetcomputer.org/).
+> #### Interact with the [Ethereum](https://ethereum.org/) blockchain from the [Internet Computer](https://internetcomputer.org/).
 
 ---
 
