@@ -54,10 +54,11 @@ When ready, run `dfx deploy` to build and deploy your application.
 - [React quick start guide](https://react.dev/learn)
 - [Tailwind reference](https://v2.tailwindcss.com/docs)
 - [Internet Computer docs](https://internetcomputer.org/docs/current/developer-docs/ic-overview)
-- [Motoko developer docs](https://internetcomputer.org/docs/current/developer-docs/build/cdks/motoko-dfinity/motoko/)
-- [Rust canister guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
-- [MOPS usage instructions](https://j4mwm-bqaaa-aaaam-qajbq-cai.ic0.app/#/docs/install)
 - [`dfx.json` reference schema](https://internetcomputer.org/docs/current/references/dfx-json-reference/)
+- [Motoko developer docs](https://internetcomputer.org/docs/current/developer-docs/build/cdks/motoko-dfinity/motoko/)
+- [MOPS usage instructions](https://j4mwm-bqaaa-aaaam-qajbq-cai.ic0.app/#/docs/install)
+- [Rust canister guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
+- [MetaMask developer docs](https://docs.metamask.io/)
 
 ## Tips and Tricks
 
