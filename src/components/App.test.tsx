@@ -10,6 +10,6 @@ describe('App', () => {
         <App />
       </StrictMode>,
     );
-    expect(screen.getByText(/Submit/i)).toBeInTheDocument();
+    expect(screen.getByText(/Home/i)).toBeInTheDocument();
   });
 });
