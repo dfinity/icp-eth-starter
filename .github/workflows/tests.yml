@@ -38,6 +38,4 @@ jobs:
         dfx cache install
         dfx start --background
     - run: npm run setup
-    - run: npm run test:mo
-    - run: npm run test:ts
-    - run: npm run test:rs
+    - run: npm test
