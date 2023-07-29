@@ -8,8 +8,8 @@ tasks:
       echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
       sudo apt-get install -q -y libunwind-dev
       sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
-      rustup target add wasm32-unknown-unknown
       dfx start --background --emulator --clean
+      rustup target add wasm32-unknown-unknown
       npm run setup
     init: |
       npm start
