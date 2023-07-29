@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'partials/variables';
+@import 'partials/scrollbar';
+
+// $button-size: 40px;
+// $button-border-width: 3px;
+
+html,
+body {
+  font-family: 'Nunito';
+  background-color: theme('colors.background');
+  transition: 0.1s ease-out opacity, border-width, border-color,
+    background-color;
+}

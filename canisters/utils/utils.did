@@ -1,0 +1,3 @@
+service : {
+  verify_ecdsa : (eth_address : text, message : text, signature : text) -> (bool) query;
+};
