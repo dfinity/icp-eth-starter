@@ -2,7 +2,6 @@
 
 tasks:
   - before: |
-      npm install &
       export MO_DEV_HIDE_URLS=1 # hide Candid UI links
       export PATH="$HOME/bin:$PATH"
       echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
@@ -19,6 +18,11 @@ tasks:
 vscode:
   extensions:
     - dfinity-foundation.vscode-motoko
+    - rust-lang.rust-analyzer
+    - dfinity-foundation.vscode-motoko
+    - esbenp.prettier-vscode
+    - bradlc.vscode-tailwindcss
+    - lightyen.tailwindcss-intellisense-twin
 
 ports:
   - name: Replica
