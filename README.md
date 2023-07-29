@@ -36,14 +36,17 @@ When ready, run `dfx deploy` to build and deploy your application.
 - [TypeScript](https://www.typescriptlang.org/): JavaScript extended with syntax for types
 - [Vite](https://vitejs.dev/): high-performance tooling for front-end web development
 - [React](https://reactjs.org/): a component-based UI library
-- [Zustand](https://www.npmjs.com/package/zustand): a simple, clean state management library
 - [Tailwind](https://tailwindcss.com/): a highly expressive, utility-first CSS framework
 - [Prettier](https://prettier.io/): code formatting for a wide range of supported languages
 
-**Back-end Service:**
+**Back-end Canister:**
 - [Motoko](https://github.com/dfinity/motoko#readme): a safe and simple programming language for the Internet Computer
 - [mo-dev](https://github.com/dfinity/motoko-dev-server#readme): a live reload development server for Motoko
 - [MOPS](https://j4mwm-bqaaa-aaaam-qajbq-cai.ic0.app/): an on-chain community package manager for Motoko
+
+**Ethereum Integration:**
+- [Rust](https://www.rust-lang.org/): a secure, high-performance canister programming language
+- [MetaMask](https://metamask.io/): a wallet and browser extension for interacting with Ethereum dapps
 
 ## Documentation
 
@@ -52,6 +55,7 @@ When ready, run `dfx deploy` to build and deploy your application.
 - [Tailwind reference](https://v2.tailwindcss.com/docs)
 - [Internet Computer docs](https://internetcomputer.org/docs/current/developer-docs/ic-overview)
 - [Motoko developer docs](https://internetcomputer.org/docs/current/developer-docs/build/cdks/motoko-dfinity/motoko/)
+- [Rust canister guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
 - [MOPS usage instructions](https://j4mwm-bqaaa-aaaam-qajbq-cai.ic0.app/#/docs/install)
 - [`dfx.json` reference schema](https://internetcomputer.org/docs/current/references/dfx-json-reference/)
 
