@@ -15,7 +15,7 @@
     "test": "run-s test:rust test:ts",
     "test:rust": "cargo test",
     "test:ts": "vitest run",
-    "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\" \"canisters/backend/**/*.mo\"",
+    "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\" \"canisters/**/*.mo\"",
     "prepare": "husky install",
     "precommit": "lint-staged"
   },
