@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "setup": "npm ci && dfx canister create --all && dfx generate backend && dfx deploy",
+    "setup": "npm i && dfx canister create --all && dfx generate backend && dfx deploy",
     "start": "run-p frontend backend",
     "frontend": "vite --port 3000",
     "backend": "run-p backend:mo backend:rs",
