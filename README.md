@@ -4,6 +4,10 @@
 
 ---
 
+### Get started directly in your browser:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/dfinity/ic-eth-starter)
+
 ## Create a New Project
 
 Make sure that [Node.js](https://nodejs.org/en/) `>= 16.x`, [`dfx`](https://internetcomputer.org/docs/current/developer-docs/build/install-upgrade-remove) `>= 0.12.x`, and the latest version of [Rust](https://www.rust-lang.org/tools/install) are installed on your system.
