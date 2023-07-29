@@ -1,5 +1,5 @@
 [package]
-name = "utils"
+name = "ic_eth"
 version = "0.0.0"
 description = "Rust utility canister"
 authors = ["DFINITY Foundation"]
