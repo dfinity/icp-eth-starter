@@ -13,7 +13,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "run-s test:mo test:rs test:ts",
-    "test:mo": "mo-test",
+    "test:mo": "mops test",
     "test:rs": "cargo test",
     "test:ts": "vitest run",
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\" \"canisters/**/*.mo\"",
