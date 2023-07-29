@@ -19,6 +19,11 @@ tasks:
 vscode:
   extensions:
     - dfinity-foundation.vscode-motoko
+    - rust-lang.rust-analyzer
+    - dfinity-foundation.vscode-motoko
+    - esbenp.prettier-vscode
+    - bradlc.vscode-tailwindcss
+    - lightyen.tailwindcss-intellisense-twin
 
 ports:
   - name: Replica
