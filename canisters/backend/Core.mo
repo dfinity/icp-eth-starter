@@ -22,22 +22,20 @@ module {
       };
     };
 
-    // to do --
-    // use Rust canister to verify that wallet signed caller Principal.
-    // returns true when this succeeds and false otherwise.
-
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
       // to do -- logging.
-
       let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
-      // to do -- actually check.verify_ecdsa
-
       if (checkOutcome) {
         let succ = state.putWalletSignsPrincipal(wallet, caller, signedPrincipal);
         true;
       } else {
         false;
       };
+    };
+
+    public func setNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
+      // to do
+      false;
     };
 
   };

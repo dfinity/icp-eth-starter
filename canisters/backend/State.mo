@@ -7,7 +7,7 @@ import Principal "mo:base/Principal";
 
 module {
 
-  public let EthWallet = Types.EthWallet;
+  public let Address = Types.Address;
   public type EthWallet = Types.EthWallet;
   public type CreateSuccess = Types.CreateSuccess;
   public type SignatureCheckSuccess = Types.SignatureCheckSuccess;
@@ -47,12 +47,12 @@ module {
   public class OOOf(sys : System.System, state : Stable.State) {
 
     public let principals = Relate.OO.Map<Principal, CreateSuccess>(state.principals, Principal.hash, Principal.equal);
-    public let ethWallets = Relate.OO.Map<EthWallet, CreateSuccess>(state.ethWallets, EthWallet.hash, EthWallet.equal);
+    public let ethWallets = Relate.OO.Map<EthWallet, CreateSuccess>(state.ethWallets, Address.hash, Address.equal);
 
     public let walletSignsPrincipal = Relate.OO.TernRel<EthWallet, Principal, SignatureCheckSuccess>(
       state.walletSignsPrincipal,
-      (EthWallet.hash, Principal.hash),
-      (EthWallet.equal, Principal.equal),
+      (Address.hash, Principal.hash),
+      (Address.equal, Principal.equal),
     );
 
     // Gets the first login time, possibly this time.

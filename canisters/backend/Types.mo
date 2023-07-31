@@ -18,12 +18,23 @@ module {
     public type ConnectEthWallet = Bool;
   };
 
-  public module EthWallet {
+  public module Address {
     public type Address = Text;
     public let hash = Text.hash;
     public let equal = Text.equal;
+  };
 
+  public module EthWallet {
+    public type Address = Address.Address;
     public type SignedPrincipal = Text;
+  };
+
+  public module Nft {
+    public type Nft = {
+      owner : Address.Address;
+      contract : Address.Address;
+      tokenId : Nat;
+    };
   };
 
   public type EthWallet = EthWallet.Address;

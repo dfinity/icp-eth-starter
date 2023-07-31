@@ -18,4 +18,3 @@ shared ({ caller = installer }) actor class Main() {
     await core.connectEthWallet(caller, wallet, signedPrincipal);
   };
 };
-
