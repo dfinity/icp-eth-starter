@@ -25,11 +25,21 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 #[ic_cdk_macros::query]
 #[candid_method]
 pub async fn test() -> bool {
-    let host = "".to_string();
-    let service_url = "".to_string();
+    // test:
+
+    let service_url = "https://cloudflare-eth.com".to_string();
+    let json_rpc_payload = "{\"jsonrpc\":\"2.0\",\"method\":\"eth_gasPrice\",\"params\":[],\"id\":1}".to_string();
     let max_response_bytes = 2048;
 
-    let json_rpc_payload = "{ barf : 666 }";
+    //
+    // Potentially not garbage:
+    // 
+
+    let parsed_url = url::Url::parse(&service_url).expect("blah");
+    let host = parsed_url
+        .host_str()
+        .expect("blah")
+        .to_string();
 
     let request_headers = vec![
         HttpHeader {
