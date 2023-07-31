@@ -9,6 +9,7 @@ import { applicationName } from '../setupApp';
 import { handleError } from '../utils/handlers';
 import makeObservable from '../utils/makeObservable';
 import { getBackend, isLocalNetwork } from './backendService';
+import { unwrap } from '../utils/unwrap';
 
 export type User = {
   type: 'ic';
@@ -17,7 +18,7 @@ export type User = {
 };
 
 export interface UserDetail {
-  // address: string | undefined;
+  createTime?: string | undefined;
 }
 
 export const USER_STORE = makeObservable<User | null | undefined>();
@@ -67,14 +68,18 @@ const finishLoginIC = async (client: AuthClient) => {
 };
 
 const loadUserDetail = async (): Promise<UserDetail> => {
-  // try {
-  //   const detail = await getBackend().login();
-  //   return {};
-  // } catch (err) {
-  //   console.warn(err);
-  //   return {};
-  // }
-  return {};
+  try {
+    let detail = unwrap(await getBackend().fastLogin());
+    if (!detail) {
+      detail = await getBackend().login();
+    }
+    return {
+      createTime: String(detail.createTime),
+    };
+  } catch (err) {
+    console.warn(err);
+    return {};
+  }
 };
 
 if (window.indexedDB) {
