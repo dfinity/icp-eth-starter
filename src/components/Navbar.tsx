@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
+import { FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import tw from 'twin.macro';
 // @ts-ignore
-import { FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
 import icpLogo from '../assets/icp.png?webp&height=48';
 import { useBreakpoint } from '../hooks/utils/useBreakpoint';
 import useIdentity from '../services/userService';
