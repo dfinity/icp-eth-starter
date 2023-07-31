@@ -14,6 +14,10 @@ shared ({ caller = installer }) actor class Main() {
     core.login(caller);
   };
 
+  public query ({ caller }) func fastLogin() : async ?Types.Resp.Login {
+    core.fastLogin(caller);
+  };
+
   public shared ({ caller }) func connectEthWallet(wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
     await core.connectEthWallet(caller, wallet, signedPrincipal);
   };
