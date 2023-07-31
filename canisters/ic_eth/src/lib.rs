@@ -1,7 +1,10 @@
 use std::str::FromStr;
 
 use candid::candid_method;
-use ethers_core::types::{Address, RecoveryMessage, Signature};
+use ethers_core::{
+    abi,
+    types::{Address, RecoveryMessage, Signature},
+};
 //use ic_cdk::api::management_canister::http_request::HttpHeader;
 //use ic_cdk::api::management_canister::http_request::TransformContext;
 //use ic_cdk::api::management_canister::http_request::CanisterHttpRequestArgument;
@@ -22,24 +25,22 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
         .is_ok()
 }
 
-#[ic_cdk_macros::query]
+#[ic_cdk_macros::update]
 #[candid_method]
 pub async fn test() -> bool {
     // test:
 
-    let service_url = "https://cloudflare-eth.com".to_string();
-    let json_rpc_payload = "{\"jsonrpc\":\"2.0\",\"method\":\"eth_gasPrice\",\"params\":[],\"id\":1}".to_string();
+    let service_url = "https://cloudflare-eth.com/v1/sepolia".to_string();
+    let json_rpc_payload =
+        "{\"jsonrpc\":\"2.0\",\"method\":\"eth_gasPrice\",\"params\":[],\"id\":1}".to_string();
     let max_response_bytes = 2048;
 
     //
     // Potentially not garbage:
-    // 
+    //
 
     let parsed_url = url::Url::parse(&service_url).expect("blah");
-    let host = parsed_url
-        .host_str()
-        .expect("blah")
-        .to_string();
+    let host = parsed_url.host_str().expect("blah").to_string();
 
     let request_headers = vec![
         HttpHeader {
@@ -59,10 +60,14 @@ pub async fn test() -> bool {
         body: Some(json_rpc_payload.as_bytes().to_vec()),
         transform: None,
     };
-    match make_http_request(request, 123123).await {
-        Ok((result,)) => true,
-        Err((r, m)) => todo!(),
-    }
+    let result = match make_http_request(request, 5000000).await {
+        Ok((r,)) => r,
+        Err((r, m)) => panic!("{:?} {:?}", r, m),
+    };
+    panic!("{:#?}", std::str::from_utf8(&result.body).expect("utf8"));
+    //let num = abi::decode(&[abi::ParamType::Int(32)], &result.body);
+    //panic!("{:#?}", num);
+    true
 }
 
 #[ic_cdk_macros::query(name = "transform")]
