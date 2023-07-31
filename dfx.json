@@ -2,7 +2,7 @@
   "dfx": "0.14.3",
   "canisters": {
     "frontend": {
-      "dependencies": ["backend", "ic_eth", "internet_identity"],
+      "dependencies": ["backend", "internet_identity"],
       "type": "assets",
       "frontend": {
         "entrypoint": "dist/index.html"
