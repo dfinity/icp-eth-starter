@@ -17,5 +17,5 @@ shared ({ caller = installer }) actor class Main() {
   public shared ({ caller }) func connectEthWallet(wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
     await core.connectEthWallet(caller, wallet, signedPrincipal);
   };
-
 };
+
