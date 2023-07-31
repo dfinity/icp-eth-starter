@@ -22,6 +22,13 @@ module {
       };
     };
 
+    public func fastLogin(caller : Principal) : ?Types.Resp.Login {
+      switch (state.principals.get(caller)) {
+        case null null;
+        case (?_) ?login(caller);
+      };
+    };
+
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
       // to do -- logging.
       let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
