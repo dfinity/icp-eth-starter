@@ -17,6 +17,7 @@
     "test:rs": "cargo test",
     "test:ts": "vitest run",
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\" \"canisters/**/*.mo\"",
+    "sources": "mops sources",
     "prepare": "husky install",
     "precommit": "lint-staged",
     "postinstall": "mops install"

@@ -32,7 +32,7 @@
   },
   "defaults": {
     "build": {
-      "packtool": "mops sources"
+      "packtool": "npm run --silent sources"
     }
   }
 }
