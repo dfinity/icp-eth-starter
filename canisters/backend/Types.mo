@@ -30,6 +30,7 @@ module {
       owner : Address.Address;
       contract : Address.Address;
       tokenId : Nat;
+      network : Text;
     };
   };
 
