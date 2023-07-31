@@ -15,11 +15,7 @@ module {
 
     public func login(caller : Principal) : Types.Resp.Login {
       // to do -- logging.
-      let succ = state.login(caller);
-      {
-        succ with principal = caller;
-        ethWallets = state.getWalletsForPrincipal(caller);
-      };
+      state.login(caller)
     };
 
     public func fastLogin(caller : Principal) : ?Types.Resp.Login {
