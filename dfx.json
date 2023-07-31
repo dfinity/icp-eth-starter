@@ -9,11 +9,10 @@
       },
       "source": ["dist/"]
     },
-      "backend": {
-	  	"dependencies": ["ic_eth"],
-
+    "backend": {
+      "dependencies": ["ic_eth"],
       "type": "motoko",
-	"main": "canisters/backend/Main.mo"
+      "main": "canisters/backend/Main.mo"
     },
     "ic_eth": {
       "type": "rust",
