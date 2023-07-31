@@ -2,13 +2,12 @@ import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import tw from 'twin.macro';
 // @ts-ignore
+import { FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
 import icpLogo from '../assets/icp.png?webp&height=48';
 import { useBreakpoint } from '../hooks/utils/useBreakpoint';
-import Tooltip from './utils/Tooltip';
 import useIdentity from '../services/userService';
 import LoginArea, { LoginAreaButton } from './LoginArea';
-import { FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
-import { displayCycles } from '../utils/cycles';
+import Tooltip from './utils/Tooltip';
 
 interface NavItemProps {
   to: string;
@@ -66,14 +65,6 @@ export default function Navbar() {
           </div>
           {isMobile || user ? (
             <div tw="flex items-center">
-              {!!user && !isMobile && (
-                <div tw="font-semibold mr-3 select-none">
-                  {displayCycles(
-                    BigInt(user.detail.unlockedCycles) +
-                      BigInt(user.detail.lockedCycles),
-                  )}
-                </div>
-              )}
               <Tooltip content="Profile">
                 <Link to="/profile" tw="flex items-center">
                   <LoginAreaButton>

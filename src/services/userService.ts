@@ -8,7 +8,6 @@ import useObservableState from '../hooks/utils/useObservableState';
 import { applicationName } from '../setupApp';
 import { handleError } from '../utils/handlers';
 import makeObservable from '../utils/makeObservable';
-import { unwrap } from '../utils/unwrap';
 import { getBackend, isLocalNetwork } from './backendService';
 
 export type User = {
@@ -18,11 +17,7 @@ export type User = {
 };
 
 export interface UserDetail {
-  jobIds: string[];
-  instanceIds: string[];
-  unlockedCycles: string;
-  lockedCycles: string;
-  wallet: string | undefined;
+  // address: string | undefined;
 }
 
 export const USER_STORE = makeObservable<User | null | undefined>();
@@ -72,25 +67,14 @@ const finishLoginIC = async (client: AuthClient) => {
 };
 
 const loadUserDetail = async (): Promise<UserDetail> => {
-  try {
-    const account = await getBackend().get_account();
-    return {
-      jobIds: [...account.job_ids].map((n) => String(n)),
-      instanceIds: [...account.instance_ids].map((n) => String(n)),
-      unlockedCycles: String(account.unlocked_cycles),
-      lockedCycles: String(account.locked_cycles),
-      wallet: unwrap(account.wallet, String),
-    };
-  } catch (err) {
-    console.warn(err);
-    return {
-      jobIds: [],
-      instanceIds: [],
-      unlockedCycles: '0',
-      lockedCycles: '0',
-      wallet: undefined,
-    };
-  }
+  // try {
+  //   const detail = await getBackend().login();
+  //   return {};
+  // } catch (err) {
+  //   console.warn(err);
+  //   return {};
+  // }
+  return {};
 };
 
 if (window.indexedDB) {
