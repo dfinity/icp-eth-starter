@@ -68,7 +68,7 @@ module {
 
         public func getWalletsForPrincipal(p : Principal) : [EthWallet] {
             let data = walletSignsPrincipal.getRelatedRight(p);
-            let wallets = Iter.map<(EthWallet, SignatureCheckSuccess),EthWallet> (data, func (w : EthWallet, c : SignatureCheckSuccess) : EthWallet { w } );
+            let wallets = Iter.map<(EthWallet, SignatureCheckSuccess),EthWallet> (data, func (w, c) : EthWallet { w } );
             Iter.toArray(wallets)
                                   
         };
