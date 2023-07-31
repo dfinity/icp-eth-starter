@@ -2,6 +2,7 @@ import Types "Types";
 import State "State";
 import System "System";
 import IcEth "canister:ic_eth";
+import Principal "mo:base/Principal";
 
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State) {
@@ -28,8 +29,8 @@ module {
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
       // to do -- logging.
 
-      let checkOutcome = false;
-      // to do -- actually check.
+      let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
+      // to do -- actually check.verify_ecdsa
 
       if (checkOutcome) {
         let succ = state.putWalletSignsPrincipal(wallet, caller, signedPrincipal);

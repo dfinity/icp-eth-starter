@@ -10,7 +10,7 @@ shared ({ caller = installer }) actor class Main() {
 
   let core = Core.Core(installer, System.IC(), _state_v0);
 
-  public shared ({ caller }) func login() : async Types.PrincipalView {
+  public shared ({ caller }) func login() : async Types.Resp.Login {
     core.login(caller);
   };
 
