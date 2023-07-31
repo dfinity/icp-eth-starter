@@ -7,13 +7,9 @@ module {
     createTime : System.Time;
   };
 
-  public type PrincipalView = {
-    ethWallets : [Text];
-  };
-
   public module Resp {
 
-    public type Login = { principal : Principal } and CreateSuccess and PrincipalView;
+    public type Login = CreateSuccess;
 
     public type ConnectEthWallet = Bool;
   };

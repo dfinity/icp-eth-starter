@@ -21,4 +21,9 @@ shared ({ caller = installer }) actor class Main() {
   public shared ({ caller }) func connectEthWallet(wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
     await core.connectEthWallet(caller, wallet, signedPrincipal);
   };
+
+  public func setNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
+    await core.setNfts(caller, nfts);
+  };
+
 };
