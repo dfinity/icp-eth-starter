@@ -11,6 +11,7 @@ use ethers_core::{
 use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
 };
+use serde::Deserialize;
 
 #[ic_cdk_macros::query]
 #[candid_method]
@@ -100,7 +101,6 @@ pub async fn get_owner(
         Err((r, m)) => panic!("{:?} {:?}", r, m),
     };
 
-    use serde::Deserialize;
     #[derive(Deserialize)]
     struct JsonRpcResult {
         result: String,
