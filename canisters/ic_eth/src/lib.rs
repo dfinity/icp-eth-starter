@@ -10,7 +10,7 @@ use ethers_core::{
 //use ic_cdk::api::management_canister::http_request::CanisterHttpRequestArgument;
 use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
-    HttpResponse, TransformArgs, TransformContext,
+    HttpResponse, TransformArgs,
 };
 
 #[ic_cdk_macros::query]
