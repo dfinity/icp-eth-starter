@@ -588,6 +588,7 @@ dependencies = [
  "candid",
  "ethers-core",
  "getrandom",
+ "hex",
  "ic-cdk",
  "ic-cdk-macros",
  "url",

@@ -27,14 +27,32 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 
 #[ic_cdk_macros::update]
 #[candid_method]
-pub async fn test() -> bool {
+pub async fn getOwner(nftContractAddress : String, tokenId : usize) -> String {
     // test:
+    
+    let f = abi::Function{
+	name: "ownerOf".to_string(),
+	inputs: vec![abi::Param{ name: "_tokenId".to_string(), kind: abi::ParamType::Uint(256), internal_type: None }],
+	outputs: vec![abi::Param{ name: "".to_string(), kind: abi::ParamType::Address, internal_type: None }],
+	constant: None,
+	state_mutability: abi::StateMutability::View,
+    };
 
-    let service_url = "https://cloudflare-eth.com/v1/sepolia".to_string();
+    let data = hex::encode(f.encode_input(&[abi::Token::Uint(tokenId.into())]).expect("encode_input"));
+    //let service_url = "https://cloudflare-eth.com/v1/sepolia".to_string();
+    let service_url = "https://rpc2.sepolia.org/".to_string();
+    //let service_url = "https://rpc.sepolia.dev".to_string();
+    
+    let params = format!(r#"[ {{ "to" : "{}", "data" : "0x{}" }}, "latest" ]"#, nftContractAddress, data);
+
+    //panic!("{}", params);
+    
     let json_rpc_payload =
-        "{\"jsonrpc\":\"2.0\",\"method\":\"eth_gasPrice\",\"params\":[],\"id\":1}".to_string();
+        format!("{{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":{},\"id\":1}}", params);
     let max_response_bytes = 2048;
 
+    //panic!("{:?}", json_rpc_payload);
+    
     //
     // Potentially not garbage:
     //
@@ -67,7 +85,8 @@ pub async fn test() -> bool {
     panic!("{:#?}", std::str::from_utf8(&result.body).expect("utf8"));
     //let num = abi::decode(&[abi::ParamType::Int(32)], &result.body);
     //panic!("{:#?}", num);
-    true
+    
+    "barf".to_string()
 }
 
 #[ic_cdk_macros::query(name = "transform")]

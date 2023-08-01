@@ -19,7 +19,7 @@ url = "2.3"
 # ic-canisters-http-types = { git = "https://github.com/dfinity/ic", rev = "d7c7abd7bdb0620635acd1c145e870a7da86a5e3" }
 # ic-nervous-system-common = { git = "https://github.com/dfinity/ic", rev = "d7c7abd7bdb0620635acd1c145e870a7da86a5e3" }
 # serde = "1"
-# hex = "0.4"
+hex = "0.4"
 # sha3 = "0.10"
 # libsecp256k1 = "0.7"
 # secp256k1 = { version = "0.27", features = ["bitcoin-hashes", "recovery"] }
