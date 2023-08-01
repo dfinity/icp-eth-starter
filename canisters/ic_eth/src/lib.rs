@@ -28,34 +28,55 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 //
 // ?? whitelist / access control
 // ?? cycles estimation (for HTTP outcall to RPC mech).
-// 
 //
-// https://cloudflare-eth.com/v1/sepolia
+// Mainnet service URL: https://cloudflare-eth.com
+// Sepolia service URL: https://rpc.sepolia.org
 
 #[ic_cdk_macros::update]
 #[candid_method]
-pub async fn getOwner(serviceUrl: String, nftContractAddress : String, tokenId : usize) -> String {
-    // test:
-    let service_url = serviceUrl;
-    
-    let f = abi::Function{
-	name: "ownerOf".to_string(),
-	inputs: vec![abi::Param{ name: "_tokenId".to_string(), kind: abi::ParamType::Uint(256), internal_type: None }],
-	outputs: vec![abi::Param{ name: "".to_string(), kind: abi::ParamType::Address, internal_type: None }],
-	constant: None,
-	state_mutability: abi::StateMutability::View,
+pub async fn get_owner(
+    service_url: String,
+    nft_contract_address: String,
+    token_id: usize,
+) -> String {
+    #[allow(deprecated)]
+    let f = abi::Function {
+        name: "ownerOf".to_string(),
+        inputs: vec![abi::Param {
+            name: "_tokenId".to_string(),
+            kind: abi::ParamType::Uint(256),
+            internal_type: None,
+        }],
+        outputs: vec![abi::Param {
+            name: "".to_string(),
+            kind: abi::ParamType::Address,
+            internal_type: None,
+        }],
+        constant: None,
+        state_mutability: abi::StateMutability::View,
     };
 
-    let data = hex::encode(f.encode_input(&[abi::Token::Uint(tokenId.into())]).expect("encode_input"));
-   
-    let params = format!(r#"[ {{ "to" : "0x{}", "data" : "0x{}" }}, "latest" ]"#, nftContractAddress, data);
+    let data = hex::encode(
+        f.encode_input(&[abi::Token::Uint(token_id.into())])
+            .expect("encode_input"),
+    );
 
-    let json_rpc_payload =
-        format!("{{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":{},\"id\":1}}", params);
-    let max_response_bytes = 2048;   
+    let params = format!(
+        r#"[ {{ "to" : "0x{}", "data" : "0x{}" }}, "latest" ]"#,
+        nft_contract_address, data
+    );
 
-    let parsed_url = url::Url::parse(&service_url).expect("blah");
-    let host = parsed_url.host_str().expect("blah").to_string();
+    let json_rpc_payload = format!(
+        "{{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":{},\"id\":1}}",
+        params
+    );
+    let max_response_bytes = 2048;
+
+    let parsed_url = url::Url::parse(&service_url).expect("Service URL parse error");
+    let host = parsed_url
+        .host_str()
+        .expect("Invalid service URL host")
+        .to_string();
 
     let request_headers = vec![
         HttpHeader {
@@ -82,11 +103,12 @@ pub async fn getOwner(serviceUrl: String, nftContractAddress : String, tokenId :
 
     use serde::Deserialize;
     #[derive(Deserialize)]
-    struct JSONRPCResult {
-	result: String
+    struct JsonRpcResult {
+        result: String,
     }
-    let json: JSONRPCResult =
-        serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8")).expect("JSON was not well-formatted");
+    let json: JsonRpcResult =
+        serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
+            .expect("JSON was not well-formatted");
     json.result
 }
 
