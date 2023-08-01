@@ -37,7 +37,11 @@ pub async fn get_nft_owner(
     nft_contract_address: String,
     token_id: usize,
 ) -> String {
-    let service_url = match network.as_str() {
+    // Remove leading `0x` when found
+    let network = preprocess_address(&network);
+    let nft_contract_address = preprocess_address(&nft_contract_address);
+
+    let service_url = match network {
         "mainnet" => "https://cloudflare-eth.com",
         "sepolia" => "https://rpc.sepolia.org",
         _ => panic!("Unknown network: {}", network),
@@ -116,10 +120,10 @@ pub async fn get_nft_owner(
     json.result[json.result.len() - 40..].to_string()
 }
 
-// fn preprocess_address<'a>(address: &'a str) -> &'a str {
-//     if address.starts_with("0x") {
-//         &address[2..]
-//     } else {
-//         address
-//     }
-// }
+fn preprocess_address<'a>(address: &'a str) -> &'a str {
+    if address.starts_with("0x") {
+        &address[2..]
+    } else {
+        address
+    }
+}
