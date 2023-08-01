@@ -29,16 +29,21 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 // ?? whitelist / access control
 // ?? cycles estimation (for HTTP outcall to RPC mech).
 //
-// Mainnet service URL: https://cloudflare-eth.com
-// Sepolia service URL: https://rpc.sepolia.org
 
 #[ic_cdk_macros::update]
 #[candid_method]
-pub async fn get_owner(
-    service_url: String,
+pub async fn get_nft_owner(
+    network: String,
     nft_contract_address: String,
     token_id: usize,
 ) -> String {
+    let service_url = match network.as_str() {
+        "mainnet" => "https://cloudflare-eth.com",
+        "sepolia" => "https://rpc.sepolia.org",
+        _ => panic!("Unknown network: {}", network),
+    }
+    .to_string();
+
     #[allow(deprecated)]
     let f = abi::Function {
         name: "ownerOf".to_string(),
@@ -108,5 +113,13 @@ pub async fn get_owner(
     let json: JsonRpcResult =
         serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
             .expect("JSON was not well-formatted");
-    json.result
+    json.result[json.result.len() - 40..].to_string()
 }
+
+// fn preprocess_address<'a>(address: &'a str) -> &'a str {
+//     if address.starts_with("0x") {
+//         &address[2..]
+//     } else {
+//         address
+//     }
+// }
