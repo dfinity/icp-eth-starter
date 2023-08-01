@@ -10,7 +10,6 @@ use ethers_core::{
 //use ic_cdk::api::management_canister::http_request::CanisterHttpRequestArgument;
 use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
-    HttpResponse, TransformArgs,
 };
 
 #[ic_cdk_macros::query]
@@ -110,15 +109,4 @@ pub async fn get_owner(
         serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
             .expect("JSON was not well-formatted");
     json.result
-}
-
-#[ic_cdk_macros::query(name = "transform")]
-fn transform(args: TransformArgs) -> HttpResponse {
-    HttpResponse {
-        status: args.response.status.clone(),
-        body: args.response.body,
-        // Strip headers as they contain the Date which is not necessarily the same
-        // and will prevent consensus on the result.
-        headers: Vec::<HttpHeader>::new(),
-    }
 }
