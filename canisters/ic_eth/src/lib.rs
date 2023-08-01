@@ -25,10 +25,18 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
         .is_ok()
 }
 
+//
+// ?? whitelist / access control
+// ?? cycles estimation (for HTTP outcall to RPC mech).
+// 
+//
+// https://cloudflare-eth.com/v1/sepolia
+
 #[ic_cdk_macros::update]
 #[candid_method]
-pub async fn getOwner(nftContractAddress : String, tokenId : usize) -> String {
+pub async fn getOwner(serviceUrl: String, nftContractAddress : String, tokenId : usize) -> String {
     // test:
+    let service_url = serviceUrl;
     
     let f = abi::Function{
 	name: "ownerOf".to_string(),
@@ -39,23 +47,12 @@ pub async fn getOwner(nftContractAddress : String, tokenId : usize) -> String {
     };
 
     let data = hex::encode(f.encode_input(&[abi::Token::Uint(tokenId.into())]).expect("encode_input"));
-    //let service_url = "https://cloudflare-eth.com/v1/sepolia".to_string();
-    let service_url = "https://rpc2.sepolia.org/".to_string();
-    //let service_url = "https://rpc.sepolia.dev".to_string();
-    
-    let params = format!(r#"[ {{ "to" : "{}", "data" : "0x{}" }}, "latest" ]"#, nftContractAddress, data);
+   
+    let params = format!(r#"[ {{ "to" : "0x{}", "data" : "0x{}" }}, "latest" ]"#, nftContractAddress, data);
 
-    //panic!("{}", params);
-    
     let json_rpc_payload =
         format!("{{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":{},\"id\":1}}", params);
-    let max_response_bytes = 2048;
-
-    //panic!("{:?}", json_rpc_payload);
-    
-    //
-    // Potentially not garbage:
-    //
+    let max_response_bytes = 2048;   
 
     let parsed_url = url::Url::parse(&service_url).expect("blah");
     let host = parsed_url.host_str().expect("blah").to_string();
@@ -82,11 +79,15 @@ pub async fn getOwner(nftContractAddress : String, tokenId : usize) -> String {
         Ok((r,)) => r,
         Err((r, m)) => panic!("{:?} {:?}", r, m),
     };
-    panic!("{:#?}", std::str::from_utf8(&result.body).expect("utf8"));
-    //let num = abi::decode(&[abi::ParamType::Int(32)], &result.body);
-    //panic!("{:#?}", num);
-    
-    "barf".to_string()
+
+    use serde::Deserialize;
+    #[derive(Deserialize)]
+    struct JSONRPCResult {
+	result: String
+    }
+    let json: JSONRPCResult =
+        serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8")).expect("JSON was not well-formatted");
+    json.result
 }
 
 #[ic_cdk_macros::query(name = "transform")]
