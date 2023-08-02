@@ -57,8 +57,8 @@ export default function WalletArea() {
     if (nftInfo) {
       handlePromise(
         (async () => {
+          // TODO: handle situation where `tokenURI()` is not implemented
           try {
-            // TODO: handle situation where `tokenURI()` is not implemented
             // let contract = new ethers.Contract(
             //   nft.address,
             //   erc721Abi,
@@ -102,7 +102,7 @@ export default function WalletArea() {
               {/* <FaEthereum tw="hidden sm:block text-3xl" /> */}
               <div>
                 Ethereum address:
-                <div tw="text-sm font-bold mt-1 overflow-x-auto">{account}</div>
+                <div tw="text-xs sm:text-sm font-bold mt-1">{account}</div>
               </div>
             </div>
           </div>
