@@ -76,9 +76,11 @@ export default function WalletArea() {
       let contract = new ethers.Contract(
         '0x7236dA2B814f496ef31b73b461Fbd3309EFe4dcE',
         erc721Abi,
-        // provider,
+        ethers.getDefaultProvider(nft.network),
       );
-      console.log(contract); ///
+      contract
+        .tokenURI(nft.tokenId)
+        .then((uri) => console.log(uri), console.warn);
     }
   }, [ethereum, nft]);
 

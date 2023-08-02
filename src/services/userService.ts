@@ -18,7 +18,7 @@ export type User = {
 };
 
 export interface UserDetail {
-  createTime?: string | undefined;
+  createTime: string | undefined;
 }
 
 export const USER_STORE = makeObservable<User | null | undefined>();
@@ -78,7 +78,9 @@ const loadUserDetail = async (): Promise<UserDetail> => {
     };
   } catch (err) {
     console.warn(err);
-    return {};
+    return {
+      createTime: undefined,
+    };
   }
 };
 
