@@ -3,6 +3,7 @@ import State "State";
 import System "System";
 import IcEth "canister:ic_eth";
 import Principal "mo:base/Principal";
+import Nat64 "mo:base/Nat64";
 
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State) {
@@ -40,7 +41,7 @@ module {
         // to do -- logging.
         //  get_nft_owner : (network : text, nft_contract_address : text, token_id : nat64) -> (text);
         for (nft in nfts.vals()) {
-            let owner = await IcEth.get_nft_owner(nft.network, nft.contract, nft.tokenId);
+            let owner = await IcEth.get_nft_owner(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
             if(owner == nft.owner) {
                 // log success
             } else {
