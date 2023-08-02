@@ -11,7 +11,7 @@ use ethers_core::{
 use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
 };
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[ic_cdk_macros::query]
 #[candid_method]
@@ -70,15 +70,32 @@ pub async fn get_nft_owner(
             .expect("encode_input"),
     );
 
-    let params = format!(
-        r#"[ {{ "to" : "0x{}", "data" : "0x{}" }}, "latest" ]"#,
-        nft_contract_address, data
-    );
+    #[derive(Serialize)]
+    struct JsonRpcRequest {
+        id: usize,
+        jsonrpc: String,
+        method: String,
+        params: (EthCallParams, String),
+    }
+    #[derive(Serialize)]
+    struct EthCallParams {
+        to: String,
+        data: String,
+    }
 
-    let json_rpc_payload = format!(
-        "{{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":{},\"id\":1}}",
-        params
-    );
+    let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
+        id: 1, // TODO: possibly increment id for each call?
+        jsonrpc: "2.0".to_string(),
+        method: "eth_call".to_string(),
+        params: (
+            EthCallParams {
+                to: format!("0x{nft_contract_address}").to_string(),
+                data: format!("0x{data}").to_string(),
+            },
+            "latest".to_string(),
+        ),
+    })
+    .expect("Error while encoding JSON-RPC request");
     let max_response_bytes = 2048;
 
     let parsed_url = url::Url::parse(&service_url).expect("Service URL parse error");
@@ -112,12 +129,23 @@ pub async fn get_nft_owner(
 
     #[derive(Deserialize)]
     struct JsonRpcResult {
-        result: String,
+        result: Option<String>,
+        error: Option<JsonRpcError>,
+    }
+    #[derive(Deserialize)]
+    struct JsonRpcError {
+        code: usize,
+        message: String,
+        // data: String,
     }
     let json: JsonRpcResult =
         serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
             .expect("JSON was not well-formatted");
-    json.result[json.result.len() - 40..].to_string()
+    if let Some(err) = json.error {
+        panic!("Error code {}: {}", err.code, err.message);
+    }
+    let result = json.result.expect("Unexpected JSON response");
+    result[result.len() - 40..].to_string()
 }
 
 fn preprocess_address<'a>(address: &'a str) -> &'a str {
