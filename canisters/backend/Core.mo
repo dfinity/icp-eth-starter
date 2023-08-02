@@ -25,9 +25,9 @@ module {
       };
     };
 
-    public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
+    public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet { 
       // to do -- logging.
-      let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
+     let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
       if (checkOutcome) {
         let succ = state.putWalletSignsPrincipal(wallet, caller, signedPrincipal);
         true;
@@ -37,8 +37,18 @@ module {
     };
 
     public func setNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
-      // to do
-      false;
+        // to do -- logging.
+        //  get_nft_owner : (network : text, nft_contract_address : text, token_id : nat64) -> (text);
+        for (nft in nfts.vals()) {
+            let owner = await IcEth.get_nft_owner(nft.network, nft.contract, nft.tokenId);
+            if(owner == nft.owner) {
+                // log success
+            } else {
+                // log failure
+                return false
+            }
+        };
+        true
     };
 
   };
