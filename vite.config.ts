@@ -2,10 +2,10 @@
 import { defineConfig } from 'vite';
 
 import react from '@vitejs/plugin-react';
+import { spawnSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { imagetools } from 'vite-imagetools';
-import { spawnSync } from 'child_process';
 
 const localNetwork = 'local';
 const network = process.env['DFX_NETWORK'] || localNetwork;
