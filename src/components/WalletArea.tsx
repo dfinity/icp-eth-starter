@@ -96,14 +96,12 @@ export default function WalletArea() {
     }
     if (status === 'connected') {
       return (
-        <div tw="flex flex-col md:flex-row items-center">
-          <div tw="flex-1 text-xl text-gray-600">
-            <div tw="flex items-center gap-2">
-              {/* <FaEthereum tw="hidden sm:block text-3xl" /> */}
-              <div>
-                Ethereum address:
-                <div tw="text-xs sm:text-sm font-bold mt-1">{account}</div>
-              </div>
+        <div tw="flex-1 text-xl text-gray-600">
+          <div tw="flex items-center gap-2">
+            {/* <FaEthereum tw="hidden sm:block text-3xl" /> */}
+            <div>
+              Ethereum address:
+              <div tw="text-xs sm:text-sm font-bold mt-1">{account}</div>
             </div>
           </div>
         </div>
@@ -127,10 +125,10 @@ export default function WalletArea() {
     <>
       {!!user && (
         <>
-          <div tw="flex flex-col md:flex-row items-center">
+          <div tw="flex flex-col md:flex-row items-start md:items-center gap-2">
             <div tw="flex-1 text-xl text-gray-600">
               Internet Computer principal:
-              <div tw="text-sm font-bold mt-1">
+              <div tw="text-xs sm:text-sm font-bold mt-1">
                 {user.client.getIdentity().getPrincipal().toString()}
               </div>
             </div>
