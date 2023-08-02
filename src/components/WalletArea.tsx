@@ -11,14 +11,14 @@ import { LoginAreaButton } from './LoginArea';
 import useIdentity, { logout } from '../services/userService';
 
 const FormContainer = styled.form`
-  ${tw`space-y-4`}
+  /* ${tw`space-y-4`}
 
   label {
     ${tw`flex flex-col gap-2 w-full text-xl font-semibold`}
     > * {
       ${tw`text-lg font-normal`}
     }
-  }
+  } */
 
   input[type='text'],
   input[type='number'],
@@ -97,27 +97,15 @@ export default function WalletArea() {
     if (status === 'connected') {
       return (
         <div tw="flex flex-col md:flex-row items-center">
-          <div tw="flex-1 pb-4 text-xl text-gray-600">
+          <div tw="flex-1 text-xl text-gray-600">
             <div tw="flex items-center gap-2">
-              <FaEthereum tw="hidden sm:block text-3xl" />
+              {/* <FaEthereum tw="hidden sm:block text-3xl" /> */}
               <div>
                 Ethereum address:
                 <div tw="text-sm font-bold mt-1 overflow-x-auto">{account}</div>
               </div>
             </div>
           </div>
-          {/* <div tw="flex flex-col items-center mt-3 sm:mt-0">
-            <LoginAreaButton
-              tw="flex gap-1 items-center text-base px-4"
-              onClick={() =>
-                handlePromise(logout(), undefined, 'Error while signing out!')
-              }
-            >
-              <FaSignOutAlt />
-              <span tw="font-semibold select-none ml-1">Sign out</span>
-            </LoginAreaButton>
-          </div> */}
-          <div tw=""></div>
         </div>
       );
     }
@@ -139,9 +127,8 @@ export default function WalletArea() {
     <>
       {!!user && (
         <>
-          {' '}
           <div tw="flex flex-col md:flex-row items-center">
-            <div tw="flex-1 pb-4 text-xl text-gray-600">
+            <div tw="flex-1 text-xl text-gray-600">
               Internet Computer principal:
               <div tw="text-sm font-bold mt-1">
                 {user.client.getIdentity().getPrincipal().toString()}
@@ -166,7 +153,7 @@ export default function WalletArea() {
       <hr tw="my-5" />
       <FormContainer>
         <label>
-          OpenSea NFT
+          <div tw="text-xl text-gray-600 mb-1">OpenSea NFT:</div>
           <input
             type="text"
             placeholder="Paste URL here"
