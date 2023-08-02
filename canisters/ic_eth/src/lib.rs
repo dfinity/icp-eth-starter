@@ -41,6 +41,7 @@ pub async fn get_nft_owner(
     let network = preprocess_address(&network);
     let nft_contract_address = preprocess_address(&nft_contract_address);
 
+    let max_response_bytes = 2048;
     let service_url = match network {
         "mainnet" => "https://cloudflare-eth.com",
         "sepolia" => "https://rpc.sepolia.org",
@@ -96,7 +97,6 @@ pub async fn get_nft_owner(
         ),
     })
     .expect("Error while encoding JSON-RPC request");
-    let max_response_bytes = 2048;
 
     let parsed_url = url::Url::parse(&service_url).expect("Service URL parse error");
     let host = parsed_url
