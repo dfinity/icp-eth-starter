@@ -8,13 +8,13 @@ if (getNetwork() === 'ic') {
   (agent as any)._host = 'https://icp-api.io/';
 }
 
-if (
-  window.location.hostname.endsWith('.icp0.io') ||
-  window.location.hostname.endsWith('.ic0.app')
-) {
-  // Custom domain name
-  window.location.hostname = 'ai.internetcomputer.org';
-}
+// if (
+//   window.location.hostname.endsWith('.icp0.io') ||
+//   window.location.hostname.endsWith('.ic0.app')
+// ) {
+//   // Custom domain name
+//   window.location.hostname = 'custom.hostname.org';
+// }
 
 const localPort = 4943;
 const url = new URL(window.location.href);
