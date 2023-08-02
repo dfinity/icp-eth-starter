@@ -1,3 +1,4 @@
 service : {
-  verify_ecdsa : (eth_address : text, message : text, signature : text) -> (bool) query
+  verify_ecdsa : (eth_address : text, message : text, signature : text) -> (bool) query;
+  get_nft_owner : (network : text, nft_contract_address : text, token_id : nat64) -> (text);
 }
