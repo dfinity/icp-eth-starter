@@ -14,9 +14,6 @@ html,
 body {
   font-family: 'Nunito';
   background-color: theme('colors.background');
-  transition:
-    0.1s ease-out opacity,
-    border-width,
-    border-color,
+  transition: 0.1s ease-out opacity, border-width, border-color,
     background-color;
 }

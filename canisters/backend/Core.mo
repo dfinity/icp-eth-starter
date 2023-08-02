@@ -15,7 +15,7 @@ module {
 
     public func login(caller : Principal) : Types.Resp.Login {
       // to do -- logging.
-      state.login(caller)
+      state.login(caller);
     };
 
     public func fastLogin(caller : Principal) : ?Types.Resp.Login {
