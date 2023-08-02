@@ -25,5 +25,5 @@ shared ({ caller = installer }) actor class Main() {
   public func setNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
     await core.setNfts(caller, nfts);
   };
-      
+
 };
