@@ -43,10 +43,10 @@ export default function WalletArea() {
     if (!groups) {
       return;
     }
-    const [, , network, address, tokenId] = groups;
+    const [, , network, contract, tokenId] = groups;
     return {
       network,
-      address,
+      contract,
       tokenId: Number(tokenId),
     };
   };
@@ -61,14 +61,14 @@ export default function WalletArea() {
           try {
             const nft = await getAlchemy(
               `eth-${nftInfo.network}` as any,
-            ).nft.getNftMetadata(nftInfo.address, nftInfo.tokenId, {});
+            ).nft.getNftMetadata(nftInfo.contract, nftInfo.tokenId, {});
             setNftResult({ nft });
 
             try {
               setNftValid(
                 await getBackend().setNfts([
                   {
-                    contract: nftInfo.address,
+                    contract: nftInfo.contract,
                     network: nftInfo.network,
                     tokenId: BigInt(nftInfo.tokenId),
                     owner: address,
