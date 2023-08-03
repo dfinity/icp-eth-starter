@@ -34,12 +34,8 @@ pub async fn get_nft_owner(
     nft_contract_address: String,
     token_id: usize,
 ) -> String {
-    // Remove leading `0x` when found
-    let network = preprocess_address(&network);
-    let nft_contract_address = preprocess_address(&nft_contract_address);
-
     let max_response_bytes = 2048;
-    let service_url = match network {
+    let service_url = match network.as_str() {
         "mainnet" => "https://cloudflare-eth.com",
         "sepolia" => "https://rpc.sepolia.org",
         _ => panic!("Unknown network: {}", network),
@@ -63,8 +59,8 @@ pub async fn get_nft_owner(
         state_mutability: abi::StateMutability::View,
     };
 
-    let data = hex::encode(
-        f.encode_input(&[abi::Token::Uint(token_id.into())])
+    let data = to_hex(
+        &f.encode_input(&[abi::Token::Uint(token_id.into())])
             .expect("encode_input"),
     );
 
@@ -87,8 +83,8 @@ pub async fn get_nft_owner(
         method: "eth_call".to_string(),
         params: (
             EthCallParams {
-                to: format!("0x{nft_contract_address}").to_string(),
-                data: format!("0x{data}").to_string(),
+                to: nft_contract_address,
+                data,
             },
             "latest".to_string(),
         ),
@@ -133,7 +129,6 @@ pub async fn get_nft_owner(
     struct JsonRpcError {
         code: isize,
         message: String,
-        // data: String,
     }
     let json: JsonRpcResult =
         serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
@@ -142,13 +137,9 @@ pub async fn get_nft_owner(
         panic!("JSON-RPC error code {}: {}", err.code, err.message);
     }
     let result = json.result.expect("Unexpected JSON response");
-    result[result.len() - 40..].to_string()
+    format!("0x{}", &result[result.len() - 40..]).to_string()
 }
 
-fn preprocess_address<'a>(address: &'a str) -> &'a str {
-    if address.starts_with("0x") {
-        &address[2..]
-    } else {
-        address
-    }
+fn to_hex(data: &[u8]) -> String {
+    format!("0x{}", hex::encode(data))
 }
