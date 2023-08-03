@@ -32,7 +32,7 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 
 #[ic_cdk_macros::update]
 #[candid_method]
-pub async fn get_nft_owner(
+pub async fn erc721_owner_of(
     network: String,
     nft_contract_address: String,
     token_id: usize,
