@@ -28,10 +28,8 @@ module {
       };
     };
 
-    public func getEthWallets(caller : Principal) : async Types.Resp.GetEthWallets {
-      let log = logger.Begin(caller, #getEthWallets());
-      let wallets = state.getWalletsForPrincipal(caller);
-      log.okWith(wallets);
+    public func getEthWallets(caller : Principal) : Types.Resp.GetEthWallets {
+      state.getWalletsForPrincipal(caller);
     };
 
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {

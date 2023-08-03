@@ -12,7 +12,6 @@ module {
 
   public type Request = {
     #login;
-    #getEthWallets : ();
     #connectEthWallet : (Types.EthWallet, Types.SignedPrincipal);
     #isNftOwned : Types.Nft.Nft;
     #setNfts : [Types.Nft.Nft];
