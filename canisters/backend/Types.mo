@@ -30,8 +30,13 @@ module {
     public type Nft = {
       owner : Address.Address;
       contract : Address.Address;
+      tokenType : TokenType;
       tokenId : Nat;
       network : Text;
+    };
+    public type TokenType = {
+      #erc721;
+      #erc1155;
     };
   };
 
