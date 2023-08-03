@@ -9,7 +9,7 @@ import { useAddressVerified } from '../services/addressService';
 import { getAlchemy } from '../services/alchemyService';
 import { getBackend } from '../services/backendService';
 import useIdentity, { logout } from '../services/userService';
-import { handlePromise } from '../utils/handlers';
+import { handleError, handlePromise } from '../utils/handlers';
 import { LoginAreaButton } from './LoginArea';
 
 const FormContainer = styled.form`
@@ -58,15 +58,7 @@ export default function WalletArea() {
       setNftValid(undefined);
       handlePromise(
         (async () => {
-          // TODO: handle situation where `tokenURI()` is not implemented
           try {
-            // let contract = new ethers.Contract(
-            //   nft.address,
-            //   erc721Abi,
-            //   getAlchemyProvider(nft.network),
-            // );
-            // const uri = await contract.tokenURI(nft.tokenId);
-            // const meta = await (await fetch(uri)).json();
             const nft = await getAlchemy(
               `eth-${nftInfo.network}` as any,
             ).nft.getNftMetadata(nftInfo.address, nftInfo.tokenId, {});
@@ -76,16 +68,15 @@ export default function WalletArea() {
               setNftValid(
                 await getBackend().setNfts([
                   {
-                    contract: nftInfo.address.slice(2),
+                    contract: nftInfo.address,
                     network: nftInfo.network,
                     tokenId: BigInt(nftInfo.tokenId),
-                    owner: address.slice(2),
+                    owner: address,
                   },
                 ]),
               );
             } catch (err) {
-              // handleError(err, 'Error while updating NFT!');
-              console.error(err);
+              handleError(err, 'Error while verifying NFT ownership!');
               setNftValid(false);
             }
           } catch (err) {
