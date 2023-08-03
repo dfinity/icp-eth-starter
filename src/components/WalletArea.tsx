@@ -5,10 +5,11 @@ import { FaEthereum, FaSignOutAlt } from 'react-icons/fa';
 import { styled } from 'styled-components/macro';
 import tw from 'twin.macro';
 import { useSessionStorage } from '../hooks/utils/useLocalStorage';
+import { useAddressVerified } from '../services/addressService';
 import { getAlchemy } from '../services/alchemyService';
+import useIdentity, { logout } from '../services/userService';
 import { handlePromise } from '../utils/handlers';
 import { LoginAreaButton } from './LoginArea';
-import useIdentity, { logout } from '../services/userService';
 
 const FormContainer = styled.form`
   input[type='text'],
@@ -25,6 +26,10 @@ export default function WalletArea() {
   const { status, connect, account, ethereum } = useMetaMask();
   const [nftUrl, setNftUrl] = useSessionStorage('ic-eth.nft-url', '');
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
+  const [isAddressVerified, verifyAddress] = useAddressVerified(
+    ethereum.selectedAddress,
+    ethereum,
+  );
 
   const parseNft = (nftUrl: string) => {
     const groups =
@@ -87,14 +92,27 @@ export default function WalletArea() {
     }
     if (status === 'connected') {
       return (
-        <div tw="flex-1 text-xl text-gray-600">
-          <div tw="flex items-center gap-2">
-            {/* <FaEthereum tw="hidden sm:block text-3xl" /> */}
-            <div>
-              Ethereum address:
-              <div tw="text-xs sm:text-sm font-bold mt-1">{account}</div>
+        <div tw="flex flex-col md:flex-row items-start md:items-center gap-2">
+          <div tw="flex-1 text-xl text-gray-600">
+            <div tw="flex items-center gap-2">
+              {/* <FaEthereum tw="hidden sm:block text-3xl" /> */}
+              <div>
+                Ethereum address:
+                <div tw="text-xs sm:text-sm font-bold mt-1">{account}</div>
+              </div>
             </div>
           </div>
+          {!isAddressVerified && (
+            <div tw="flex flex-col items-center mt-3 sm:mt-0">
+              <LoginAreaButton
+                tw="flex gap-1 items-center text-base px-4"
+                onClick={() => verifyAddress()}
+              >
+                <FaEthereum />
+                <span tw="font-semibold select-none ml-1">Verify wallet</span>
+              </LoginAreaButton>
+            </div>
+          )}
         </div>
       );
     }
