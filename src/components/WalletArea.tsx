@@ -1,7 +1,13 @@
 import { type Nft } from 'alchemy-sdk';
 import { useMetaMask } from 'metamask-react';
 import { useEffect, useMemo, useState } from 'react';
-import { FaEthereum, FaSignOutAlt } from 'react-icons/fa';
+import {
+  FaCheckCircle,
+  FaCircleNotch,
+  FaEthereum,
+  FaSignOutAlt,
+  FaTimesCircle,
+} from 'react-icons/fa';
 import { styled } from 'styled-components';
 import tw from 'twin.macro';
 import { useSessionStorage } from '../hooks/utils/useLocalStorage';
@@ -173,7 +179,20 @@ export default function WalletArea() {
       <hr tw="my-5" />
       <FormContainer>
         <label>
-          <div tw="text-xl text-gray-600 mb-1">OpenSea NFT:</div>
+          <div tw="flex items-center gap-3 text-xl text-gray-600 mb-1">
+            <div>OpenSea NFT:</div>
+            {!!nftInfo && (
+              <div tw="text-base">
+                {nftValid === true ? (
+                  <FaCheckCircle tw="text-green-500" />
+                ) : nftValid === false ? (
+                  <FaTimesCircle tw="text-red-500" />
+                ) : (
+                  <FaCircleNotch tw="opacity-60 animate-spin [animation-duration: 2s]" />
+                )}
+              </div>
+            )}
+          </div>
           <input
             css={
               nftInfo && [
