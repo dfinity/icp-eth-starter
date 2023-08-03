@@ -124,7 +124,7 @@ export default function WalletArea() {
           {isAddressVerified === false && (
             <div tw="flex flex-col items-center mt-3 sm:mt-0">
               <LoginAreaButton
-                tw="flex gap-1 items-center text-base px-4"
+                tw="flex gap-1 items-center text-base px-4 text-blue-600 border-blue-500"
                 onClick={() => verifyAddress()}
               >
                 <FaEthereum />

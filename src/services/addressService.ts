@@ -31,8 +31,8 @@ export function useAddressVerified(
   const verify = useCallback(() => {
     handlePromise(
       verifyAddress(address, ethereum),
-      'Verifying address...',
-      'Error while verifying address!',
+      'Verifying wallet...',
+      'Error while verifying wallet!',
     );
   }, [address, ethereum]);
   return [
