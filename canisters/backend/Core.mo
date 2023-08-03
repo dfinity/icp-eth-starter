@@ -52,7 +52,7 @@ module {
     func isNftOwned_(caller : Principal, nft : Types.Nft.Nft) : async Bool {
       switch (state.hasWalletSignsPrincipal(nft.owner, caller)) {
         case (?_) {
-          let owner = await IcEth.get_nft_owner(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
+          let owner = await IcEth.erc721_owner_of(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
           owner == nft.owner;
         };
         case null {

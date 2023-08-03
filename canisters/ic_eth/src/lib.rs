@@ -42,7 +42,7 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 
 #[ic_cdk_macros::update]
 #[candid_method]
-pub async fn get_nft_owner(
+pub async fn erc721_owner_of(
     network: String,
     nft_contract_address: String,
     token_id: usize,
@@ -165,15 +165,13 @@ pub async fn erc1155_balance_of(
     owner_address: String,
     token_id: usize,
 ) -> usize {
-    // to do -- use BigUint ?
-    // Remove leading `0x` when found
-    let network = preprocess_address(&network);
-    let nft_contract_address = preprocess_address(&nft_contract_address);
-    let owner_address = preprocess_address(&owner_address);
-    let owner_address = ethers_core::types::H160::from_slice(owner_address.as_bytes());
+    // to do -- use BigUint
+    
+    let owner_address =
+        ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
     let max_response_bytes = 2048;
-    let service_url = match network {
+    let service_url = match network.as_str() {
         "mainnet" => "https://cloudflare-eth.com",
         "sepolia" => "https://rpc.sepolia.org",
         _ => panic!("Unknown network: {}", network),
@@ -204,8 +202,8 @@ pub async fn erc1155_balance_of(
         state_mutability: abi::StateMutability::View,
     };
 
-    let data = hex::encode(
-        f.encode_input(&[
+    let data = to_hex(
+        &f.encode_input(&[
             abi::Token::Address(owner_address.into()),
             abi::Token::Uint(token_id.into()),
         ])
@@ -226,13 +224,13 @@ pub async fn erc1155_balance_of(
     }
 
     let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
-        id: 1, // TODO: possibly increment id for each call?
+        id: next_id(),
         jsonrpc: "2.0".to_string(),
         method: "eth_call".to_string(),
         params: (
             EthCallParams {
-                to: format!("0x{nft_contract_address}").to_string(),
-                data: format!("0x{data}").to_string(),
+                to: nft_contract_address,
+                data,
             },
             "latest".to_string(),
         ),
