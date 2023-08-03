@@ -11,15 +11,6 @@ import { LoginAreaButton } from './LoginArea';
 import useIdentity, { logout } from '../services/userService';
 
 const FormContainer = styled.form`
-  /* ${tw`space-y-4`}
-
-  label {
-    ${tw`flex flex-col gap-2 w-full text-xl font-semibold`}
-    > * {
-      ${tw`text-lg font-normal`}
-    }
-  } */
-
   input[type='text'],
   input[type='number'],
   textarea {
