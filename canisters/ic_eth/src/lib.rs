@@ -134,7 +134,7 @@ pub async fn get_nft_owner(
     }
     #[derive(Deserialize)]
     struct JsonRpcError {
-        code: usize,
+        code: isize,
         message: String,
         // data: String,
     }
