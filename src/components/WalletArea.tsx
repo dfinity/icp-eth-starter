@@ -73,12 +73,6 @@ export default function WalletArea() {
             setNftResult({ nft });
 
             try {
-              console.log({
-                contract: nftInfo.address,
-                network: nftInfo.network,
-                tokenId: BigInt(nftInfo.tokenId),
-                owner: address,
-              }); ///
               setNftValid(
                 await getBackend().setNfts([
                   {
