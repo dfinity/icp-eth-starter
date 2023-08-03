@@ -71,11 +71,21 @@ export default function WalletArea() {
             setNftResult({ nft });
 
             try {
+              const tokenType =
+                nft.tokenType === 'ERC1155'
+                  ? { erc1155: null }
+                  : nft.tokenType === 'ERC721'
+                  ? { erc721: null }
+                  : undefined;
+              if (!tokenType) {
+                throw new Error(`Unknown token type: ${nft.tokenType}`);
+              }
               setNftValid(
                 await getBackend().setNfts([
                   {
                     contract: nftInfo.contract,
                     network: nftInfo.network,
+                    tokenType,
                     tokenId: BigInt(nftInfo.tokenId),
                     owner: address,
                   },
