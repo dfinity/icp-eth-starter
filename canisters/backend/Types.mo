@@ -11,6 +11,7 @@ module {
 
     public type Login = CreateSuccess;
 
+    public type GetEthWallets = [EthWallet];
     public type ConnectEthWallet = Bool;
   };
 
