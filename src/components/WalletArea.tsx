@@ -7,10 +7,10 @@ import tw from 'twin.macro';
 import { useSessionStorage } from '../hooks/utils/useLocalStorage';
 import { useAddressVerified } from '../services/addressService';
 import { getAlchemy } from '../services/alchemyService';
-import useIdentity, { logout } from '../services/userService';
-import { handleError, handlePromise } from '../utils/handlers';
-import { LoginAreaButton } from './LoginArea';
 import { getBackend } from '../services/backendService';
+import useIdentity, { logout } from '../services/userService';
+import { handlePromise } from '../utils/handlers';
+import { LoginAreaButton } from './LoginArea';
 
 const FormContainer = styled.form`
   input[type='text'],
@@ -82,15 +82,17 @@ export default function WalletArea() {
               setNftValid(
                 await getBackend().setNfts([
                   {
-                    contract: nftInfo.address,
+                    contract: nftInfo.address.slice(2),
                     network: nftInfo.network,
                     tokenId: BigInt(nftInfo.tokenId),
-                    owner: address,
+                    owner: address.slice(2),
                   },
                 ]),
               );
             } catch (err) {
-              handleError(err, 'Error while updating NFT!');
+              // handleError(err, 'Error while updating NFT!');
+              console.error(err);
+              setNftValid(false);
             }
           } catch (err) {
             console.warn(err);
@@ -188,38 +190,40 @@ export default function WalletArea() {
         <label>
           <div tw="text-xl text-gray-600 mb-1">OpenSea NFT:</div>
           <input
-            css={[
-              nftValid === true
-                ? tw`border-green-500`
-                : nftValid === false && tw`border-red-500`,
-            ]}
+            css={
+              nftInfo && [
+                nftValid === true
+                  ? tw`border-green-500`
+                  : nftValid === false
+                  ? tw`border-red-500`
+                  : tw`border-yellow-500`,
+              ]
+            }
             type="text"
             placeholder="Paste URL here"
             value={nftUrl}
             onChange={(e) => setNftUrl(e.target.value)}
           />
-          {nftInfo && nftResult ? (
-            <>
-              {'nft' in nftResult && (
-                <div tw="mt-3 max-w-[500px] mx-auto">
-                  <NftView nft={nftResult.nft} />
-                </div>
-              )}
-              {'err' in nftResult && (
-                <div tw="text-red-600">{nftResult.err}</div>
-              )}
-            </>
-          ) : (
-            <a
-              tw="text-blue-500"
-              href="https://opensea.io/account"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Account page
-            </a>
-          )}
         </label>
+        {nftInfo && nftResult ? (
+          <>
+            {'nft' in nftResult && (
+              <div tw="mt-3 max-w-[500px] mx-auto">
+                <NftView nft={nftResult.nft} />
+              </div>
+            )}
+            {'err' in nftResult && <div tw="text-red-600">{nftResult.err}</div>}
+          </>
+        ) : (
+          <a
+            tw="text-blue-500"
+            href="https://opensea.io/account"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Account page
+          </a>
+        )}
       </FormContainer>
     </>
   );
