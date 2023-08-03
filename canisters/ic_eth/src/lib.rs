@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{cell::RefCell, str::FromStr};
 
 use candid::candid_method;
 use ethers_core::{
@@ -9,6 +9,19 @@ use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
 };
 use serde::{Deserialize, Serialize};
+
+thread_local! {
+    static NEXT_ID: RefCell<usize> = RefCell::default();
+}
+
+fn next_id() -> usize {
+    NEXT_ID.with(|next_id| {
+        let mut next_id = next_id.borrow_mut();
+        let id = *next_id;
+        *next_id = next_id.wrapping_add(1);
+        id
+    })
+}
 
 #[ic_cdk_macros::query]
 #[candid_method]
@@ -78,7 +91,7 @@ pub async fn get_nft_owner(
     }
 
     let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
-        id: 1, // TODO: possibly increment id for each call?
+        id: next_id(),
         jsonrpc: "2.0".to_string(),
         method: "eth_call".to_string(),
         params: (
