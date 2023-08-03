@@ -138,7 +138,9 @@ export default function WalletArea() {
                 onClick={() => verifyAddress()}
               >
                 <FaEthereum />
-                <span tw="font-semibold select-none ml-1">Verify wallet</span>
+                <span tw="font-semibold select-none ml-1 animate-pulse [animation-duration: 2s]">
+                  Verify wallet
+                </span>
               </LoginAreaButton>
             </div>
           )}
@@ -186,59 +188,65 @@ export default function WalletArea() {
         </>
       )}
       <div tw="mx-auto">{getMetaMaskButton()}</div>
-      <hr tw="my-5" />
-      <FormContainer>
-        <label>
-          <div tw="flex items-center gap-3 text-xl text-gray-600 mb-1">
-            <div>OpenSea NFT:</div>
-            {!!nftInfo && (
-              <div tw="text-base">
-                {isNftValid === true ? (
-                  <FaCheckCircle tw="text-green-500" />
-                ) : isNftValid === false ? (
-                  <FaTimesCircle tw="text-red-500" />
-                ) : (
-                  <FaCircleNotch tw="opacity-60 animate-spin [animation-duration: 2s]" />
+      {!!isAddressVerified && (
+        <>
+          <hr tw="my-5" />
+          <FormContainer>
+            <label>
+              <div tw="flex items-center gap-3 text-xl text-gray-600 mb-1">
+                <div>OpenSea NFT:</div>
+                {!!nftInfo && (
+                  <div tw="text-base">
+                    {isNftValid === true ? (
+                      <FaCheckCircle tw="text-green-500" />
+                    ) : isNftValid === false ? (
+                      <FaTimesCircle tw="text-red-500" />
+                    ) : (
+                      <FaCircleNotch tw="opacity-60 animate-spin [animation-duration: 2s]" />
+                    )}
+                  </div>
                 )}
               </div>
+              <input
+                css={
+                  nftInfo && [
+                    isNftValid === true
+                      ? tw`border-green-500`
+                      : isNftValid === false
+                      ? tw`border-red-500`
+                      : tw`border-yellow-500`,
+                  ]
+                }
+                type="text"
+                placeholder="Paste URL here"
+                value={nftUrl}
+                onChange={(e) => setNftUrl(e.target.value)}
+              />
+            </label>
+            {nftInfo && nftResult ? (
+              <>
+                {'nft' in nftResult && (
+                  <div tw="mt-3 max-w-[500px] mx-auto">
+                    <NftView nft={nftResult.nft} />
+                  </div>
+                )}
+                {'err' in nftResult && (
+                  <div tw="text-red-600">{nftResult.err}</div>
+                )}
+              </>
+            ) : (
+              <a
+                tw="text-blue-500"
+                href="https://opensea.io/account"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Account page
+              </a>
             )}
-          </div>
-          <input
-            css={
-              nftInfo && [
-                isNftValid === true
-                  ? tw`border-green-500`
-                  : isNftValid === false
-                  ? tw`border-red-500`
-                  : tw`border-yellow-500`,
-              ]
-            }
-            type="text"
-            placeholder="Paste URL here"
-            value={nftUrl}
-            onChange={(e) => setNftUrl(e.target.value)}
-          />
-        </label>
-        {nftInfo && nftResult ? (
-          <>
-            {'nft' in nftResult && (
-              <div tw="mt-3 max-w-[500px] mx-auto">
-                <NftView nft={nftResult.nft} />
-              </div>
-            )}
-            {'err' in nftResult && <div tw="text-red-600">{nftResult.err}</div>}
-          </>
-        ) : (
-          <a
-            tw="text-blue-500"
-            href="https://opensea.io/account"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Account page
-          </a>
-        )}
-      </FormContainer>
+          </FormContainer>
+        </>
+      )}
     </>
   );
 }
