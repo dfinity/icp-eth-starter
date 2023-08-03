@@ -2,19 +2,20 @@ use std::{cell::RefCell, str::FromStr};
 
 use candid::candid_method;
 use ethers_core::{
-    abi,
+    abi::{self, Token},
     types::{Address, RecoveryMessage, Signature},
 };
+use hex::FromHexError;
 use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
 };
 use serde::{Deserialize, Serialize};
 
 thread_local! {
-    static NEXT_ID: RefCell<usize> = RefCell::default();
+    static NEXT_ID: RefCell<u64> = RefCell::default();
 }
 
-fn next_id() -> usize {
+fn next_id() -> u64 {
     NEXT_ID.with(|next_id| {
         let mut next_id = next_id.borrow_mut();
         let id = *next_id;
@@ -45,7 +46,7 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 pub async fn erc721_owner_of(
     network: String,
     nft_contract_address: String,
-    token_id: usize,
+    token_id: u64,
 ) -> String {
     let max_response_bytes = 2048;
     let service_url = match network.as_str() {
@@ -76,19 +77,6 @@ pub async fn erc721_owner_of(
         &f.encode_input(&[abi::Token::Uint(token_id.into())])
             .expect("encode_input"),
     );
-
-    #[derive(Serialize)]
-    struct JsonRpcRequest {
-        id: usize,
-        jsonrpc: String,
-        method: String,
-        params: (EthCallParams, String),
-    }
-    #[derive(Serialize)]
-    struct EthCallParams {
-        to: String,
-        data: String,
-    }
 
     let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
         id: next_id(),
@@ -132,17 +120,6 @@ pub async fn erc721_owner_of(
         Ok((r,)) => r,
         Err((r, m)) => panic!("{:?} {:?}", r, m),
     };
-
-    #[derive(Deserialize)]
-    struct JsonRpcResult {
-        result: Option<String>,
-        error: Option<JsonRpcError>,
-    }
-    #[derive(Deserialize)]
-    struct JsonRpcError {
-        code: isize,
-        message: String,
-    }
     let json: JsonRpcResult =
         serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
             .expect("JSON was not well-formatted");
@@ -157,16 +134,20 @@ fn to_hex(data: &[u8]) -> String {
     format!("0x{}", hex::encode(data))
 }
 
+fn from_hex(data: &str) -> Result<Vec<u8>, FromHexError> {
+    hex::decode(&data[2..])
+}
+
 #[ic_cdk_macros::update]
 #[candid_method]
 pub async fn erc1155_balance_of(
     network: String,
     nft_contract_address: String,
     owner_address: String,
-    token_id: usize,
-) -> usize {
-    // to do -- use BigUint
-    
+    token_id: u64,
+) -> u64 {
+    // to do -- use `candid::Nat`
+
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
@@ -210,19 +191,6 @@ pub async fn erc1155_balance_of(
         .expect("encode_input"),
     );
 
-    #[derive(Serialize)]
-    struct JsonRpcRequest {
-        id: usize,
-        jsonrpc: String,
-        method: String,
-        params: (EthCallParams, String),
-    }
-    #[derive(Serialize)]
-    struct EthCallParams {
-        to: String,
-        data: String,
-    }
-
     let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
         id: next_id(),
         jsonrpc: "2.0".to_string(),
@@ -266,17 +234,6 @@ pub async fn erc1155_balance_of(
         Err((r, m)) => panic!("{:?} {:?}", r, m),
     };
 
-    #[derive(Deserialize)]
-    struct JsonRpcResult {
-        result: Option<usize>,
-        error: Option<JsonRpcError>,
-    }
-    #[derive(Deserialize)]
-    struct JsonRpcError {
-        code: isize,
-        message: String,
-        // data: String,
-    }
     let json: JsonRpcResult =
         serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
             .expect("JSON was not well-formatted");
@@ -284,5 +241,38 @@ pub async fn erc1155_balance_of(
         panic!("JSON-RPC error code {}: {}", err.code, err.message);
     }
     let result = json.result.expect("Unexpected JSON response");
-    result
+    match f
+        .decode_output(&from_hex(&result).expect("decode_hex"))
+        .expect("Error while decoding JSON result")
+        .get(0)
+    {
+        Some(Token::Uint(n)) => n.as_u64(), // TODO: convert to `candid::Nat`
+        _ => panic!("Unexpected JSON output"),
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcRequest {
+    id: u64,
+    jsonrpc: String,
+    method: String,
+    params: (EthCallParams, String),
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct EthCallParams {
+    to: String,
+    data: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcResult {
+    result: Option<String>,
+    error: Option<JsonRpcError>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcError {
+    code: isize,
+    message: String,
 }
