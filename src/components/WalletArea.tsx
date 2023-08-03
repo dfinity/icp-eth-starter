@@ -8,8 +8,9 @@ import { useSessionStorage } from '../hooks/utils/useLocalStorage';
 import { useAddressVerified } from '../services/addressService';
 import { getAlchemy } from '../services/alchemyService';
 import useIdentity, { logout } from '../services/userService';
-import { handlePromise } from '../utils/handlers';
+import { handleError, handlePromise } from '../utils/handlers';
 import { LoginAreaButton } from './LoginArea';
+import { getBackend } from '../services/backendService';
 
 const FormContainer = styled.form`
   input[type='text'],
@@ -26,8 +27,11 @@ export default function WalletArea() {
   const { status, connect, account, ethereum } = useMetaMask();
   const [nftUrl, setNftUrl] = useSessionStorage('ic-eth.nft-url', '');
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
+  const [nftValid, setNftValid] = useState<boolean>();
+
+  const address = (ethereum.selectedAddress as string) || '';
   const [isAddressVerified, verifyAddress] = useAddressVerified(
-    ethereum.selectedAddress,
+    address,
     ethereum,
   );
 
@@ -51,6 +55,7 @@ export default function WalletArea() {
 
   useEffect(() => {
     if (nftInfo) {
+      setNftValid(undefined);
       handlePromise(
         (async () => {
           // TODO: handle situation where `tokenURI()` is not implemented
@@ -66,6 +71,21 @@ export default function WalletArea() {
               `eth-${nftInfo.network}` as any,
             ).nft.getNftMetadata(nftInfo.address, nftInfo.tokenId, {});
             setNftResult({ nft });
+
+            try {
+              setNftValid(
+                await getBackend().setNfts([
+                  {
+                    contract: nftInfo.address,
+                    network: nftInfo.network,
+                    tokenId: BigInt(nftInfo.tokenId),
+                    owner: address,
+                  },
+                ]),
+              );
+            } catch (err) {
+              handleError(err, 'Error while updating NFT!');
+            }
           } catch (err) {
             console.warn(err);
             setNftResult({ err: String(err) });
@@ -73,7 +93,7 @@ export default function WalletArea() {
         })(),
       );
     }
-  }, [ethereum, nftInfo]);
+  }, [address, ethereum, nftInfo]);
 
   const getMetaMaskButton = () => {
     if (status === 'notConnected') {
@@ -162,6 +182,7 @@ export default function WalletArea() {
         <label>
           <div tw="text-xl text-gray-600 mb-1">OpenSea NFT:</div>
           <input
+            css={[nftValid === false && tw`border-red-500`]}
             type="text"
             placeholder="Paste URL here"
             value={nftUrl}

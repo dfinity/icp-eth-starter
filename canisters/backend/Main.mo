@@ -26,7 +26,11 @@ shared ({ caller = installer }) actor class Main() {
     await core.connectEthWallet(caller, wallet, signedPrincipal);
   };
 
-  public func setNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
+  public shared ({ caller }) func isNftOwned(caller : Principal, nft : Types.Nft.Nft) : async Bool {
+    await core.isNftOwned(caller, nft);
+  };
+
+  public shared ({ caller }) func setNfts(nfts : [Types.Nft.Nft]) : async Bool {
     await core.setNfts(caller, nfts);
   };
 
