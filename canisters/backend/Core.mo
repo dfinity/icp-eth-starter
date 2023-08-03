@@ -52,5 +52,12 @@ module {
       log.okWith(true);
     };
 
+    public func getHistory(caller : Principal) : ?[History.Event] {
+      do ? {
+        // to do -- access control, maybe.
+        logger.getEvents(0, logger.getSize());
+      };
+    };
+
   };
 };
