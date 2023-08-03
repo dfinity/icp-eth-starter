@@ -1,17 +1,27 @@
-use std::str::FromStr;
+use std::{cell::RefCell, str::FromStr};
 
 use candid::candid_method;
 use ethers_core::{
     abi,
     types::{Address, RecoveryMessage, Signature},
 };
-//use ic_cdk::api::management_canister::http_request::HttpHeader;
-//use ic_cdk::api::management_canister::http_request::TransformContext;
-//use ic_cdk::api::management_canister::http_request::CanisterHttpRequestArgument;
 use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
 };
 use serde::{Deserialize, Serialize};
+
+thread_local! {
+    static NEXT_ID: RefCell<usize> = RefCell::default();
+}
+
+fn next_id() -> usize {
+    NEXT_ID.with(|next_id| {
+        let mut next_id = next_id.borrow_mut();
+        let id = *next_id;
+        *next_id = next_id.wrapping_add(1);
+        id
+    })
+}
 
 #[ic_cdk_macros::query]
 #[candid_method]
@@ -37,12 +47,8 @@ pub async fn erc721_owner_of(
     nft_contract_address: String,
     token_id: usize,
 ) -> String {
-    // Remove leading `0x` when found
-    let network = preprocess_address(&network);
-    let nft_contract_address = preprocess_address(&nft_contract_address);
-
     let max_response_bytes = 2048;
-    let service_url = match network {
+    let service_url = match network.as_str() {
         "mainnet" => "https://cloudflare-eth.com",
         "sepolia" => "https://rpc.sepolia.org",
         _ => panic!("Unknown network: {}", network),
@@ -66,8 +72,8 @@ pub async fn erc721_owner_of(
         state_mutability: abi::StateMutability::View,
     };
 
-    let data = hex::encode(
-        f.encode_input(&[abi::Token::Uint(token_id.into())])
+    let data = to_hex(
+        &f.encode_input(&[abi::Token::Uint(token_id.into())])
             .expect("encode_input"),
     );
 
@@ -85,13 +91,13 @@ pub async fn erc721_owner_of(
     }
 
     let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
-        id: 1, // TODO: possibly increment id for each call?
+        id: next_id(),
         jsonrpc: "2.0".to_string(),
         method: "eth_call".to_string(),
         params: (
             EthCallParams {
-                to: format!("0x{nft_contract_address}").to_string(),
-                data: format!("0x{data}").to_string(),
+                to: nft_contract_address,
+                data,
             },
             "latest".to_string(),
         ),
@@ -136,7 +142,6 @@ pub async fn erc721_owner_of(
     struct JsonRpcError {
         code: isize,
         message: String,
-        // data: String,
     }
     let json: JsonRpcResult =
         serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
@@ -145,15 +150,11 @@ pub async fn erc721_owner_of(
         panic!("JSON-RPC error code {}: {}", err.code, err.message);
     }
     let result = json.result.expect("Unexpected JSON response");
-    result[result.len() - 40..].to_string()
+    format!("0x{}", &result[result.len() - 40..]).to_string()
 }
 
-fn preprocess_address<'a>(address: &'a str) -> &'a str {
-    if address.starts_with("0x") {
-        &address[2..]
-    } else {
-        address
-    }
+fn to_hex(data: &[u8]) -> String {
+    format!("0x{}", hex::encode(data))
 }
 
 #[ic_cdk_macros::update]
