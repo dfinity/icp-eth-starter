@@ -28,6 +28,10 @@ module {
       };
     };
 
+    public func getEthWallets(caller : Principal) : Types.Resp.GetEthWallets {
+      state.getWalletsForPrincipal(caller);
+    };
+
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
       let log = logger.Begin(caller, #connectEthWallet(wallet, signedPrincipal));
       let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
@@ -38,14 +42,31 @@ module {
       log.okWith(checkOutcome);
     };
 
+    public func isNftOwned(caller : Principal, nft : Types.Nft.Nft) : async Bool {
+      let log = logger.Begin(caller, #isNftOwned(nft));
+      let isOwned = await isNftOwned_(caller, nft);
+      log.okWith(isOwned);
+    };
+
+    // TODO: refactor to a predicate
+    func isNftOwned_(caller : Principal, nft : Types.Nft.Nft) : async Bool {
+      switch (state.hasWalletSignsPrincipal(nft.owner, caller)) {
+        case (?_) {
+          let owner = await IcEth.get_nft_owner(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
+          owner == nft.owner;
+        };
+        case null {
+          false;
+        };
+      };
+    };
+
     public func setNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
       let log = logger.Begin(caller, #setNfts(nfts));
       for (nft in nfts.vals()) {
-        let owner = await IcEth.get_nft_owner(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
-        if (owner == nft.owner) {
-          log.internal(#verifyOwnerOutcome(nft, true));
-        } else {
-          log.internal(#verifyOwnerOutcome(nft, false));
+        let isOwned = await isNftOwned_(caller, nft);
+        log.internal(#verifyOwnerOutcome(nft, isOwned));
+        if (not isOwned) {
           return log.errWith(false);
         };
       };

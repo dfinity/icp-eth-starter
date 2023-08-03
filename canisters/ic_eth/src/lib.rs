@@ -134,7 +134,7 @@ pub async fn get_nft_owner(
     }
     #[derive(Deserialize)]
     struct JsonRpcError {
-        code: usize,
+        code: isize,
         message: String,
         // data: String,
     }
@@ -142,7 +142,7 @@ pub async fn get_nft_owner(
         serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
             .expect("JSON was not well-formatted");
     if let Some(err) = json.error {
-        panic!("Error code {}: {}", err.code, err.message);
+        panic!("JSON-RPC error code {}: {}", err.code, err.message);
     }
     let result = json.result.expect("Unexpected JSON response");
     result[result.len() - 40..].to_string()

@@ -1,25 +1,24 @@
 import { type Nft } from 'alchemy-sdk';
 import { useMetaMask } from 'metamask-react';
 import { useEffect, useMemo, useState } from 'react';
-import { FaEthereum, FaSignOutAlt } from 'react-icons/fa';
-import { styled } from 'styled-components/macro';
+import {
+  FaCheckCircle,
+  FaCircleNotch,
+  FaEthereum,
+  FaSignOutAlt,
+  FaTimesCircle,
+} from 'react-icons/fa';
+import { styled } from 'styled-components';
 import tw from 'twin.macro';
 import { useSessionStorage } from '../hooks/utils/useLocalStorage';
+import { useAddressVerified } from '../services/addressService';
 import { getAlchemy } from '../services/alchemyService';
-import { handlePromise } from '../utils/handlers';
-import { LoginAreaButton } from './LoginArea';
+import { getBackend } from '../services/backendService';
 import useIdentity, { logout } from '../services/userService';
+import { handleError, handlePromise } from '../utils/handlers';
+import { LoginAreaButton } from './LoginArea';
 
 const FormContainer = styled.form`
-  /* ${tw`space-y-4`}
-
-  label {
-    ${tw`flex flex-col gap-2 w-full text-xl font-semibold`}
-    > * {
-      ${tw`text-lg font-normal`}
-    }
-  } */
-
   input[type='text'],
   input[type='number'],
   textarea {
@@ -34,6 +33,13 @@ export default function WalletArea() {
   const { status, connect, account, ethereum } = useMetaMask();
   const [nftUrl, setNftUrl] = useSessionStorage('ic-eth.nft-url', '');
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
+  const [nftValid, setNftValid] = useState<boolean>();
+
+  const address = (ethereum.selectedAddress as string) || '';
+  const [isAddressVerified, verifyAddress] = useAddressVerified(
+    address,
+    ethereum,
+  );
 
   const parseNft = (nftUrl: string) => {
     const groups =
@@ -43,10 +49,10 @@ export default function WalletArea() {
     if (!groups) {
       return;
     }
-    const [, , network, address, tokenId] = groups;
+    const [, , network, contract, tokenId] = groups;
     return {
       network,
-      address,
+      contract,
       tokenId: Number(tokenId),
     };
   };
@@ -55,21 +61,40 @@ export default function WalletArea() {
 
   useEffect(() => {
     if (nftInfo) {
+      setNftValid(undefined);
       handlePromise(
         (async () => {
-          // TODO: handle situation where `tokenURI()` is not implemented
           try {
-            // let contract = new ethers.Contract(
-            //   nft.address,
-            //   erc721Abi,
-            //   getAlchemyProvider(nft.network),
-            // );
-            // const uri = await contract.tokenURI(nft.tokenId);
-            // const meta = await (await fetch(uri)).json();
             const nft = await getAlchemy(
               `eth-${nftInfo.network}` as any,
-            ).nft.getNftMetadata(nftInfo.address, nftInfo.tokenId, {});
+            ).nft.getNftMetadata(nftInfo.contract, nftInfo.tokenId, {});
             setNftResult({ nft });
+
+            try {
+              const tokenType =
+                nft.tokenType === 'ERC1155'
+                  ? { erc1155: null }
+                  : nft.tokenType === 'ERC721'
+                  ? { erc721: null }
+                  : undefined;
+              if (!tokenType) {
+                throw new Error(`Unknown token type: ${nft.tokenType}`);
+              }
+              setNftValid(
+                await getBackend().setNfts([
+                  {
+                    contract: nftInfo.contract,
+                    network: nftInfo.network,
+                    tokenType,
+                    tokenId: BigInt(nftInfo.tokenId),
+                    owner: address,
+                  },
+                ]),
+              );
+            } catch (err) {
+              handleError(err, 'Error while verifying NFT ownership!');
+              setNftValid(false);
+            }
           } catch (err) {
             console.warn(err);
             setNftResult({ err: String(err) });
@@ -77,7 +102,7 @@ export default function WalletArea() {
         })(),
       );
     }
-  }, [ethereum, nftInfo]);
+  }, [address, ethereum, nftInfo]);
 
   const getMetaMaskButton = () => {
     if (status === 'notConnected') {
@@ -96,14 +121,27 @@ export default function WalletArea() {
     }
     if (status === 'connected') {
       return (
-        <div tw="flex-1 text-xl text-gray-600">
-          <div tw="flex items-center gap-2">
-            {/* <FaEthereum tw="hidden sm:block text-3xl" /> */}
-            <div>
-              Ethereum address:
-              <div tw="text-xs sm:text-sm font-bold mt-1">{account}</div>
+        <div tw="flex flex-col md:flex-row items-start md:items-center gap-2">
+          <div tw="flex-1 text-xl text-gray-600">
+            <div tw="flex items-center gap-2">
+              {/* <FaEthereum tw="hidden sm:block text-3xl" /> */}
+              <div>
+                Ethereum address:
+                <div tw="text-xs sm:text-sm font-bold mt-1">{account}</div>
+              </div>
             </div>
           </div>
+          {isAddressVerified === false && (
+            <div tw="flex flex-col items-center mt-3 sm:mt-0">
+              <LoginAreaButton
+                tw="flex gap-1 items-center text-base px-4 text-blue-600 border-blue-500"
+                onClick={() => verifyAddress()}
+              >
+                <FaEthereum />
+                <span tw="font-semibold select-none ml-1">Verify wallet</span>
+              </LoginAreaButton>
+            </div>
+          )}
         </div>
       );
     }
@@ -151,35 +189,55 @@ export default function WalletArea() {
       <hr tw="my-5" />
       <FormContainer>
         <label>
-          <div tw="text-xl text-gray-600 mb-1">OpenSea NFT:</div>
+          <div tw="flex items-center gap-3 text-xl text-gray-600 mb-1">
+            <div>OpenSea NFT:</div>
+            {!!nftInfo && (
+              <div tw="text-base">
+                {nftValid === true ? (
+                  <FaCheckCircle tw="text-green-500" />
+                ) : nftValid === false ? (
+                  <FaTimesCircle tw="text-red-500" />
+                ) : (
+                  <FaCircleNotch tw="opacity-60 animate-spin [animation-duration: 2s]" />
+                )}
+              </div>
+            )}
+          </div>
           <input
+            css={
+              nftInfo && [
+                nftValid === true
+                  ? tw`border-green-500`
+                  : nftValid === false
+                  ? tw`border-red-500`
+                  : tw`border-yellow-500`,
+              ]
+            }
             type="text"
             placeholder="Paste URL here"
             value={nftUrl}
             onChange={(e) => setNftUrl(e.target.value)}
           />
-          {nftInfo && nftResult ? (
-            <>
-              {'nft' in nftResult && (
-                <div tw="mt-3 max-w-[500px] mx-auto">
-                  <NftView nft={nftResult.nft} />
-                </div>
-              )}
-              {'err' in nftResult && (
-                <div tw="text-red-600">{nftResult.err}</div>
-              )}
-            </>
-          ) : (
-            <a
-              tw="text-blue-500"
-              href="https://opensea.io/account"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Account page
-            </a>
-          )}
         </label>
+        {nftInfo && nftResult ? (
+          <>
+            {'nft' in nftResult && (
+              <div tw="mt-3 max-w-[500px] mx-auto">
+                <NftView nft={nftResult.nft} />
+              </div>
+            )}
+            {'err' in nftResult && <div tw="text-red-600">{nftResult.err}</div>}
+          </>
+        ) : (
+          <a
+            tw="text-blue-500"
+            href="https://opensea.io/account"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Account page
+          </a>
+        )}
       </FormContainer>
     </>
   );

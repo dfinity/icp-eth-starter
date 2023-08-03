@@ -21,8 +21,16 @@ shared ({ caller = installer }) actor class Main() {
     core.fastLogin(caller);
   };
 
+  public query ({ caller }) func getEthWallets() : async Types.Resp.GetEthWallets {
+    core.getEthWallets(caller);
+  };
+
   public shared ({ caller }) func connectEthWallet(wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
     await core.connectEthWallet(caller, wallet, signedPrincipal);
+  };
+
+  public shared ({ caller }) func isNftOwned(caller : Principal, nft : Types.Nft.Nft) : async Bool {
+    await core.isNftOwned(caller, nft);
   };
 
   public shared ({ caller }) func setNfts(nfts : [Types.Nft.Nft]) : async Bool {
