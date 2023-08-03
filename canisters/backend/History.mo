@@ -51,11 +51,6 @@ module {
     };
   };
 
-  /// # history representation.
-  ///
-  /// A record that can recover state and diagnose behavior.
-  /// Can be stored in a stable variable.
-  ///
   public type History = {
     var nextRequestId : Nat;
     var events : Seq.Sequence<Event>;
