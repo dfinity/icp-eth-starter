@@ -3,12 +3,15 @@ import Core "Core";
 import State "State";
 
 import System "System";
+import History "History";
 
 shared ({ caller = installer }) actor class Main() {
 
+  let sys = System.IC();
   stable var _state_v0 : State.Stable.State = State.Stable.initialState();
+  stable var _history_v0 : History.History = History.init(sys, installer);
 
-  let core = Core.Core(installer, System.IC(), _state_v0);
+  let core = Core.Core(installer, sys, _state_v0, _history_v0);
 
   public shared ({ caller }) func login() : async Types.Resp.Login {
     core.login(caller);
@@ -33,5 +36,9 @@ shared ({ caller = installer }) actor class Main() {
   public shared ({ caller }) func setNfts(nfts : [Types.Nft.Nft]) : async Bool {
     await core.setNfts(caller, nfts);
   };
+
+  public shared ({ caller }) func getHistory() : async ?[History.Event] {
+    core.getHistory(caller);
+  }
 
 };
