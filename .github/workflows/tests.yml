@@ -30,6 +30,7 @@ jobs:
         cache: 'npm'
     - name: Set up Rust
       run: rustup target add wasm32-unknown-unknown
+    - uses: Swatinem/rust-cache@v2
     - name: Install dfx
       run: |
         echo y | bash -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
