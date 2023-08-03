@@ -66,22 +66,3 @@ const toHex = (str: string) => {
   }
   return result;
 };
-
-// export function useEthAddresses(): Refresh<string[] | null | undefined> {
-//   const user = useIdentity();
-//   const onRefresh = useCallback(
-//     () =>
-//       handlePromise(
-//         (async () => {
-//           if (user) {
-//             return null;
-//           }
-//           return getBackend().getEthWallets();
-//         })(),
-//         'Verifying address...',
-//         'Error while verifying address!',
-//       ),
-//     [user],
-//   );
-//   return useRefresh(onRefresh);
-// }
