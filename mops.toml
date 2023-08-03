@@ -1,2 +1,3 @@
 [dependencies]
 base = "0.9.3"
+sequence = "https://github.com/matthewhammer/motoko-sequence#366c419"
