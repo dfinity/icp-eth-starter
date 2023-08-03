@@ -5,6 +5,7 @@ import IcEth "canister:ic_eth";
 import Principal "mo:base/Principal";
 import Nat64 "mo:base/Nat64";
 import History "History";
+import Debug "mo:base/Debug";
 
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State, history : History.History) {
@@ -53,6 +54,7 @@ module {
       switch (state.hasWalletSignsPrincipal(nft.owner, caller)) {
         case (?_) {
           let owner = await IcEth.get_nft_owner(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
+          Debug.print (debug_show (owner, nft.owner));
           owner == nft.owner;
         };
         case null {

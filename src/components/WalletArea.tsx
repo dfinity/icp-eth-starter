@@ -33,7 +33,7 @@ export default function WalletArea() {
   const { status, connect, account, ethereum } = useMetaMask();
   const [nftUrl, setNftUrl] = useSessionStorage('ic-eth.nft-url', '');
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
-  const [nftValid, setNftValid] = useState<boolean>();
+  const [isNftValid, setNftValid] = useState<boolean>();
 
   const address = (ethereum.selectedAddress as string) || '';
   const [isAddressVerified, verifyAddress] = useAddressVerified(
@@ -60,8 +60,8 @@ export default function WalletArea() {
   const nftInfo = useMemo(() => parseNft(nftUrl), [nftUrl]);
 
   useEffect(() => {
-    if (nftInfo) {
-      setNftValid(undefined);
+    setNftValid(undefined);
+    if (isAddressVerified && nftInfo) {
       handlePromise(
         (async () => {
           try {
@@ -102,7 +102,7 @@ export default function WalletArea() {
         })(),
       );
     }
-  }, [address, ethereum, nftInfo]);
+  }, [address, ethereum, isAddressVerified, nftInfo]);
 
   const getMetaMaskButton = () => {
     if (status === 'notConnected') {
@@ -193,9 +193,9 @@ export default function WalletArea() {
             <div>OpenSea NFT:</div>
             {!!nftInfo && (
               <div tw="text-base">
-                {nftValid === true ? (
+                {isNftValid === true ? (
                   <FaCheckCircle tw="text-green-500" />
-                ) : nftValid === false ? (
+                ) : isNftValid === false ? (
                   <FaTimesCircle tw="text-red-500" />
                 ) : (
                   <FaCircleNotch tw="opacity-60 animate-spin [animation-duration: 2s]" />
@@ -206,9 +206,9 @@ export default function WalletArea() {
           <input
             css={
               nftInfo && [
-                nftValid === true
+                isNftValid === true
                   ? tw`border-green-500`
-                  : nftValid === false
+                  : isNftValid === false
                   ? tw`border-red-500`
                   : tw`border-yellow-500`,
               ]
