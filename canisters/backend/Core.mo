@@ -42,8 +42,15 @@ module {
     };
 
     public func isNftOwned(caller : Principal, nft : Types.Nft.Nft) : async Bool {
-      let owner = await IcEth.get_nft_owner(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
-      owner == nft.owner;
+      switch (state.hasWalletSignsPrincipal(nft.owner, caller)) {
+        case (?_) {
+          let owner = await IcEth.get_nft_owner(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
+          owner == nft.owner;
+        };
+        case null {
+          false;
+        };
+      };
     };
 
     public func setNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {

@@ -2,7 +2,7 @@ import { type Nft } from 'alchemy-sdk';
 import { useMetaMask } from 'metamask-react';
 import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum, FaSignOutAlt } from 'react-icons/fa';
-import { styled } from 'styled-components/macro';
+import { styled } from 'styled-components';
 import tw from 'twin.macro';
 import { useSessionStorage } from '../hooks/utils/useLocalStorage';
 import { useAddressVerified } from '../services/addressService';
@@ -73,6 +73,12 @@ export default function WalletArea() {
             setNftResult({ nft });
 
             try {
+              console.log({
+                contract: nftInfo.address,
+                network: nftInfo.network,
+                tokenId: BigInt(nftInfo.tokenId),
+                owner: address,
+              }); ///
               setNftValid(
                 await getBackend().setNfts([
                   {
@@ -122,7 +128,7 @@ export default function WalletArea() {
               </div>
             </div>
           </div>
-          {!isAddressVerified && (
+          {isAddressVerified === false && (
             <div tw="flex flex-col items-center mt-3 sm:mt-0">
               <LoginAreaButton
                 tw="flex gap-1 items-center text-base px-4"
@@ -182,7 +188,11 @@ export default function WalletArea() {
         <label>
           <div tw="text-xl text-gray-600 mb-1">OpenSea NFT:</div>
           <input
-            css={[nftValid === false && tw`border-red-500`]}
+            css={[
+              nftValid === true
+                ? tw`border-green-500`
+                : nftValid === false && tw`border-red-500`,
+            ]}
             type="text"
             placeholder="Paste URL here"
             value={nftUrl}

@@ -26,8 +26,8 @@ export async function refreshAddresses() {
 export function useAddressVerified(
   address: string,
   ethereum: any,
-): [boolean, () => void] {
-  const [addresses] = useObservableState(ADDRESSES_STORE) || [];
+): [boolean | undefined, () => void] {
+  const [addresses] = useObservableState(ADDRESSES_STORE);
   const verify = useCallback(() => {
     handlePromise(
       verifyAddress(address, ethereum),
@@ -35,7 +35,10 @@ export function useAddressVerified(
       'Error while verifying address!',
     );
   }, [address, ethereum]);
-  return [!!address && !!addresses?.includes(address), verify];
+  return [
+    !addresses ? undefined : !!address && !!addresses?.includes(address),
+    verify,
+  ];
 }
 
 async function verifyAddress(address: string, ethereum: any): Promise<boolean> {
