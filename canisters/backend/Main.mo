@@ -4,6 +4,7 @@ import State "State";
 
 import System "System";
 import History "History";
+import Snapshot "Snapshot";
 
 shared ({ caller = installer }) actor class Main() {
 
@@ -39,6 +40,10 @@ shared ({ caller = installer }) actor class Main() {
 
   public shared ({ caller }) func getHistory() : async ?[History.Event] {
     core.getHistory(caller);
-  }
+  };
+
+  public shared ({ caller }) func getState() : async ?[Snapshot.Entry] {
+    core.getState(caller);
+  };
 
 };
