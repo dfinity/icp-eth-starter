@@ -1,4 +1,6 @@
 import Text "mo:base/Text";
+import Nat "mo:base/Nat";
+import Hash "mo:base/Hash";
 import System "System";
 
 module {
@@ -38,6 +40,20 @@ module {
       #erc721;
       #erc1155;
     };
+    public module Id {
+      public type Id = {
+        contract : Address.Address;
+        tokenId : Nat;
+        network : Text;
+      };
+      public func fromNft(n : Nft) : Id { n };
+      public func hash(n : Id) : Hash.Hash {
+        Text.hash(n.network # "/" # n.contract # "/" # Nat.toText(n.tokenId));
+      };
+      public func equal(n1 : Id, n2 : Id) : Bool {
+        n1 == n2;
+      };
+    };
   };
 
   public type EthWallet = EthWallet.Address;
@@ -46,6 +62,10 @@ module {
   // Stored in stable memory, for each wallet-principal pair we check:
   public type SignatureCheckSuccess = {
     signedPrincipal : SignedPrincipal;
+    checkTime : System.Time;
+  };
+
+  public type OwnershipCheckSuccess = {
     checkTime : System.Time;
   };
 };
