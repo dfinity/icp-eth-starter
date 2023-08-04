@@ -11,7 +11,12 @@ module {
   public type EthWallet = Types.EthWallet;
   public type CreateSuccess = Types.CreateSuccess;
   public type SignatureCheckSuccess = Types.SignatureCheckSuccess;
+  public type OwnershipCheckSuccess = Types.OwnershipCheckSuccess;
   public type SignedPrincipal = Types.SignedPrincipal;
+
+  public let NftId = Types.Nft.Id;
+  public type NftId = Types.Nft.Id.Id;
+  public type Nft = Types.Nft.Nft;
 
   public module Stable {
 
@@ -22,17 +27,23 @@ module {
       principals : Relate.Stable.Map<Principal, CreateSuccess>;
       ethWallets : Relate.Stable.Map<EthWallet, CreateSuccess>;
 
+      ethNfts : Relate.Stable.Map<NftId, Nft>;
+
       //
       // Relations
       //
       walletSignsPrincipal : Relate.Stable.TernRel<EthWallet, Principal, SignatureCheckSuccess>;
+      walletOwnsNft : Relate.Stable.TernRel<EthWallet, NftId, OwnershipCheckSuccess>;
     };
 
     public func initialState() : State {
       {
         principals = Relate.Stable.emptyMap();
         ethWallets = Relate.Stable.emptyMap();
+        ethNfts = Relate.Stable.emptyMap();
+
         walletSignsPrincipal = Relate.Stable.emptyTernRel();
+        walletOwnsNft = Relate.Stable.emptyTernRel();
       };
     };
   };
@@ -49,10 +60,18 @@ module {
     public let principals = Relate.OO.Map<Principal, CreateSuccess>(state.principals, Principal.hash, Principal.equal);
     public let ethWallets = Relate.OO.Map<EthWallet, CreateSuccess>(state.ethWallets, Address.hash, Address.equal);
 
+    public let ethNfts = Relate.OO.Map<NftId, Nft>(state.ethNfts, NftId.hash, NftId.equal);
+
     public let walletSignsPrincipal = Relate.OO.TernRel<EthWallet, Principal, SignatureCheckSuccess>(
       state.walletSignsPrincipal,
       (Address.hash, Principal.hash),
       (Address.equal, Principal.equal),
+    );
+
+    public let walletOwnsNft = Relate.OO.TernRel<EthWallet, NftId, OwnershipCheckSuccess>(
+      state.walletOwnsNft,
+      (Address.hash, NftId.hash),
+      (Address.equal, NftId.equal),
     );
 
     // Gets the first login time, possibly this time.
