@@ -16,6 +16,7 @@ module {
 
   public let NftId = Types.Nft.Id;
   public type NftId = Types.Nft.Id.Id;
+  public type Nft = Types.Nft.Nft;
 
   public module Stable {
 
@@ -25,7 +26,8 @@ module {
       //
       principals : Relate.Stable.Map<Principal, CreateSuccess>;
       ethWallets : Relate.Stable.Map<EthWallet, CreateSuccess>;
-      ethNfts : Relate.Stable.Map<NftId, CreateSuccess>;
+
+      ethNfts : Relate.Stable.Map<NftId, Nft>;
 
       //
       // Relations
@@ -58,7 +60,7 @@ module {
     public let principals = Relate.OO.Map<Principal, CreateSuccess>(state.principals, Principal.hash, Principal.equal);
     public let ethWallets = Relate.OO.Map<EthWallet, CreateSuccess>(state.ethWallets, Address.hash, Address.equal);
 
-    public let ethNfts = Relate.OO.Map<NftId, CreateSuccess>(state.ethNfts, NftId.hash, NftId.equal);
+    public let ethNfts = Relate.OO.Map<NftId, Nft>(state.ethNfts, NftId.hash, NftId.equal);
 
     public let walletSignsPrincipal = Relate.OO.TernRel<EthWallet, Principal, SignatureCheckSuccess>(
       state.walletSignsPrincipal,

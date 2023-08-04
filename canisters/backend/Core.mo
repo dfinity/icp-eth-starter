@@ -74,6 +74,7 @@ module {
       for (nft in nfts.vals()) {
         let isOwned = await isNftOwned_(caller, nft);
         log.internal(#verifyOwnerOutcome(nft, isOwned));
+        state.ethNfts.put(nft, nft);
         if (not isOwned) {
           return log.errWith(false);
         };
