@@ -5,6 +5,7 @@ import IcEth "canister:ic_eth";
 import Principal "mo:base/Principal";
 import Nat64 "mo:base/Nat64";
 import History "History";
+import Snapshot "Snapshot";
 
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State, history : History.History) {
@@ -87,6 +88,13 @@ module {
       do ? {
         // to do -- access control, maybe.
         logger.getEvents(0, logger.getSize());
+      };
+    };
+
+    public func getState(caller : Principal) : ?[Snapshot.Entry] {
+      do ? {
+        // to do -- access control, maybe.
+        Snapshot.getAll(_state);
       };
     };
 
