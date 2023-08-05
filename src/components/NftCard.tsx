@@ -3,7 +3,11 @@ import { useNftMetadata } from '../services/nftService';
 import Loading from './utils/Loading';
 import 'twin.macro';
 
-export default function NftCard({ nft }: { nft: Nft }) {
+interface NftCardProps {
+  nft: Nft;
+}
+
+export default function NftCard({ nft }: NftCardProps) {
   const [metadata] = useNftMetadata(nft.network, nft.contract, nft.tokenId);
 
   return (
