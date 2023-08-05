@@ -142,9 +142,8 @@ module {
       emit(#addNft { principal; nft; wallet; time = sys.time() });
     };
 
-    public func getPublicHistory() : [Types.PublicEvent] {
-      let i : Iter.Iter<Types.PublicEvent> = Seq.iter(state.publicHistory.events, #bwd);
-      Iter.toArray(i);
+    public func getPublicHistory() : Iter.Iter<Types.PublicEvent> {
+      Seq.iter(state.publicHistory.events, #bwd);
     };
 
   };

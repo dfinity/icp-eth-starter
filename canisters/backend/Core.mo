@@ -90,28 +90,22 @@ module {
     };
 
     public func getNfts(caller : Principal) : [Types.Nft.Nft] {
-      type EthWallet = Types.EthWallet;
-      type Nft = Types.Nft.Nft;
-      let wallets = state.walletSignsPrincipal.getRelatedRight(caller);
-      let wallets_ = Iter.map<(EthWallet, Types.SignatureCheckSuccess), EthWallet>(wallets, func(w, c) : EthWallet { w });
-      let nfts = Iter.map<EthWallet, Iter.Iter<Nft>>(
-        wallets_,
-        func(w) : Iter.Iter<Nft> {
-          let nfts = state.walletOwnsNft.getRelatedLeft(w);
-          Iter.map<(Types.Nft.Id.Id, Types.OwnershipCheckSuccess), Nft>(
-            nfts,
-            func(id, _) : Nft {
-              let ?nft = state.ethNfts.get(id) else { assert false; loop {} };
-              nft;
-            },
-          );
+      let nfts = Iter.mapFilter<Types.PublicEvent, Types.Nft.Nft>(
+        state.getPublicHistory(),
+        func(e : Types.PublicEvent) : ?Types.Nft.Nft {
+          switch (e) {
+            case (#addNft(e)) {
+              if (e.principal == caller) ?e.nft else null;
+            };
+            case _ null;
+          };
         },
       );
-      Iter.toArray(Iter.flatten(nfts));
+      Iter.toArray(nfts);
     };
 
     public func getPublicHistory(caller : Principal) : [Types.PublicEvent] {
-      state.getPublicHistory();
+      Iter.toArray(state.getPublicHistory());
     };
 
     public func getHistory(caller : Principal) : ?[History.Event] {
