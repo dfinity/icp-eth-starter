@@ -81,7 +81,7 @@ export default function WalletArea() {
                 throw new Error(`Unknown token type: ${nft.tokenType}`);
               }
               setNftValid(
-                await getBackend().setNfts([
+                await getBackend().addNfts([
                   {
                     contract: nftInfo.contract,
                     network: nftInfo.network,
