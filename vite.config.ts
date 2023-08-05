@@ -36,11 +36,6 @@ export default defineConfig({
   build: {
     outDir: './dist',
     emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        app: './src/index.html',
-      },
-    },
   },
   plugins: [
     react({
