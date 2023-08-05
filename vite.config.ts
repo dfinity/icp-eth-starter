@@ -33,10 +33,14 @@ const canisterIds = JSON.parse(readFileSync(canisterIdPath, 'utf8'));
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: 'src',
   build: {
-    outDir: '../dist',
+    outDir: './dist',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        app: './src/index.html',
+      },
+    },
   },
   plugins: [
     react({
@@ -75,7 +79,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
-    setupFiles: './setupTests.ts',
-    cache: { dir: '../node_modules/.vitest' },
+    setupFiles: './src/setupTests.ts',
+    cache: { dir: './node_modules/.vitest' },
   },
 });
