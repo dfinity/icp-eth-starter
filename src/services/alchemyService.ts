@@ -2,6 +2,9 @@ import { Alchemy, Network } from 'alchemy-sdk';
 import { AlchemyProvider } from 'ethers';
 
 const apiKey = process.env.VITE_ALCHEMY_API_KEY;
+if (!apiKey) {
+  console.warn('Alchemy API key not found!');
+}
 
 export function getAlchemyProvider(network: string) {
   return new AlchemyProvider(network, apiKey);
