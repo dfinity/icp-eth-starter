@@ -70,4 +70,25 @@ module {
     };
   };
 
+  public func mapFilter<X, Y>(xs : Iter<X>, f : X -> ?Y) : Iter<Y> {
+    object {
+      public func next() : ?Y {
+        loop {
+          switch (xs.next()) {
+            case (null) {
+              return null;
+            };
+            case (?x) {
+              switch (f(x)) {
+                case null {};
+                case (?y) { return ?y };
+              };
+            };
+          };
+        };
+        null;
+      };
+    };
+  };
+
 };

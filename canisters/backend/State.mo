@@ -4,6 +4,10 @@ import System "System";
 
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
+import Int "mo:base/Int";
+
+import Seq "mo:sequence/Sequence";
+import Stream "mo:sequence/Stream";
 
 module {
 
@@ -20,7 +24,16 @@ module {
 
   public module Stable {
 
+    public type PublicHistory = {
+      var events : Seq.Sequence<Types.PublicEvent>;
+    };
+
     public type State = {
+      //
+      // Public History (for Homepage)
+      //
+      publicHistory : PublicHistory;
+
       //
       // Entities
       //
@@ -36,8 +49,12 @@ module {
       walletOwnsNft : Relate.Stable.TernRel<EthWallet, NftId, OwnershipCheckSuccess>;
     };
 
-    public func initialState() : State {
+    public func initialState(sys : System.System) : State {
       {
+        publicHistory = {
+          var events = Seq.make(#install { time = sys.time() });
+        };
+
         principals = Relate.Stable.emptyMap();
         ethWallets = Relate.Stable.emptyMap();
         ethNfts = Relate.Stable.emptyMap();
@@ -56,6 +73,8 @@ module {
   // - interactions with other services/canisters (absent here).
   //
   public class OOOf(sys : System.System, state : Stable.State) {
+
+    let levels : Stream.Stream<Nat32> = Stream.Bernoulli.seedFrom(Int.abs(sys.time()));
 
     public let principals = Relate.OO.Map<Principal, CreateSuccess>(state.principals, Principal.hash, Principal.equal);
     public let ethWallets = Relate.OO.Map<EthWallet, CreateSuccess>(state.ethWallets, Address.hash, Address.equal);
@@ -109,6 +128,22 @@ module {
     // Get latest timestamp for a checked signature, and the signature, if any.
     public func hasWalletSignsPrincipal(w : EthWallet, p : Principal) : ?SignatureCheckSuccess {
       walletSignsPrincipal.get(w, p);
+    };
+
+    func emit(event : Types.PublicEvent) {
+      state.publicHistory.events := Seq.pushBack<Types.PublicEvent>(
+        state.publicHistory.events,
+        levels.next(),
+        event,
+      );
+    };
+
+    public func emitAddNftEvent(principal : Principal, wallet : EthWallet, nft : Nft) {
+      emit(#addNft { principal; nft; wallet; time = sys.time() });
+    };
+
+    public func getPublicHistory() : Iter.Iter<Types.PublicEvent> {
+      Seq.iter(state.publicHistory.events, #bwd);
     };
 
   };
