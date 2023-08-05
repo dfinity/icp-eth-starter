@@ -9,7 +9,7 @@ import Snapshot "Snapshot";
 shared ({ caller = installer }) actor class Main() {
 
   let sys = System.IC();
-  stable var _state_v0 : State.Stable.State = State.Stable.initialState();
+  stable var _state_v0 : State.Stable.State = State.Stable.initialState(sys);
   stable var _history_v0 : History.History = History.init(sys, installer);
 
   let core = Core.Core(installer, sys, _state_v0, _history_v0);
@@ -44,6 +44,10 @@ shared ({ caller = installer }) actor class Main() {
 
   public shared ({ caller }) func getHistory() : async ?[History.Event] {
     core.getHistory(caller);
+  };
+
+  public query ({ caller }) func getPublicHistory() : async [Types.PublicEvent] {
+    core.getPublicHistory(caller);
   };
 
   public shared ({ caller }) func getState() : async ?[Snapshot.Entry] {

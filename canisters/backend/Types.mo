@@ -68,4 +68,23 @@ module {
   public type OwnershipCheckSuccess = {
     checkTime : System.Time;
   };
+
+  public type PublicHistory = [PublicEvent];
+
+  // public events are for public consumption.
+  // they are distinct from
+  // request/internal/response events in the main canister log.
+
+  public type PublicEvent = {
+    #install : { time : System.Time };
+    #addNft : AddNftEvent;
+  };
+
+  public type AddNftEvent = {
+    principal : Principal;
+    wallet : EthWallet;
+    nft : Nft.Nft;
+    time : System.Time;
+  };
+
 };

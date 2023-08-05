@@ -8,6 +8,9 @@ import History "History";
 import Snapshot "Snapshot";
 import Iter "IterMore";
 
+import Seq "mo:sequence/Sequence";
+import Stream "mo:sequence/Stream";
+
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State, history : History.History) {
 
@@ -81,6 +84,7 @@ module {
           return log.errWith(false);
         };
         state.walletOwnsNft.put(nft.owner, nft, { checkTime = sys.time() });
+        state.emitAddNftEvent(caller, nft.owner, nft);
       };
       log.okWith(true);
     };
@@ -104,6 +108,10 @@ module {
         },
       );
       Iter.toArray(Iter.flatten(nfts));
+    };
+
+    public func getPublicHistory(caller : Principal) : [Types.PublicEvent] {
+      state.getPublicHistory();
     };
 
     public func getHistory(caller : Principal) : ?[History.Event] {
