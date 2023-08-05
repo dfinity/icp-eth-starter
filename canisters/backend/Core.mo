@@ -6,6 +6,7 @@ import Principal "mo:base/Principal";
 import Nat64 "mo:base/Nat64";
 import History "History";
 import Snapshot "Snapshot";
+import Iter "IterMore";
 
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State, history : History.History) {
@@ -70,7 +71,7 @@ module {
       };
     };
 
-    public func setNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
+    public func addNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
       let log = logger.Begin(caller, #setNfts(nfts));
       for (nft in nfts.vals()) {
         let isOwned = await isNftOwned_(caller, nft);
@@ -82,6 +83,27 @@ module {
         state.walletOwnsNft.put(nft.owner, nft, { checkTime = sys.time() });
       };
       log.okWith(true);
+    };
+
+    public func getNfts(caller : Principal) : [Types.Nft.Nft] {
+      type EthWallet = Types.EthWallet;
+      type Nft = Types.Nft.Nft;
+      let wallets = state.walletSignsPrincipal.getRelatedRight(caller);
+      let wallets_ = Iter.map<(EthWallet, Types.SignatureCheckSuccess), EthWallet>(wallets, func(w, c) : EthWallet { w });
+      let nfts = Iter.map<EthWallet, Iter.Iter<Nft>>(
+        wallets_,
+        func(w) : Iter.Iter<Nft> {
+          let nfts = state.walletOwnsNft.getRelatedLeft(w);
+          Iter.map<(Types.Nft.Id.Id, Types.OwnershipCheckSuccess), Nft>(
+            nfts,
+            func(id, _) : Nft {
+              let ?nft = state.ethNfts.get(id) else { assert false; loop {} };
+              nft;
+            },
+          );
+        },
+      );
+      Iter.toArray(Iter.flatten(nfts));
     };
 
     public func getHistory(caller : Principal) : ?[History.Event] {
