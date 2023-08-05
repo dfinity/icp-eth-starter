@@ -14,7 +14,7 @@ module {
   public func trie2D<X, Y, Z>(t : Trie.Trie2D<X, Y, Z>) : Iter<(X, Y, Z)> {
     // maybe there's a way to elimninate some type args, but they
     // seemed required at the time of authoring them.
-    iterFlatten(
+    flatten(
       Iter.map<(X, Trie.Trie<Y, Z>), Iter<(X, Y, Z)>>(
         Trie.iter<X, Trie.Trie<Y, Z>>(t),
         func(x : X, t2 : Trie.Trie<Y, Z>) : Iter<(X, Y, Z)> {
@@ -28,7 +28,7 @@ module {
   };
 
   // to do -- open PR for motoko-base.
-  func iterFlatten<X>(i : Iter<Iter<X>>) : Iter<X> {
+  public func flatten<X>(i : Iter<Iter<X>>) : Iter<X> {
     object {
       var inner = i.next();
       public func next() : ?X {
@@ -46,7 +46,7 @@ module {
   };
 
   // to do -- open PR for motoko-base.
-  func iterAppend<X>(i1 : Iter<X>, i2 : Iter<X>) : Iter<X> {
+  public func append<X>(i1 : Iter<X>, i2 : Iter<X>) : Iter<X> {
     object {
       public func next() : ?X {
         switch (i1.next()) {
@@ -62,7 +62,7 @@ module {
     var all = object { public func next() : ?X { null } };
     var i : Int = iters.size() - 1;
     loop {
-      all := iterAppend(iters[Int.abs(i)], all);
+      all := append(iters[Int.abs(i)], all);
       i := i - 1;
       if (i < 0) {
         return all;

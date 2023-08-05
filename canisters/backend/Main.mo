@@ -34,8 +34,12 @@ shared ({ caller = installer }) actor class Main() {
     await core.isNftOwned(caller, nft);
   };
 
-  public shared ({ caller }) func setNfts(nfts : [Types.Nft.Nft]) : async Bool {
-    await core.setNfts(caller, nfts);
+  public shared ({ caller }) func addNfts(nfts : [Types.Nft.Nft]) : async Bool {
+    await core.addNfts(caller, nfts);
+  };
+
+  public query ({ caller }) func getNfts(nfts : [Types.Nft.Nft]) : async [Types.Nft.Nft] {
+    core.getNfts(caller);
   };
 
   public shared ({ caller }) func getHistory() : async ?[History.Event] {
