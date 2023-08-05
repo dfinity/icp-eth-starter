@@ -38,7 +38,7 @@ shared ({ caller = installer }) actor class Main() {
     await core.addNfts(caller, nfts);
   };
 
-  public query ({ caller }) func getNfts(nfts : [Types.Nft.Nft]) : async [Types.Nft.Nft] {
+  public query ({ caller }) func getNfts() : async [Types.Nft.Nft] {
     core.getNfts(caller);
   };
 
