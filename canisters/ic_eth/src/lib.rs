@@ -116,7 +116,7 @@ pub async fn erc721_owner_of(
         body: Some(json_rpc_payload.as_bytes().to_vec()),
         transform: None,
     };
-    let result = match make_http_request(request, 5000000).await {
+    let result = match make_http_request(request, 10_000_000).await {
         Ok((r,)) => r,
         Err((r, m)) => panic!("{:?} {:?}", r, m),
     };

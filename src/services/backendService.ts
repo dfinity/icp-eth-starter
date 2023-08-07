@@ -8,9 +8,10 @@ export function getBackend() {
 }
 
 export function getNetwork(): string | undefined {
-  return import.meta.env.DFX_NETWORK;
+  return window.process?.env.DFX_NETWORK;
 }
 
 export function isLocalNetwork(): boolean {
-  return !getNetwork() || getNetwork() === 'local';
+  const network = getNetwork();
+  return !network || network === 'local';
 }
