@@ -29,11 +29,13 @@ export function useAddressVerified(
 ): [boolean | undefined, () => void] {
   const [addresses] = useObservableState(ADDRESSES_STORE);
   const verify = useCallback(() => {
-    handlePromise(
-      verifyAddress(address, ethereum),
-      'Verifying wallet...',
-      'Error while verifying wallet!',
-    );
+    if (address && ethereum) {
+      handlePromise(
+        verifyAddress(address, ethereum),
+        'Verifying wallet...',
+        'Error while verifying wallet!',
+      );
+    }
   }, [address, ethereum]);
   return [
     !addresses ? undefined : !!address && !!addresses?.includes(address),
