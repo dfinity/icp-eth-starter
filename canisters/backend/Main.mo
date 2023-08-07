@@ -42,7 +42,7 @@ shared ({ caller = installer }) actor class Main() {
     core.getNfts(caller);
   };
 
-  public shared ({ caller }) func getHistory() : async ?[History.Event] {
+  public query ({ caller }) func getHistory() : async ?[History.Event] {
     core.getHistory(caller);
   };
 
@@ -50,7 +50,7 @@ shared ({ caller = installer }) actor class Main() {
     core.getPublicHistory(caller);
   };
 
-  public shared ({ caller }) func getState() : async ?[Snapshot.Entry] {
+  public query ({ caller }) func getState() : async ?[Snapshot.Entry] {
     core.getState(caller);
   };
 
