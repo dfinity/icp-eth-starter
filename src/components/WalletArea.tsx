@@ -237,7 +237,7 @@ export default function WalletArea() {
             ) : (
               <a
                 tw="text-blue-500"
-                href="https://opensea.io/account"
+                href="https://testnets.opensea.io/account"
                 target="_blank"
                 rel="noreferrer"
               >
