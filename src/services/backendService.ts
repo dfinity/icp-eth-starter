@@ -12,5 +12,6 @@ export function getNetwork(): string | undefined {
 }
 
 export function isLocalNetwork(): boolean {
-  return !getNetwork() || getNetwork() === 'local';
+  const network = getNetwork();
+  return !network || network === 'local';
 }

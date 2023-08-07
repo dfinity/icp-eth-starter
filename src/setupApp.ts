@@ -1,7 +1,7 @@
 import { Actor } from '@dfinity/agent';
 import { getBackend, getNetwork } from './services/backendService';
 
-export const applicationName = 'IC ~ ETH';
+export const applicationName = 'IC + ETH';
 
 const agent = Actor.agentOf(getBackend());
 if (getNetwork() === 'ic') {

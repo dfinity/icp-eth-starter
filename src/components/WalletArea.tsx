@@ -35,7 +35,7 @@ export default function WalletArea() {
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
   const [isNftValid, setNftValid] = useState<boolean>();
 
-  const address = (ethereum.selectedAddress as string) || '';
+  const address = (ethereum?.selectedAddress as string | undefined) || '';
   const [isAddressVerified, verifyAddress] = useAddressVerified(
     address,
     ethereum,
@@ -102,7 +102,7 @@ export default function WalletArea() {
         })(),
       );
     }
-  }, [address, ethereum, isAddressVerified, nftInfo]);
+  }, [address, isAddressVerified, nftInfo]);
 
   const getMetaMaskButton = () => {
     if (status === 'notConnected') {
@@ -237,7 +237,7 @@ export default function WalletArea() {
             ) : (
               <a
                 tw="text-blue-500"
-                href="https://opensea.io/account"
+                href="https://testnets.opensea.io/account"
                 target="_blank"
                 rel="noreferrer"
               >

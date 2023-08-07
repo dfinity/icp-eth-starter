@@ -18,7 +18,7 @@ export type User = {
 };
 
 export interface UserDetail {
-  createTime: string | undefined;
+  createTime: Date | undefined;
 }
 
 export const USER_STORE = makeObservable<User | null | undefined>();
@@ -74,7 +74,7 @@ const loadUserDetail = async (): Promise<UserDetail> => {
       detail = await getBackend().login();
     }
     return {
-      createTime: String(detail.createTime),
+      createTime: new Date(Number(detail.createTime) / 1e6),
     };
   } catch (err) {
     console.warn(err);
