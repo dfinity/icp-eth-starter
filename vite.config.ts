@@ -47,7 +47,7 @@ export default defineConfig({
     imagetools(),
   ],
   define: {
-    'process.env.DFX_NETWORK': JSON.stringify(process.env.DFX_NETWORK),
+    'import.meta.env.DFX_NETWORK': JSON.stringify(process.env.DFX_NETWORK),
     // Expose canister IDs provided by `dfx deploy`
     ...Object.fromEntries(
       Object.entries(canisterIds).map(([name, ids]: any) => [
