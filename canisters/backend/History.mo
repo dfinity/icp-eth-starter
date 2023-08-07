@@ -14,7 +14,7 @@ module {
     #login;
     #connectEthWallet : (Types.EthWallet, Types.SignedPrincipal);
     #isNftOwned : Types.Nft.Nft;
-    #setNfts : [Types.Nft.Nft];
+    #addNfts : [Types.Nft.Nft];
   };
 
   public type Response = {

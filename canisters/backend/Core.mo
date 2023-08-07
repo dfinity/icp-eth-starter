@@ -75,7 +75,7 @@ module {
     };
 
     public func addNfts(caller : Principal, nfts : [Types.Nft.Nft]) : async Bool {
-      let log = logger.Begin(caller, #setNfts(nfts));
+      let log = logger.Begin(caller, #addNfts(nfts));
       for (nft in nfts.vals()) {
         let isOwned = await isNftOwned_(caller, nft);
         log.internal(#verifyOwnerOutcome(nft, isOwned));
@@ -83,8 +83,10 @@ module {
         if (not isOwned) {
           return log.errWith(false);
         };
+        if (state.walletOwnsNft.get(nft.owner, nft) == null) {
+          state.emitAddNftEvent(caller, nft.owner, nft);
+        };
         state.walletOwnsNft.put(nft.owner, nft, { checkTime = sys.time() });
-        state.emitAddNftEvent(caller, nft.owner, nft);
       };
       log.okWith(true);
     };
