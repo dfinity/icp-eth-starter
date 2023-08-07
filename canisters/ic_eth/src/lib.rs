@@ -8,6 +8,7 @@ use ethers_core::{
 use hex::FromHexError;
 use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
+    TransformContext, HttpResponse, TransformArgs,
 };
 use serde::{Deserialize, Serialize};
 
@@ -24,7 +25,7 @@ fn next_id() -> u64 {
     })
 }
 
-const HTTP_CYCLES : u128 = 100_000_000;
+const HTTP_CYCLES: u128 = 100_000_000;
 
 #[ic_cdk_macros::query]
 #[candid_method]
@@ -116,7 +117,7 @@ pub async fn erc721_owner_of(
         method: HttpMethod::POST,
         headers: request_headers,
         body: Some(json_rpc_payload.as_bytes().to_vec()),
-        transform: None,
+        transform: Some(TransformContext::from_name("transform".to_string(), vec![])),
     };
     let result = match make_http_request(request, HTTP_CYCLES).await {
         Ok((r,)) => r,
@@ -229,7 +230,7 @@ pub async fn erc1155_balance_of(
         method: HttpMethod::POST,
         headers: request_headers,
         body: Some(json_rpc_payload.as_bytes().to_vec()),
-        transform: None,
+        transform: Some(TransformContext::from_name("transform".to_string(), vec![])),
     };
     let result = match make_http_request(request, HTTP_CYCLES).await {
         Ok((r,)) => r,
@@ -259,6 +260,17 @@ struct JsonRpcRequest {
     jsonrpc: String,
     method: String,
     params: (EthCallParams, String),
+}
+
+#[ic_cdk_macros::query(name = "transform")]
+fn transform(args: TransformArgs) -> HttpResponse {
+    HttpResponse {
+        status: args.response.status.clone(),
+        body: args.response.body,
+        // Strip headers as they contain the Date which is not necessarily the same
+        // and will prevent consensus on the result.
+        headers: Vec::<HttpHeader>::new(),
+    }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
