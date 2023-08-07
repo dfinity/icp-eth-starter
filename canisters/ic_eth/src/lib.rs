@@ -24,6 +24,8 @@ fn next_id() -> u64 {
     })
 }
 
+const HTTP_CYCLES : u128 = 100_000_000;
+
 #[ic_cdk_macros::query]
 #[candid_method]
 pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> bool {
@@ -116,7 +118,7 @@ pub async fn erc721_owner_of(
         body: Some(json_rpc_payload.as_bytes().to_vec()),
         transform: None,
     };
-    let result = match make_http_request(request, 10_000_000).await {
+    let result = match make_http_request(request, HTTP_CYCLES).await {
         Ok((r,)) => r,
         Err((r, m)) => panic!("{:?} {:?}", r, m),
     };
@@ -229,7 +231,7 @@ pub async fn erc1155_balance_of(
         body: Some(json_rpc_payload.as_bytes().to_vec()),
         transform: None,
     };
-    let result = match make_http_request(request, 5000000).await {
+    let result = match make_http_request(request, HTTP_CYCLES).await {
         Ok((r,)) => r,
         Err((r, m)) => panic!("{:?} {:?}", r, m),
     };
