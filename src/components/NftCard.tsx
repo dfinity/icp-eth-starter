@@ -12,8 +12,6 @@ interface NftCardProps {
 
 export default function NftCard({ nft, principal, time }: NftCardProps) {
   const [metadata] = useNftMetadata(nft.network, nft.contract, nft.tokenId);
-  // const breakpoint = useBreakpoint();
-  // const isMobile = breakpoint === 'xs';
 
   const url = `https://${
     nft.network === 'sepolia' ? 'testnets.' : ''
