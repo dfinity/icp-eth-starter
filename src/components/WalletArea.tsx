@@ -1,6 +1,6 @@
 import { type Nft } from 'alchemy-sdk';
 import { useMetaMask } from 'metamask-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FaCheckCircle,
   FaCircleNotch,
@@ -14,10 +14,10 @@ import { useSessionStorage } from '../hooks/utils/useLocalStorage';
 import { useAddressVerified } from '../services/addressService';
 import { getAlchemy } from '../services/alchemyService';
 import { getBackend } from '../services/backendService';
+import { refreshHistory, usePublicNfts } from '../services/historyService';
 import useIdentity, { logout } from '../services/userService';
 import { handleError, handlePromise } from '../utils/handlers';
 import { LoginAreaButton } from './LoginArea';
-import { refreshHistory, usePublicNfts } from '../services/historyService';
 import NftList from './NftList';
 
 const FormContainer = styled.form`
@@ -62,7 +62,7 @@ export default function WalletArea() {
 
   const nftInfo = useMemo(() => parseNft(nftUrl), [nftUrl]);
 
-  useEffect(() => {
+  const verifyNft = useCallback(() => {
     setNftValid(undefined);
     if (isAddressVerified && nftInfo) {
       handlePromise(
@@ -108,6 +108,8 @@ export default function WalletArea() {
       );
     }
   }, [address, isAddressVerified, nftInfo]);
+
+  useEffect(() => verifyNft(), [verifyNft]);
 
   const getMetaMaskButton = () => {
     if (status === 'notConnected') {
@@ -205,7 +207,10 @@ export default function WalletArea() {
                     {isNftValid === true ? (
                       <FaCheckCircle tw="text-green-500" />
                     ) : isNftValid === false ? (
-                      <FaTimesCircle tw="text-red-500" />
+                      <FaTimesCircle
+                        tw="text-red-500 cursor-pointer"
+                        onClick={() => verifyNft()}
+                      />
                     ) : (
                       <FaCircleNotch tw="opacity-60 animate-spin [animation-duration: 2s]" />
                     )}
