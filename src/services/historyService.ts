@@ -18,6 +18,13 @@ export interface Nft {
   tokenType: TokenType;
 }
 
+export interface PublicNft {
+  nft: Nft;
+  wallet: String;
+  principal: string;
+  time: Date;
+}
+
 export const PUBLIC_HISTORY_STORE = makeObservable<
   PublicEvent[] | null | undefined
 >();
@@ -33,53 +40,51 @@ export function unwrapNft(nft: CandidNft): Nft {
   };
 }
 
-USER_STORE.callAndSubscribe((user) => {
+USER_STORE.callAndSubscribe(refreshHistory);
+
+export async function refreshHistory() {
+  const user = USER_STORE.get();
   if (!user) {
     PUBLIC_HISTORY_STORE.set(null);
     return;
   }
-  getBackend()
-    .getPublicHistory()
-    .then((history) => PUBLIC_HISTORY_STORE.set(history))
-    .catch((err) => {
-      handleError(err, 'Error while fetching canister history!');
-      return null;
-    });
-});
+  PUBLIC_HISTORY_STORE.set(
+    await getBackend()
+      .getPublicHistory()
+      .catch((err) => {
+        handleError(err, 'Error while fetching canister history!');
+        return null;
+      }),
+  );
+  NFT_LIST_STORE.set(
+    await getBackend()
+      .getNfts()
+      .then((nfts) => nfts.map(unwrapNft))
+      .catch((err) => {
+        handleError(err, 'Error while fetching NFT list!');
+        return null;
+      }),
+  );
+}
 
-NFT_LIST_STORE.callAndSubscribe((user) => {
-  if (!user) {
-    NFT_LIST_STORE.set(null);
-    return;
-  }
-  getBackend()
-    .getNfts()
-    .then((nfts) => NFT_LIST_STORE.set(nfts.map(unwrapNft)))
-    .catch((err) => {
-      handleError(err, 'Error while fetching NFT list!');
-      return null;
-    });
-});
-
-export function usePublicNfts():
-  | { nft: Nft; principal: string; wallet: String; time: Date }[]
-  | null
-  | undefined {
+export function usePublicNfts(): PublicNft[] | null | undefined {
   const history = useObservableState(PUBLIC_HISTORY_STORE)[0];
   if (!history) {
     return history;
   }
-  const results = [];
+  const results: PublicNft[] = [];
   history?.forEach((history) => {
     if ('addNft' in history) {
       const event = history.addNft;
       results.push({
-        ...event,
         nft: unwrapNft(event.nft),
+        wallet: event.wallet,
+        principal: event.principal.toString(),
         time: new Date(Number(event.time)),
       });
     }
   });
+  return results;
 }
 
 export function useNfts(): Nft[] | null | undefined {

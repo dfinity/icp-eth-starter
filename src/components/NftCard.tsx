@@ -1,7 +1,7 @@
-import { Nft } from '../declarations/backend/backend.did';
-import { useNftMetadata } from '../services/alchemyService';
-import Loading from './utils/Loading';
 import 'twin.macro';
+import { useNftMetadata } from '../services/alchemyService';
+import { Nft } from '../services/historyService';
+import Loading from './utils/Loading';
 
 interface NftCardProps {
   nft: Nft;
