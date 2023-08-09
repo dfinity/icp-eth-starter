@@ -11,7 +11,11 @@ export default function NftList({ items }: NftListProps) {
     <div tw="space-y-3">
       {items.map((item, i) => (
         <div key={i}>
-          <NftCard nft={{ ...item.nft }} />
+          <NftCard
+            nft={{ ...item.nft }}
+            principal={item.principal}
+            time={item.time}
+          />
         </div>
       ))}
     </div>
