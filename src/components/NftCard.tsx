@@ -1,6 +1,7 @@
 import 'twin.macro';
 import { useNftMetadata } from '../services/alchemyService';
 import { Nft } from '../services/historyService';
+import { abbreviateAddress, abbreviatePrincipal } from '../utils/abbreviate';
 import Loading from './utils/Loading';
 
 interface NftCardProps {
@@ -11,6 +12,8 @@ interface NftCardProps {
 
 export default function NftCard({ nft, principal, time }: NftCardProps) {
   const [metadata] = useNftMetadata(nft.network, nft.contract, nft.tokenId);
+  // const breakpoint = useBreakpoint();
+  // const isMobile = breakpoint === 'xs';
 
   return (
     <div tw="p-5 bg-white rounded-full space-y-3 drop-shadow-2xl">
@@ -23,14 +26,14 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
               src={metadata.media[0].gateway}
             />
           )}
-          <div tw="space-y-2 text-sm">
+          <div tw="space-y-2 text-xs sm:text-sm">
             {!!metadata.title && (
-              <div tw="text-2xl sm:text-xl font-bold">{metadata.title}</div>
+              <div tw="text-base sm:text-xl font-bold">{metadata.title}</div>
             )}
             <div>
-              <div>{nft.owner}</div>
-              {!!principal && <div>{principal}</div>}
               {!!time && <div>{time.toLocaleString()}</div>}
+              <div>{abbreviateAddress(nft.owner)}</div>
+              {!!principal && <div>{abbreviatePrincipal(principal)}</div>}
             </div>
           </div>
         </div>

@@ -80,7 +80,7 @@ export function usePublicNfts(): VerifiedNft[] | null | undefined {
         nft: unwrapNft(event.nft),
         wallet: event.wallet,
         principal: event.principal.toString(),
-        time: new Date(Number(event.time)),
+        time: new Date(Number(event.time) / 1e6),
       });
     }
   });
