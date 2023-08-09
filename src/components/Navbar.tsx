@@ -61,7 +61,7 @@ export default function Navbar() {
           )}
           <div tw="flex-1 flex items-center">
             <NavItem to="/">Home</NavItem>
-            {!!user && <NavItem to="/submit">Submit</NavItem>}
+            {!!user && <NavItem to="/verify">Verify</NavItem>}
           </div>
           {isMobile || user ? (
             // <div tw="flex items-center">
