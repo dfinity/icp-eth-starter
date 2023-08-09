@@ -8,7 +8,7 @@ interface NftListProps {
 
 export default function NftList({ items }: NftListProps) {
   return (
-    <div tw="flex gap-3">
+    <div tw="flex flex-wrap [&>*]:(w-full md:w-auto) gap-3">
       {items.map((item, i) => (
         <div key={i}>
           <NftCard

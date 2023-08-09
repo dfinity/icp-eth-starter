@@ -17,7 +17,7 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
   // const isMobile = breakpoint === 'xs';
 
   return (
-    <div tw="p-5 pr-10 bg-white rounded-3xl space-y-3 drop-shadow-2xl">
+    <div tw="p-5 bg-white rounded-3xl space-y-3 drop-shadow-2xl">
       {metadata ? (
         <div tw="flex items-center gap-3">
           {!!metadata.media.length && (
