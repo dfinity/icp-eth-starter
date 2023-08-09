@@ -1,5 +1,5 @@
 import { Nft } from '../declarations/backend/backend.did';
-import { useNftMetadata } from '../services/nftService';
+import { useNftMetadata } from '../services/alchemyService';
 import Loading from './utils/Loading';
 import 'twin.macro';
 
