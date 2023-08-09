@@ -17,6 +17,8 @@ import { getBackend } from '../services/backendService';
 import useIdentity, { logout } from '../services/userService';
 import { handleError, handlePromise } from '../utils/handlers';
 import { LoginAreaButton } from './LoginArea';
+import { usePublicNfts } from '../services/historyService';
+import NftList from './NftList';
 
 const FormContainer = styled.form`
   input[type='text'],
@@ -34,6 +36,7 @@ export default function WalletArea() {
   const [nftUrl, setNftUrl] = useSessionStorage('ic-eth.nft-url', '');
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
   const [isNftValid, setNftValid] = useState<boolean>();
+  const nfts = usePublicNfts();
 
   const address = (ethereum?.selectedAddress as string | undefined) || '';
   const [isAddressVerified, verifyAddress] = useAddressVerified(
@@ -245,6 +248,13 @@ export default function WalletArea() {
               </a>
             )}
           </FormContainer>
+          {!!nfts && (
+            <>
+              <hr tw="my-5" />
+              <div tw="text-xl text-gray-600 mb-3">Previously verified:</div>
+              <NftList items={nfts} />
+            </>
+          )}
         </>
       )}
     </>
