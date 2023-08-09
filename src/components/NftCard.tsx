@@ -3,6 +3,7 @@ import { useNftMetadata } from '../services/alchemyService';
 import { Nft } from '../services/historyService';
 import { abbreviateAddress, abbreviatePrincipal } from '../utils/abbreviate';
 import Loading from './utils/Loading';
+import Tooltip from './utils/Tooltip';
 
 interface NftCardProps {
   nft: Nft;
@@ -16,12 +17,12 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
   // const isMobile = breakpoint === 'xs';
 
   return (
-    <div tw="p-5 bg-white rounded-full space-y-3 drop-shadow-2xl">
+    <div tw="p-5 pr-10 bg-white rounded-3xl space-y-3 drop-shadow-2xl">
       {metadata ? (
         <div tw="flex items-center gap-3">
           {!!metadata.media.length && (
             <img
-              tw="w-full rounded-full max-w-[100px]"
+              tw="w-full rounded-2xl max-w-[100px]"
               alt="NFT preview"
               src={metadata.media[0].gateway}
             />
@@ -33,7 +34,11 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
             <div>
               {!!time && <div>{time.toLocaleString()}</div>}
               <div>{abbreviateAddress(nft.owner)}</div>
-              {!!principal && <div>{abbreviatePrincipal(principal)}</div>}
+              {!!principal && (
+                <Tooltip content={principal}>
+                  <>{abbreviatePrincipal(principal)}</>
+                </Tooltip>
+              )}
             </div>
           </div>
         </div>
