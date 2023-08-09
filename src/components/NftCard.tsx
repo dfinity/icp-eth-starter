@@ -15,11 +15,20 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
   // const breakpoint = useBreakpoint();
   // const isMobile = breakpoint === 'xs';
 
+  const url = `https://${
+    nft.network === 'sepolia' ? 'testnets.' : ''
+  }opensea.io/assets/${nft.network}/${nft.contract}/${nft.tokenId}`;
+
   if (!metadata) {
     return null;
   }
   return (
-    <div tw="p-5 bg-white rounded-3xl space-y-3 drop-shadow-2xl">
+    <a
+      tw="p-5 bg-white rounded-3xl space-y-3 drop-shadow-2xl cursor-pointer block"
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+    >
       <div tw="flex items-center gap-3">
         {!!metadata.media.length && (
           <img
@@ -43,6 +52,6 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </a>
   );
 }
