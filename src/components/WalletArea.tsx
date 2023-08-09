@@ -17,7 +17,7 @@ import { getBackend } from '../services/backendService';
 import useIdentity, { logout } from '../services/userService';
 import { handleError, handlePromise } from '../utils/handlers';
 import { LoginAreaButton } from './LoginArea';
-import { usePublicNfts } from '../services/historyService';
+import { refreshHistory, usePublicNfts } from '../services/historyService';
 import NftList from './NftList';
 
 const FormContainer = styled.form`
@@ -83,17 +83,19 @@ export default function WalletArea() {
               if (!tokenType) {
                 throw new Error(`Unknown token type: ${nft.tokenType}`);
               }
-              setNftValid(
-                await getBackend().addNfts([
-                  {
-                    contract: nftInfo.contract,
-                    network: nftInfo.network,
-                    tokenType,
-                    tokenId: BigInt(nftInfo.tokenId),
-                    owner: address,
-                  },
-                ]),
-              );
+              const valid = await getBackend().addNfts([
+                {
+                  contract: nftInfo.contract,
+                  network: nftInfo.network,
+                  tokenType,
+                  tokenId: BigInt(nftInfo.tokenId),
+                  owner: address,
+                },
+              ]);
+              setNftValid(valid);
+              if (valid) {
+                refreshHistory();
+              }
             } catch (err) {
               handleError(err, 'Error while verifying NFT ownership!');
               setNftValid(false);
