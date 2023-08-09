@@ -20,7 +20,7 @@ export default function useRefresh<T>(
     return value;
   }, [refresh]);
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    handleRefresh();
+  }, [handleRefresh]);
   return [value, handleRefresh];
 }

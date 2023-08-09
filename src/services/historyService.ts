@@ -18,7 +18,7 @@ export interface Nft {
   tokenType: TokenType;
 }
 
-export interface PublicNft {
+export interface VerifiedNft {
   nft: Nft;
   wallet: String;
   principal: string;
@@ -67,12 +67,12 @@ export async function refreshHistory() {
   );
 }
 
-export function usePublicNfts(): PublicNft[] | null | undefined {
+export function usePublicNfts(): VerifiedNft[] | null | undefined {
   const history = useObservableState(PUBLIC_HISTORY_STORE)[0];
   if (!history) {
     return history;
   }
-  const results: PublicNft[] = [];
+  const results: VerifiedNft[] = [];
   history?.forEach((history) => {
     if ('addNft' in history) {
       const event = history.addNft;
