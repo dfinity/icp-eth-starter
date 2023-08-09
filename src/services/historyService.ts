@@ -43,11 +43,6 @@ export function unwrapNft(nft: CandidNft): Nft {
 USER_STORE.callAndSubscribe(refreshHistory);
 
 export async function refreshHistory() {
-  const user = USER_STORE.get();
-  if (!user) {
-    PUBLIC_HISTORY_STORE.set(null);
-    return;
-  }
   PUBLIC_HISTORY_STORE.set(
     await getBackend()
       .getPublicHistory()
@@ -57,13 +52,15 @@ export async function refreshHistory() {
       }),
   );
   NFT_LIST_STORE.set(
-    await getBackend()
-      .getNfts()
-      .then((nfts) => nfts.map(unwrapNft))
-      .catch((err) => {
-        handleError(err, 'Error while fetching NFT list!');
-        return null;
-      }),
+    USER_STORE.get()
+      ? await getBackend()
+          .getNfts()
+          .then((nfts) => nfts.map(unwrapNft))
+          .catch((err) => {
+            handleError(err, 'Error while fetching NFT list!');
+            return null;
+          })
+      : null,
   );
 }
 
