@@ -1,12 +1,11 @@
 import { ReactNode } from 'react';
-import { FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import tw from 'twin.macro';
 // @ts-ignore
 import icpLogo from '../assets/icp.png?webp&height=48';
 import { useBreakpoint } from '../hooks/utils/useBreakpoint';
 import useIdentity from '../services/userService';
-import LoginArea, { LoginAreaButton } from './LoginArea';
+import LoginArea from './LoginArea';
 import Tooltip from './utils/Tooltip';
 
 interface NavItemProps {
@@ -62,17 +61,19 @@ export default function Navbar() {
           )}
           <div tw="flex-1 flex items-center">
             <NavItem to="/">Home</NavItem>
+            {!!user && <NavItem to="/verify">Verify</NavItem>}
           </div>
           {isMobile || user ? (
-            <div tw="flex items-center">
-              <Tooltip content="Profile">
-                <Link to="/profile" tw="flex items-center">
-                  <LoginAreaButton>
-                    {user ? <FaUserCircle /> : <FaRegUserCircle />}
-                  </LoginAreaButton>
-                </Link>
-              </Tooltip>
-            </div>
+            // <div tw="flex items-center">
+            //   <Tooltip content="Profile">
+            //     <Link to="/profile" tw="flex items-center">
+            //       <LoginAreaButton>
+            //         {user ? <FaUserCircle /> : <FaRegUserCircle />}
+            //       </LoginAreaButton>
+            //     </Link>
+            //   </Tooltip>
+            // </div>
+            <></>
           ) : (
             <LoginArea />
           )}

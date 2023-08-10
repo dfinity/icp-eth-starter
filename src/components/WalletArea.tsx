@@ -1,6 +1,6 @@
 import { type Nft } from 'alchemy-sdk';
 import { useMetaMask } from 'metamask-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FaCheckCircle,
   FaCircleNotch,
@@ -14,9 +14,11 @@ import { useSessionStorage } from '../hooks/utils/useLocalStorage';
 import { useAddressVerified } from '../services/addressService';
 import { getAlchemy } from '../services/alchemyService';
 import { getBackend } from '../services/backendService';
+import { refreshHistory, usePublicNfts } from '../services/historyService';
 import useIdentity, { logout } from '../services/userService';
 import { handleError, handlePromise } from '../utils/handlers';
 import { LoginAreaButton } from './LoginArea';
+import NftList from './NftList';
 
 const FormContainer = styled.form`
   input[type='text'],
@@ -34,6 +36,7 @@ export default function WalletArea() {
   const [nftUrl, setNftUrl] = useSessionStorage('ic-eth.nft-url', '');
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
   const [isNftValid, setNftValid] = useState<boolean>();
+  const nfts = usePublicNfts();
 
   const address = (ethereum?.selectedAddress as string | undefined) || '';
   const [isAddressVerified, verifyAddress] = useAddressVerified(
@@ -59,7 +62,7 @@ export default function WalletArea() {
 
   const nftInfo = useMemo(() => parseNft(nftUrl), [nftUrl]);
 
-  useEffect(() => {
+  const verifyNft = useCallback(() => {
     setNftValid(undefined);
     if (isAddressVerified && nftInfo) {
       handlePromise(
@@ -80,17 +83,19 @@ export default function WalletArea() {
               if (!tokenType) {
                 throw new Error(`Unknown token type: ${nft.tokenType}`);
               }
-              setNftValid(
-                await getBackend().addNfts([
-                  {
-                    contract: nftInfo.contract,
-                    network: nftInfo.network,
-                    tokenType,
-                    tokenId: BigInt(nftInfo.tokenId),
-                    owner: address,
-                  },
-                ]),
-              );
+              const valid = await getBackend().addNfts([
+                {
+                  contract: nftInfo.contract,
+                  network: nftInfo.network,
+                  tokenType,
+                  tokenId: BigInt(nftInfo.tokenId),
+                  owner: address,
+                },
+              ]);
+              setNftValid(valid);
+              if (valid) {
+                refreshHistory();
+              }
             } catch (err) {
               handleError(err, 'Error while verifying NFT ownership!');
               setNftValid(false);
@@ -103,6 +108,8 @@ export default function WalletArea() {
       );
     }
   }, [address, isAddressVerified, nftInfo]);
+
+  useEffect(() => verifyNft(), [verifyNft]);
 
   const getMetaMaskButton = () => {
     if (status === 'notConnected') {
@@ -200,7 +207,10 @@ export default function WalletArea() {
                     {isNftValid === true ? (
                       <FaCheckCircle tw="text-green-500" />
                     ) : isNftValid === false ? (
-                      <FaTimesCircle tw="text-red-500" />
+                      <FaTimesCircle
+                        tw="text-red-500 cursor-pointer"
+                        onClick={() => verifyNft()}
+                      />
                     ) : (
                       <FaCircleNotch tw="opacity-60 animate-spin [animation-duration: 2s]" />
                     )}
@@ -245,6 +255,13 @@ export default function WalletArea() {
               </a>
             )}
           </FormContainer>
+          {!!nfts && (
+            <>
+              <hr tw="my-5" />
+              <div tw="text-xl text-gray-600 mb-3">Previously verified:</div>
+              <NftList items={nfts} />
+            </>
+          )}
         </>
       )}
     </>
