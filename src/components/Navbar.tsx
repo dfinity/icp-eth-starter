@@ -63,20 +63,7 @@ export default function Navbar() {
             <NavItem to="/">Home</NavItem>
             {!!user && <NavItem to="/verify">Verify</NavItem>}
           </div>
-          {user ? (
-            // <div tw="flex items-center">
-            //   <Tooltip content="Profile">
-            //     <Link to="/profile" tw="flex items-center">
-            //       <LoginAreaButton>
-            //         {user ? <FaUserCircle /> : <FaRegUserCircle />}
-            //       </LoginAreaButton>
-            //     </Link>
-            //   </Tooltip>
-            // </div>
-            <></>
-          ) : (
-            <LoginArea />
-          )}
+          {!user && <LoginArea />}
         </div>
       </div>
     </>
