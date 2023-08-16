@@ -62,7 +62,21 @@ export default function WalletArea() {
 
   const parseEtherscanNft = (nftUrl: string) => {
     const groups =
-      /^https:\/\/(sepolia\.)?etherscan\.io\/token\/(\w+)\?a=(\d+)/.exec(
+      /^https:\/\/(?:(\w+)\.)?etherscan\.io\/nft\/(\w+)\/(\d+)/.exec(nftUrl);
+    if (!groups) {
+      return;
+    }
+    const [, network, contract, tokenId] = groups;
+    return {
+      network: network || 'mainnet',
+      contract,
+      tokenId: Number(tokenId),
+    };
+  };
+
+  const parseEtherscanToken = (nftUrl: string) => {
+    const groups =
+      /^https:\/\/(?:(\w+)\.)?etherscan\.io\/token\/(\w+)\?a=(\d+)/.exec(
         nftUrl,
       );
     if (!groups) {
@@ -77,7 +91,10 @@ export default function WalletArea() {
   };
 
   const nftInfo = useMemo(
-    () => parseOpenSeaNft(nftUrl) || parseEtherscanNft(nftUrl),
+    () =>
+      parseOpenSeaNft(nftUrl) ||
+      parseEtherscanNft(nftUrl) ||
+      parseEtherscanToken(nftUrl),
     [nftUrl],
   );
 
