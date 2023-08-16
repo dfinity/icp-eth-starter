@@ -43,7 +43,7 @@ Here is our recommended way to acquire tokens and NFTs on the Sepolia testnet:
 - Navigate to MetaMask's [E2E Test Dapp](https://metamask.github.io/test-dapp/)
   - Connect your wallet
   - Scroll down to the "NFTs" section
-  - Press "Deploy" and then "Mint"
+  - Press "Deploy" and then "Mint" (may take a few seconds)
   - Press "Watch all NFTs" and in the MetaMask prompt, click the link with text "Test Dapp NFTs #1"
   - In the bottom-right of the page (under "TokenID"), press "#1" to view your newly minted NFT
   - Copy / paste the URL into the [IC 🔗 ETH demo project](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/verify) to verify that you are the owner of the NFT. 
