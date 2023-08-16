@@ -33,7 +33,7 @@ fn get_rpc_endpoint(network: &str) -> &'static str {
         "mainnet" => "https://cloudflare-eth.com/v1/mainnet",
         "goerli" => "https://ethereum-goerli.publicnode.com",
         "sepolia" => "https://rpc.sepolia.org",
-        _ => panic!("Unknown network: {}", network),
+        _ => panic!("Unsupported network: {}", network),
     }
 }
 
