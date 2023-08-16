@@ -26,6 +26,7 @@ fn next_id() -> u64 {
 }
 
 const HTTP_CYCLES: u128 = 100_000_000;
+const MAX_RESPONSE_BYTES: u64 = 2048;
 
 fn get_rpc_endpoint(network: &str) -> &'static str {
     match network {
@@ -60,7 +61,6 @@ pub async fn erc721_owner_of(
     nft_contract_address: String,
     token_id: u64,
 ) -> String {
-    let max_response_bytes = 2048;
     let service_url = get_rpc_endpoint(&network).to_string();
 
     #[allow(deprecated)]
@@ -117,7 +117,7 @@ pub async fn erc721_owner_of(
     ];
     let request = CanisterHttpRequestArgument {
         url: service_url,
-        max_response_bytes: Some(max_response_bytes),
+        max_response_bytes: Some(MAX_RESPONSE_BYTES),
         method: HttpMethod::POST,
         headers: request_headers,
         body: Some(json_rpc_payload.as_bytes().to_vec()),
@@ -158,7 +158,6 @@ pub async fn erc1155_balance_of(
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
-    let max_response_bytes = 2048;
     let service_url = get_rpc_endpoint(&network).to_string();
 
     #[allow(deprecated)]
@@ -225,7 +224,7 @@ pub async fn erc1155_balance_of(
     ];
     let request = CanisterHttpRequestArgument {
         url: service_url,
-        max_response_bytes: Some(max_response_bytes),
+        max_response_bytes: Some(MAX_RESPONSE_BYTES),
         method: HttpMethod::POST,
         headers: request_headers,
         body: Some(json_rpc_payload.as_bytes().to_vec()),
