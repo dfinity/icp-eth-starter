@@ -29,8 +29,10 @@ const HTTP_CYCLES: u128 = 100_000_000;
 
 fn get_rpc_endpoint(network: &str) -> &'static str {
     match network {
+        "mainnet" => "https://cloudflare-eth.com/v1/mainnet",
+        "goerli" => "https://ethereum-goerli.publicnode.com",
         "sepolia" => "https://rpc.sepolia.org",
-        _ => "https://cloudflare-eth.com",
+        _ => panic!("Unknown network: {}", network),
     }
 }
 
