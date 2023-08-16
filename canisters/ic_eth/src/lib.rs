@@ -8,7 +8,7 @@ use ethers_core::{
 use hex::FromHexError;
 use ic_cdk::api::management_canister::http_request::{
     http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
-    TransformContext, HttpResponse, TransformArgs,
+    HttpResponse, TransformArgs, TransformContext,
 };
 use serde::{Deserialize, Serialize};
 
@@ -26,6 +26,16 @@ fn next_id() -> u64 {
 }
 
 const HTTP_CYCLES: u128 = 100_000_000;
+const MAX_RESPONSE_BYTES: u64 = 2048;
+
+fn get_rpc_endpoint(network: &str) -> &'static str {
+    match network {
+        "mainnet" => "https://cloudflare-eth.com/v1/mainnet",
+        "goerli" => "https://ethereum-goerli.publicnode.com",
+        "sepolia" => "https://rpc.sepolia.org",
+        _ => panic!("Unknown network: {}", network),
+    }
+}
 
 #[ic_cdk_macros::query]
 #[candid_method]
@@ -51,13 +61,7 @@ pub async fn erc721_owner_of(
     nft_contract_address: String,
     token_id: u64,
 ) -> String {
-    let max_response_bytes = 2048;
-    let service_url = match network.as_str() {
-        "mainnet" => "https://cloudflare-eth.com",
-        "sepolia" => "https://rpc.sepolia.org",
-        _ => panic!("Unknown network: {}", network),
-    }
-    .to_string();
+    let service_url = get_rpc_endpoint(&network).to_string();
 
     #[allow(deprecated)]
     let f = abi::Function {
@@ -113,7 +117,7 @@ pub async fn erc721_owner_of(
     ];
     let request = CanisterHttpRequestArgument {
         url: service_url,
-        max_response_bytes: Some(max_response_bytes),
+        max_response_bytes: Some(MAX_RESPONSE_BYTES),
         method: HttpMethod::POST,
         headers: request_headers,
         body: Some(json_rpc_payload.as_bytes().to_vec()),
@@ -154,13 +158,7 @@ pub async fn erc1155_balance_of(
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
-    let max_response_bytes = 2048;
-    let service_url = match network.as_str() {
-        "mainnet" => "https://cloudflare-eth.com",
-        "sepolia" => "https://rpc.sepolia.org",
-        _ => panic!("Unknown network: {}", network),
-    }
-    .to_string();
+    let service_url = get_rpc_endpoint(&network).to_string();
 
     #[allow(deprecated)]
     let f = abi::Function {
@@ -226,7 +224,7 @@ pub async fn erc1155_balance_of(
     ];
     let request = CanisterHttpRequestArgument {
         url: service_url,
-        max_response_bytes: Some(max_response_bytes),
+        max_response_bytes: Some(MAX_RESPONSE_BYTES),
         method: HttpMethod::POST,
         headers: request_headers,
         body: Some(json_rpc_payload.as_bytes().to_vec()),
