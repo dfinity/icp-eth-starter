@@ -63,7 +63,7 @@ export default function Navbar() {
             <NavItem to="/">Home</NavItem>
             {!!user && <NavItem to="/verify">Verify</NavItem>}
           </div>
-          {isMobile || user ? (
+          {user ? (
             // <div tw="flex items-center">
             //   <Tooltip content="Profile">
             //     <Link to="/profile" tw="flex items-center">
