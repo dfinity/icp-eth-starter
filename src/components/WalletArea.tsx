@@ -44,9 +44,9 @@ export default function WalletArea() {
     ethereum,
   );
 
-  const parseNft = (nftUrl: string) => {
+  const parseOpenSeaNft = (nftUrl: string) => {
     const groups =
-      /https:\/\/(testnets\.)?opensea.io\/assets\/(\w+)\/(\w+)\/(\d+)/.exec(
+      /^https:\/\/(testnets\.)?opensea\.io\/assets\/(\w+)\/(\w+)\/(\d+)/.exec(
         nftUrl,
       );
     if (!groups) {
@@ -60,7 +60,26 @@ export default function WalletArea() {
     };
   };
 
-  const nftInfo = useMemo(() => parseNft(nftUrl), [nftUrl]);
+  const parseEtherscanNft = (nftUrl: string) => {
+    const groups =
+      /^https:\/\/(sepolia\.)?etherscan\.io\/token\/(\w+)\?a=(\d+)/.exec(
+        nftUrl,
+      );
+    if (!groups) {
+      return;
+    }
+    const [, network, contract, tokenId] = groups;
+    return {
+      network: network || 'mainnet',
+      contract,
+      tokenId: Number(tokenId),
+    };
+  };
+
+  const nftInfo = useMemo(
+    () => parseOpenSeaNft(nftUrl) || parseEtherscanNft(nftUrl),
+    [nftUrl],
+  );
 
   const verifyNft = useCallback(() => {
     setNftValid(undefined);
@@ -201,7 +220,7 @@ export default function WalletArea() {
           <FormContainer>
             <label>
               <div tw="flex items-center gap-3 text-xl text-gray-600 mb-1">
-                <div>OpenSea NFT:</div>
+                <div>OpenSea or Etherscan URL:</div>
                 {!!nftInfo && (
                   <div tw="text-base">
                     {isNftValid === true ? (
@@ -228,11 +247,16 @@ export default function WalletArea() {
                   ]
                 }
                 type="text"
-                placeholder="Paste URL here"
+                placeholder="Paste NFT URL here"
                 value={nftUrl}
                 onChange={(e) => setNftUrl(e.target.value)}
               />
             </label>
+            {!!nftUrl && !nftInfo && (
+              <div tw="text-red-600 font-bold">
+                Please enter a valid token URL
+              </div>
+            )}
             {nftInfo && nftResult ? (
               <>
                 {'nft' in nftResult && (
@@ -241,7 +265,7 @@ export default function WalletArea() {
                   </div>
                 )}
                 {'err' in nftResult && (
-                  <div tw="text-red-600">{nftResult.err}</div>
+                  <div tw="text-red-600 font-bold">{nftResult.err}</div>
                 )}
               </>
             ) : (
@@ -251,7 +275,7 @@ export default function WalletArea() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Account page
+                OpenSea account page
               </a>
             )}
           </FormContainer>
