@@ -32,6 +32,24 @@ npm start # Start the development server
 
 When ready, run `dfx deploy` to build and deploy your application.
 
+## Ethereum Networks
+
+This starter project supports the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) and [Goerli](https://goerli.net/) testnets in addition to the Ethereum mainnet. 
+
+Here is our recommended way to acquire Sepolia testnet tokens and NFTs:
+
+- Install [MetaMask](https://metamask.io/) and create a new wallet for testing purposes
+- Fund your wallet using the [Sepolia Faucet](https://sepoliafaucet.com/) (requires signing up for an [Alchemy](https://www.alchemy.com/) account)
+- Navigate to MetaMask's [E2E Test Dapp](https://metamask.github.io/test-dapp/)
+  - Connect your wallet
+  - Scroll down to the "NFTs" section
+  - Press "Deploy" -> "Mint"
+  - Press "Watch NFT 1" and in the MetaMask prompt, click the link with text "Test Dapp NFTs #1"
+  - In the bottom-right of the page (under "TokenID"), press "#1" to view your newly minted NFT
+  - Copy / paste the URL into the [IC 🔗 ETH demo project](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/verify) to verify that you are the owner of the NFT. 
+
+We encourage using the [Sepolia Faucet](https://sepoliafaucet.com/) to fund a wallet and then deploy mint an NFT using 
+
 ## Technology Stack
 
 **Front-end Webapp:**
