@@ -32,9 +32,9 @@ npm start # Start the development server
 
 When ready, run `dfx deploy` to build and deploy your application.
 
-## Build with Ethereum
+## Ethereum Testnets
 
-This starter project supports the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) and [Goerli](https://goerli.net/) testnets in addition to the Ethereum mainnet. 
+This starter project makes it possible for an IC canister to verify the ownership of Ethereum NFTs. Both the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) and [Goerli](https://goerli.net/) testnets are supported in addition to the Ethereum mainnet. 
 
 Here is our recommended way to acquire tokens and NFTs on the Sepolia testnet:
 
