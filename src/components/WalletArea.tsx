@@ -98,6 +98,12 @@ export default function WalletArea() {
     [nftUrl],
   );
 
+  const isCollectionUrl =
+    !nftInfo &&
+    (/^https:\/\/(testnets\.)?opensea\.io\/assets\/(\w+)\/(\w+)/.test(nftUrl) ||
+      /^https:\/\/(?:(\w+)\.)?etherscan\.io\/nft\/(\w+)/.test(nftUrl) ||
+      /^https:\/\/(?:(\w+)\.)?etherscan\.io\/token\/(\w+)/.test(nftUrl));
+
   const verifyNft = useCallback(() => {
     setNftValid(undefined);
     if (isAddressVerified && nftInfo) {
@@ -271,7 +277,9 @@ export default function WalletArea() {
             </label>
             {!!nftUrl && !nftInfo && (
               <div tw="text-red-600 font-bold">
-                Please enter a valid token URL
+                {isCollectionUrl
+                  ? 'This is an NFT collection; please enter the URL of an individual NFT'
+                  : 'Please enter a valid token URL'}
               </div>
             )}
             {nftInfo && nftResult ? (
