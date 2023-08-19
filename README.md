@@ -34,7 +34,7 @@ When ready, run `dfx deploy --network ic` to deploy your application to the Inte
 
 ## Ethereum Testnets
 
-This starter project makes it possible for an IC canister to verify the ownership of Ethereum NFTs. Both the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) and [Goerli](https://goerli.net/) testnets are supported in addition to the Ethereum mainnet. 
+This advanced starter project makes it possible for an IC canister to verify the ownership of Ethereum NFTs. Both the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) and [Goerli](https://goerli.net/) testnets are supported in addition to the Ethereum mainnet. 
 
 Here is our recommended way to acquire tokens and NFTs on the Sepolia testnet:
 
