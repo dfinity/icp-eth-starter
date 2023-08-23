@@ -13,21 +13,8 @@ candid = "0.9"
 ic-cdk = "0.10"
 ic-cdk-macros = "0.7"
 url = "2.3"
-# ic-metrics-encoder = "1.1"
-# ic-stable-structures = "0.5"
-# ic-canister-log = { git = "https://github.com/dfinity/ic", rev = "d7c7abd7bdb0620635acd1c145e870a7da86a5e3" }
-# ic-canisters-http-types = { git = "https://github.com/dfinity/ic", rev = "d7c7abd7bdb0620635acd1c145e870a7da86a5e3" }
-# ic-nervous-system-common = { git = "https://github.com/dfinity/ic", rev = "d7c7abd7bdb0620635acd1c145e870a7da86a5e3" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 hex = "0.4"
-# sha3 = "0.10"
-# libsecp256k1 = "0.7"
-# secp256k1 = { version = "0.27", features = ["bitcoin-hashes", "recovery"] }
-# bitcoin_hashes = "0.12"
 ethers-core = "2.0"
-# web3 = { version = "0.19", default_features = false }
-# k256 = "0.13"
-# ecdsa = "0.16"
 getrandom = { version = "0.2", features = ["custom"] }
-# ethers = "2.0"
