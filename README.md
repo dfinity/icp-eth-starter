@@ -1,8 +1,10 @@
-# IC 🔗 ETH
+# IC 🔗 ETH (Beta)
 
 > #### Interact with the [Ethereum](https://ethereum.org/) blockchain from the [Internet Computer](https://internetcomputer.org/).
 
 ---
+
+This starter project is currently in early beta testing. Please feel free to [open an issue](https://github.com/dfinity/ic-eth-starter/issues) to report a bug or request a feature. Thanks!
 
 ### Get started directly in your browser:
 
