@@ -3,14 +3,20 @@ use std::str::FromStr;
 use candid::candid_method;
 use eth_rpc::call_eth;
 use ethers_core::{
-    abi::{self, Token},
+    abi::{self, Contract, Token},
     types::{Address, RecoveryMessage, Signature},
 };
 use ic_cdk::api::management_canister::http_request::{HttpHeader, HttpResponse, TransformArgs};
 use util::from_hex;
 
-mod util;
 mod eth_rpc;
+mod util;
+
+// Load relevant ABIs (Ethereum smart contract equivalent of Candid interfaces)
+thread_local! {
+    static ERC_721: Contract = include_abi!("../abi/erc721.json");
+    static ERC_1155: Contract = include_abi!("../abi/erc1155.json");
+}
 
 /// Verify an ECDSA signature (message signed by an Ethereum wallet).
 #[ic_cdk_macros::query]

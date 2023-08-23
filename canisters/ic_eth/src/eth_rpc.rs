@@ -9,15 +9,14 @@ use crate::util::to_hex;
 const HTTP_CYCLES: u128 = 100_000_000;
 const MAX_RESPONSE_BYTES: u64 = 2048;
 
+#[macro_export]
 macro_rules! include_abi {
-    ($file:expr $(,)?) => {
-        let abi_string = include_str!($file);
-        let contract = match $ethers_core::abi::Contract::load() {
-            Ok(c) => c,
-            Err(e) => panic!("Error loading ABI contract {:?}: {}", $file, e)
-        };
-
-    }
+    ($file:expr $(,)?) => {{
+        match serde_json::from_str::<ethers_core::abi::Contract>(include_str!($file)) {
+            Ok(contract) => contract,
+            Err(err) => panic!("Error loading ABI contract {:?}: {}", $file, err),
+        }
+    }};
 }
 
 thread_local! {
