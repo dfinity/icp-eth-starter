@@ -50,7 +50,6 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
         .is_ok()
 }
 
-
 /// Find the owner of an ERC-721 NFT by calling the Ethereum blockchain.
 #[ic_cdk_macros::update]
 #[candid_method]
