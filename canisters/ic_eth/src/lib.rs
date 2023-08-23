@@ -12,7 +12,7 @@ use util::from_hex;
 mod eth_rpc;
 mod util;
 
-// Load relevant ABIs (Ethereum smart contract equivalent of Candid interfaces)
+// Load relevant ABIs (Ethereum equivalent of Candid interfaces)
 thread_local! {
     static ERC_721: Contract = include_abi!("../abi/erc721.json");
     static ERC_1155: Contract = include_abi!("../abi/erc1155.json");
