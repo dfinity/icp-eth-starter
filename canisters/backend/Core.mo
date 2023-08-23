@@ -53,7 +53,6 @@ module {
       log.okWith(isOwned);
     };
 
-    // TODO: refactor to a predicate
     func isNftOwned_(caller : Principal, nft : Types.Nft.Nft) : async Bool {
       switch (state.hasWalletSignsPrincipal(nft.owner, caller)) {
         case (?_) {

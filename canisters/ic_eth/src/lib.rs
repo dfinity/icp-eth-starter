@@ -1,41 +1,16 @@
-use std::{cell::RefCell, str::FromStr};
+use std::str::FromStr;
 
 use candid::candid_method;
+use eth_rpc::call_eth;
 use ethers_core::{
     abi::{self, Token},
     types::{Address, RecoveryMessage, Signature},
 };
-use hex::FromHexError;
-use ic_cdk::api::management_canister::http_request::{
-    http_request as make_http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod,
-    HttpResponse, TransformArgs, TransformContext,
-};
-use serde::{Deserialize, Serialize};
+use ic_cdk::api::management_canister::http_request::{HttpHeader, HttpResponse, TransformArgs};
+use util::from_hex;
 
-thread_local! {
-    static NEXT_ID: RefCell<u64> = RefCell::default();
-}
-
-fn next_id() -> u64 {
-    NEXT_ID.with(|next_id| {
-        let mut next_id = next_id.borrow_mut();
-        let id = *next_id;
-        *next_id = next_id.wrapping_add(1);
-        id
-    })
-}
-
-const HTTP_CYCLES: u128 = 100_000_000;
-const MAX_RESPONSE_BYTES: u64 = 2048;
-
-fn get_rpc_endpoint(network: &str) -> &'static str {
-    match network {
-        "mainnet" => "https://cloudflare-eth.com/v1/mainnet",
-        "goerli" => "https://ethereum-goerli.publicnode.com",
-        "sepolia" => "https://rpc.sepolia.org",
-        _ => panic!("Unsupported network: {}", network),
-    }
-}
+mod util;
+mod eth_rpc;
 
 /// Verify an ECDSA signature (message signed by an Ethereum wallet).
 #[ic_cdk_macros::query]
@@ -53,16 +28,11 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 /// Find the owner of an ERC-721 NFT by calling the Ethereum blockchain.
 #[ic_cdk_macros::update]
 #[candid_method]
-pub async fn erc721_owner_of(
-    network: String,
-    nft_contract_address: String,
-    token_id: u64,
-) -> String {
+pub async fn erc721_owner_of(network: String, contract_address: String, token_id: u64) -> String {
     // TODO: whitelist / access control
     // TODO: cycles estimation for HTTP outcalls
 
-    let service_url = get_rpc_endpoint(&network).to_string();
-
+    // `ownerOf()` function interface
     #[allow(deprecated)]
     let f = abi::Function {
         name: "ownerOf".to_string(),
@@ -80,69 +50,12 @@ pub async fn erc721_owner_of(
         state_mutability: abi::StateMutability::View,
     };
 
-    let data = to_hex(
-        &f.encode_input(&[abi::Token::Uint(token_id.into())])
-            .expect("encode_input"),
-    );
+    let data = f
+        .encode_input(&[abi::Token::Uint(token_id.into())])
+        .expect("encode_input");
 
-    let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
-        id: next_id(),
-        jsonrpc: "2.0".to_string(),
-        method: "eth_call".to_string(),
-        params: (
-            EthCallParams {
-                to: nft_contract_address,
-                data,
-            },
-            "latest".to_string(),
-        ),
-    })
-    .expect("Error while encoding JSON-RPC request");
-
-    let parsed_url = url::Url::parse(&service_url).expect("Service URL parse error");
-    let host = parsed_url
-        .host_str()
-        .expect("Invalid service URL host")
-        .to_string();
-
-    let request_headers = vec![
-        HttpHeader {
-            name: "Content-Type".to_string(),
-            value: "application/json".to_string(),
-        },
-        HttpHeader {
-            name: "Host".to_string(),
-            value: host.to_string(),
-        },
-    ];
-    let request = CanisterHttpRequestArgument {
-        url: service_url,
-        max_response_bytes: Some(MAX_RESPONSE_BYTES),
-        method: HttpMethod::POST,
-        headers: request_headers,
-        body: Some(json_rpc_payload.as_bytes().to_vec()),
-        transform: Some(TransformContext::from_name("transform".to_string(), vec![])),
-    };
-    let result = match make_http_request(request, HTTP_CYCLES).await {
-        Ok((r,)) => r,
-        Err((r, m)) => panic!("{:?} {:?}", r, m),
-    };
-    let json: JsonRpcResult =
-        serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
-            .expect("JSON was not well-formatted");
-    if let Some(err) = json.error {
-        panic!("JSON-RPC error code {}: {}", err.code, err.message);
-    }
-    let result = json.result.expect("Unexpected JSON response");
+    let result = call_eth(&network, contract_address, data).await;
     format!("0x{}", &result[result.len() - 40..]).to_string()
-}
-
-fn to_hex(data: &[u8]) -> String {
-    format!("0x{}", hex::encode(data))
-}
-
-fn from_hex(data: &str) -> Result<Vec<u8>, FromHexError> {
-    hex::decode(&data[2..])
 }
 
 /// Find the balance of an ERC-1155 token by calling the Ethereum blockchain.
@@ -150,7 +63,7 @@ fn from_hex(data: &str) -> Result<Vec<u8>, FromHexError> {
 #[candid_method]
 pub async fn erc1155_balance_of(
     network: String,
-    nft_contract_address: String,
+    contract_address: String,
     owner_address: String,
     token_id: u64,
 ) -> u64 {
@@ -159,8 +72,7 @@ pub async fn erc1155_balance_of(
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
-    let service_url = get_rpc_endpoint(&network).to_string();
-
+    // `balanceOf()` function interface
     #[allow(deprecated)]
     let f = abi::Function {
         name: "balanceOf".to_string(),
@@ -185,64 +97,14 @@ pub async fn erc1155_balance_of(
         state_mutability: abi::StateMutability::View,
     };
 
-    let data = to_hex(
-        &f.encode_input(&[
+    let data = f
+        .encode_input(&[
             abi::Token::Address(owner_address.into()),
             abi::Token::Uint(token_id.into()),
         ])
-        .expect("encode_input"),
-    );
+        .expect("encode_input");
 
-    let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
-        id: next_id(),
-        jsonrpc: "2.0".to_string(),
-        method: "eth_call".to_string(),
-        params: (
-            EthCallParams {
-                to: nft_contract_address,
-                data,
-            },
-            "latest".to_string(),
-        ),
-    })
-    .expect("Error while encoding JSON-RPC request");
-
-    let parsed_url = url::Url::parse(&service_url).expect("Service URL parse error");
-    let host = parsed_url
-        .host_str()
-        .expect("Invalid service URL host")
-        .to_string();
-
-    let request_headers = vec![
-        HttpHeader {
-            name: "Content-Type".to_string(),
-            value: "application/json".to_string(),
-        },
-        HttpHeader {
-            name: "Host".to_string(),
-            value: host.to_string(),
-        },
-    ];
-    let request = CanisterHttpRequestArgument {
-        url: service_url,
-        max_response_bytes: Some(MAX_RESPONSE_BYTES),
-        method: HttpMethod::POST,
-        headers: request_headers,
-        body: Some(json_rpc_payload.as_bytes().to_vec()),
-        transform: Some(TransformContext::from_name("transform".to_string(), vec![])),
-    };
-    let result = match make_http_request(request, HTTP_CYCLES).await {
-        Ok((r,)) => r,
-        Err((r, m)) => panic!("{:?} {:?}", r, m),
-    };
-
-    let json: JsonRpcResult =
-        serde_json::from_str(std::str::from_utf8(&result.body).expect("utf8"))
-            .expect("JSON was not well-formatted");
-    if let Some(err) = json.error {
-        panic!("JSON-RPC error code {}: {}", err.code, err.message);
-    }
-    let result = json.result.expect("Unexpected JSON response");
+    let result = call_eth(&network, contract_address, data).await;
     match f
         .decode_output(&from_hex(&result).expect("decode_hex"))
         .expect("Error while decoding JSON result")
@@ -253,14 +115,7 @@ pub async fn erc1155_balance_of(
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcRequest {
-    id: u64,
-    jsonrpc: String,
-    method: String,
-    params: (EthCallParams, String),
-}
-
+/// Required for HTTP outcalls.
 #[ic_cdk_macros::query(name = "transform")]
 fn transform(args: TransformArgs) -> HttpResponse {
     HttpResponse {
@@ -270,22 +125,4 @@ fn transform(args: TransformArgs) -> HttpResponse {
         // and will prevent consensus on the result.
         headers: Vec::<HttpHeader>::new(),
     }
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct EthCallParams {
-    to: String,
-    data: String,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcResult {
-    result: Option<String>,
-    error: Option<JsonRpcError>,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcError {
-    code: isize,
-    message: String,
 }
