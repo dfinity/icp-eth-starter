@@ -37,6 +37,7 @@ fn get_rpc_endpoint(network: &str) -> &'static str {
     }
 }
 
+/// Verify an ECDSA signature (message signed by an Ethereum wallet).
 #[ic_cdk_macros::query]
 #[candid_method]
 pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> bool {
@@ -49,11 +50,7 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
         .is_ok()
 }
 
-//
-// ?? whitelist / access control
-// ?? cycles estimation (for HTTP outcall to RPC mech).
-//
-
+/// Find the owner of an ERC-721 NFT by calling the Ethereum blockchain.
 #[ic_cdk_macros::update]
 #[candid_method]
 pub async fn erc721_owner_of(
@@ -61,6 +58,9 @@ pub async fn erc721_owner_of(
     nft_contract_address: String,
     token_id: u64,
 ) -> String {
+    // TODO: whitelist / access control
+    // TODO: cycles estimation for HTTP outcalls
+
     let service_url = get_rpc_endpoint(&network).to_string();
 
     #[allow(deprecated)]
@@ -145,6 +145,7 @@ fn from_hex(data: &str) -> Result<Vec<u8>, FromHexError> {
     hex::decode(&data[2..])
 }
 
+/// Find the balance of an ERC-1155 token by calling the Ethereum blockchain.
 #[ic_cdk_macros::update]
 #[candid_method]
 pub async fn erc1155_balance_of(
@@ -153,7 +154,7 @@ pub async fn erc1155_balance_of(
     owner_address: String,
     token_id: u64,
 ) -> u64 {
-    // to do -- use `candid::Nat`
+    // TODO: use `candid::Nat` in place of `u64`
 
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
