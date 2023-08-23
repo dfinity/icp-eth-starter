@@ -1,21 +1,21 @@
-use std::str::FromStr;
+use std::{rc::Rc, str::FromStr};
 
 use candid::candid_method;
-use eth_rpc::call_eth;
+use eth_rpc::call_contract;
 use ethers_core::{
     abi::{self, Contract, Token},
     types::{Address, RecoveryMessage, Signature},
 };
 use ic_cdk::api::management_canister::http_request::{HttpHeader, HttpResponse, TransformArgs};
-use util::from_hex;
+use util::to_hex;
 
 mod eth_rpc;
 mod util;
 
 // Load relevant ABIs (Ethereum equivalent of Candid interfaces)
 thread_local! {
-    static ERC_721: Contract = include_abi!("../abi/erc721.json");
-    static ERC_1155: Contract = include_abi!("../abi/erc1155.json");
+    static ERC_721: Rc<Contract> = Rc::new(include_abi!("../abi/erc721.json"));
+    static ERC_1155: Rc<Contract> = Rc::new(include_abi!("../abi/erc1155.json"));
 }
 
 /// Verify an ECDSA signature (message signed by an Ethereum wallet).
@@ -38,15 +38,18 @@ pub async fn erc721_owner_of(network: String, contract_address: String, token_id
     // TODO: whitelist / access control
     // TODO: cycles estimation for HTTP outcalls
 
-    let data = ERC_721.with(|abi| {
-        abi.function("ownerOf")
-            .unwrap()
-            .encode_input(&[abi::Token::Uint(token_id.into())])
-            .expect("Error while encoding input")
-    });
-
-    let result = call_eth(&network, contract_address, data).await;
-    format!("0x{}", &result[result.len() - 40..]).to_string()
+    let abi = ERC_721.with(Rc::clone);
+    let result = call_contract(
+        &network,
+        contract_address,
+        abi.function("ownerOf").unwrap(),
+        &[abi::Token::Uint(token_id.into())],
+    )
+    .await;
+    match result.get(0) {
+        Some(Token::Address(a)) => to_hex(a.as_bytes()),
+        _ => panic!("Unexpected JSON output"),
+    }
 }
 
 /// Find the balance of an ERC-1155 token by calling the Ethereum blockchain.
@@ -63,25 +66,21 @@ pub async fn erc1155_balance_of(
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
-    ERC_1155.with(|abi| {
-        let f = abi
-            .function("ownerOf")
-            .unwrap()
-            .encode_input(&[
-                abi::Token::Address(owner_address.into()),
-                abi::Token::Uint(token_id.into()),
-            ])
-            .expect("Error while encoding input");
-        let result = call_eth(&network, contract_address, data).await;
-        match f
-            .decode_output(&from_hex(&result).expect("decode_hex"))
-            .expect("Error while decoding JSON result")
-            .get(0)
-        {
-            Some(Token::Uint(n)) => n.as_u64(),
-            _ => panic!("Unexpected JSON output"),
-        }
-    })
+    let abi = ERC_721.with(Rc::clone);
+    let result = call_contract(
+        &network,
+        contract_address,
+        abi.function("ownerOf").unwrap(),
+        &[
+            abi::Token::Address(owner_address.into()),
+            abi::Token::Uint(token_id.into()),
+        ],
+    )
+    .await;
+    match result.get(0) {
+        Some(Token::Uint(n)) => n.as_u64(),
+        _ => panic!("Unexpected JSON output"),
+    }
 }
 
 /// Required for HTTP outcalls.

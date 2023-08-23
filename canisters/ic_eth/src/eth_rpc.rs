@@ -43,10 +43,10 @@ fn get_rpc_endpoint(network: &str) -> &'static str {
 }
 
 /// Call an Ethereum smart contract.
-pub async fn call_eth(
+pub async fn call_contract(
     network: &str,
     contract_address: String,
-    f: Function,
+    f: &Function,
     args: &[Token],
 ) -> Vec<Token> {
     let data = f
