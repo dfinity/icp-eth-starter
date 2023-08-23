@@ -37,7 +37,7 @@ fn get_rpc_endpoint(network: &str) -> &'static str {
     }
 }
 
-/// Verify an ECDSA signature (signed by an Ethereum wallet).
+/// Verify an ECDSA signature (message signed by an Ethereum wallet).
 #[ic_cdk_macros::query]
 #[candid_method]
 pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> bool {
