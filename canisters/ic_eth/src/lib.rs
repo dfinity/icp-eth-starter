@@ -38,27 +38,12 @@ pub async fn erc721_owner_of(network: String, contract_address: String, token_id
     // TODO: whitelist / access control
     // TODO: cycles estimation for HTTP outcalls
 
-    // `ownerOf()` function interface
-    #[allow(deprecated)]
-    let f = abi::Function {
-        name: "ownerOf".to_string(),
-        inputs: vec![abi::Param {
-            name: "_tokenId".to_string(),
-            kind: abi::ParamType::Uint(256),
-            internal_type: None,
-        }],
-        outputs: vec![abi::Param {
-            name: "".to_string(),
-            kind: abi::ParamType::Address,
-            internal_type: None,
-        }],
-        constant: None,
-        state_mutability: abi::StateMutability::View,
-    };
-
-    let data = f
-        .encode_input(&[abi::Token::Uint(token_id.into())])
-        .expect("encode_input");
+    let data = ERC_721.with(|abi| {
+        abi.function("ownerOf")
+            .unwrap()
+            .encode_input(&[abi::Token::Uint(token_id.into())])
+            .expect("Error while encoding input")
+    });
 
     let result = call_eth(&network, contract_address, data).await;
     format!("0x{}", &result[result.len() - 40..]).to_string()
@@ -78,47 +63,25 @@ pub async fn erc1155_balance_of(
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
-    // `balanceOf()` function interface
-    #[allow(deprecated)]
-    let f = abi::Function {
-        name: "balanceOf".to_string(),
-        inputs: vec![
-            abi::Param {
-                name: "account".to_string(),
-                kind: abi::ParamType::Address,
-                internal_type: None,
-            },
-            abi::Param {
-                name: "id".to_string(),
-                kind: abi::ParamType::Uint(256),
-                internal_type: None,
-            },
-        ],
-        outputs: vec![abi::Param {
-            name: "".to_string(),
-            kind: abi::ParamType::Uint(256),
-            internal_type: None,
-        }],
-        constant: None,
-        state_mutability: abi::StateMutability::View,
-    };
-
-    let data = f
-        .encode_input(&[
-            abi::Token::Address(owner_address.into()),
-            abi::Token::Uint(token_id.into()),
-        ])
-        .expect("encode_input");
-
-    let result = call_eth(&network, contract_address, data).await;
-    match f
-        .decode_output(&from_hex(&result).expect("decode_hex"))
-        .expect("Error while decoding JSON result")
-        .get(0)
-    {
-        Some(Token::Uint(n)) => n.as_u64(), // TODO: convert to `candid::Nat`
-        _ => panic!("Unexpected JSON output"),
-    }
+    ERC_1155.with(|abi| {
+        let f = abi
+            .function("ownerOf")
+            .unwrap()
+            .encode_input(&[
+                abi::Token::Address(owner_address.into()),
+                abi::Token::Uint(token_id.into()),
+            ])
+            .expect("Error while encoding input");
+        let result = call_eth(&network, contract_address, data).await;
+        match f
+            .decode_output(&from_hex(&result).expect("decode_hex"))
+            .expect("Error while decoding JSON result")
+            .get(0)
+        {
+            Some(Token::Uint(n)) => n.as_u64(),
+            _ => panic!("Unexpected JSON output"),
+        }
+    })
 }
 
 /// Required for HTTP outcalls.

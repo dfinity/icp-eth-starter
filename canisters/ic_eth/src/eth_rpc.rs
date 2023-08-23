@@ -1,10 +1,11 @@
+use ethers_core::abi::{Function, Token};
 use ic_cdk::api::management_canister::http_request::{
     http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod, TransformContext,
 };
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 
-use crate::util::to_hex;
+use crate::util::{from_hex, to_hex};
 
 const HTTP_CYCLES: u128 = 100_000_000;
 const MAX_RESPONSE_BYTES: u64 = 2048;
@@ -42,7 +43,15 @@ fn get_rpc_endpoint(network: &str) -> &'static str {
 }
 
 /// Call an Ethereum smart contract.
-pub async fn call_eth(network: &str, contract_address: String, data: Vec<u8>) -> String {
+pub async fn call_eth(
+    network: &str,
+    contract_address: String,
+    f: Function,
+    args: &[Token],
+) -> Vec<Token> {
+    let data = f
+        .encode_input(args)
+        .expect("Error while encoding input args");
     let service_url = get_rpc_endpoint(network).to_string();
     let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
         id: next_id(),
@@ -93,7 +102,8 @@ pub async fn call_eth(network: &str, contract_address: String, data: Vec<u8>) ->
     if let Some(err) = json.error {
         panic!("JSON-RPC error code {}: {}", err.code, err.message);
     }
-    json.result.expect("Unexpected JSON response")
+    let result = from_hex(&json.result.expect("Unexpected JSON response")).unwrap();
+    f.decode_output(&result).expect("Error decoding output")
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
