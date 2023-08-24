@@ -76,20 +76,16 @@ pub async fn call_contract(
     function_name: &str,
     args: &[Token],
 ) -> Vec<Token> {
-    let f = match abi.functions_by_name(function_name) {
-        Ok(fs) => {
-            if fs.len() > 1 {
-                panic!(
-                    "Found {} function overloads. Please pass one of the following: {}",
-                    fs.len(),
-                    fs.iter()
-                        .map(|f| format!("{:?}", f.abi_signature()))
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                );
-            }
-            &fs[0]
-        }
+    let f = match abi.functions_by_name(function_name).map(|v| &v[..]) {
+        Ok([f]) => f,
+        Ok(fs) => panic!(
+            "Found {} function overloads. Please pass one of the following: {}",
+            fs.len(),
+            fs.iter()
+                .map(|f| format!("{:?}", f.abi_signature()))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
         Err(_) => abi
             .functions()
             .find(|f| function_name == f.abi_signature())
