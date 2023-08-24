@@ -1,5 +1,4 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import 'twin.macro';
 import Navbar from './Navbar';
 import HomePage from './pages/HomePage';
 import VerifyPage from './pages/VerifyPage';
