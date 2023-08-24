@@ -31,26 +31,26 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
     >
       <div tw="flex items-center gap-3">
         {!!metadata.media.length && (
-          <img
-            tw="w-full rounded-2xl max-w-[100px]"
-            alt="NFT preview"
-            src={metadata.media[0].gateway}
-          />
+          <Tooltip
+            content={
+              <div tw="space-y-2">
+                <div tw="text-lg">{metadata.title}</div>
+                <div>{metadata.description}</div>
+              </div>
+            }
+          >
+            <img
+              tw="w-full rounded-2xl max-w-[100px]"
+              alt="NFT preview"
+              src={metadata.media[0].gateway}
+            />
+          </Tooltip>
         )}
         <div tw="space-y-2 text-xs sm:text-sm">
           {!!metadata.title && (
-            <Tooltip
-              content={
-                <div tw="space-y-2">
-                  <div tw="text-lg">{metadata.title}</div>
-                  <div>{metadata.description}</div>
-                </div>
-              }
-            >
-              <div tw="text-base sm:text-xl font-bold md:(text-ellipsis overflow-hidden w-[180px] whitespace-nowrap)">
-                {metadata.title}
-              </div>
-            </Tooltip>
+            <div tw="text-base sm:text-xl font-bold md:(text-ellipsis overflow-hidden w-[180px] whitespace-nowrap)">
+              {metadata.title}
+            </div>
           )}
           <div>
             {!!time && <div>{time.toLocaleString()}</div>}
