@@ -47,14 +47,14 @@ module {
       log.okWith(checkOutcome);
     };
 
-    public func isNftOwned(caller : Principal, nft : Types.Nft.Nft) : async Bool {
+    public func isNftOwned(caller : Principal, principal : Principal, nft : Types.Nft.Nft) : async Bool {
       let log = logger.Begin(caller, #isNftOwned(nft));
-      let isOwned = await isNftOwned_(caller, nft);
+      let isOwned = await isNftOwned_(principal, nft);
       log.okWith(isOwned);
     };
 
-    func isNftOwned_(caller : Principal, nft : Types.Nft.Nft) : async Bool {
-      switch (state.hasWalletSignsPrincipal(nft.owner, caller)) {
+    func isNftOwned_(principal : Principal, nft : Types.Nft.Nft) : async Bool {
+      switch (state.hasWalletSignsPrincipal(nft.owner, principal)) {
         case (?_) {
           switch (nft.tokenType) {
             case (#erc721) {
@@ -110,15 +110,15 @@ module {
     };
 
     public func getHistory(caller : Principal) : ?[History.Event] {
+      assert caller == installer;
       do ? {
-        // to do -- access control, maybe.
         logger.getEvents(0, logger.getSize());
       };
     };
 
     public func getState(caller : Principal) : ?[Snapshot.Entry] {
+      assert caller == installer;
       do ? {
-        // to do -- access control, maybe.
         Snapshot.getAll(_state);
       };
     };
