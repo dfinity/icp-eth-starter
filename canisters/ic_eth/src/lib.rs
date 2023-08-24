@@ -37,17 +37,18 @@ pub async fn erc721_owner_of(network: String, contract_address: String, token_id
     // TODO: whitelist / access control
     // TODO: cycles estimation for HTTP outcalls
 
-    let abi = ERC_721.with(Rc::clone);
+    let abi = &ERC_721.with(Rc::clone);
     let result = call_contract(
         &network,
         contract_address,
-        abi.function("ownerOf").unwrap(),
+        abi,
+        "ownerOf",
         &[Token::Uint(token_id.into())],
     )
     .await;
     match result.get(0) {
         Some(Token::Address(a)) => to_hex(a.as_bytes()),
-        _ => panic!("Unexpected JSON output"),
+        _ => panic!("Unexpected result"),
     }
 }
 
@@ -65,11 +66,12 @@ pub async fn erc1155_balance_of(
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
-    let abi = ERC_1155.with(Rc::clone);
+    let abi = &ERC_1155.with(Rc::clone);
     let result = call_contract(
         &network,
         contract_address,
-        abi.function("balanceOf").unwrap(),
+        abi,
+        "balanceOf",
         &[
             Token::Address(owner_address.into()),
             Token::Uint(token_id.into()),
@@ -78,6 +80,6 @@ pub async fn erc1155_balance_of(
     .await;
     match result.get(0) {
         Some(Token::Uint(n)) => n.as_u64(),
-        _ => panic!("Unexpected JSON output"),
+        _ => panic!("Unexpected result"),
     }
 }

@@ -1,4 +1,4 @@
-use ethers_core::abi::{Function, Token};
+use ethers_core::abi::{Contract, Token};
 use ic_cdk::api::management_canister::http_request::{
     http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod, HttpResponse, TransformArgs,
     TransformContext,
@@ -73,9 +73,13 @@ fn get_rpc_endpoint(network: &str) -> &'static str {
 pub async fn call_contract(
     network: &str,
     contract_address: String,
-    f: &Function,
+    abi: &Contract,
+    function_name: &str,
     args: &[Token],
 ) -> Vec<Token> {
+    // TODO: handle overloaded functions
+
+    let f = abi.function(function_name).unwrap();
     let data = f
         .encode_input(args)
         .expect("Error while encoding input args");
