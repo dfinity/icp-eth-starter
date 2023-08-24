@@ -14,10 +14,9 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
   const [metadata] = useNftMetadata(nft.network, nft.contract, nft.tokenId);
 
   const url = `https://${
-    nft.network === 'sepolia' ? 'testnets.' : ''
+    nft.network !== 'mainnet' ? 'testnets.' : ''
   }opensea.io/assets/${nft.network}/${nft.contract}/${nft.tokenId}`;
 
-  console.log(metadata); ///
   if (!metadata) {
     return null;
   }
@@ -28,9 +27,6 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
       target="_blank"
       rel="noreferrer"
     >
-      {metadata.tokenType === 'NOT_A_CONTRACT' && (
-        <div tw="text-xl opacity-60">(Not found)</div>
-      )}
       <div tw="flex items-center gap-3">
         {!!metadata.media.length && (
           <img
