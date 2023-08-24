@@ -4,7 +4,7 @@ import App from './App';
 import { StrictMode } from 'react';
 
 describe('App', () => {
-  test.skip('renders as expected', () => {
+  test('renders as expected', () => {
     render(
       <StrictMode>
         <App />

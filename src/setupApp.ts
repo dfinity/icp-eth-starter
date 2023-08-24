@@ -3,11 +3,6 @@ import { getBackend, getNetwork } from './services/backendService';
 
 export const applicationName = 'IC + ETH';
 
-const agent = Actor.agentOf(getBackend());
-if (getNetwork() === 'ic') {
-  (agent as any)._host = 'https://icp-api.io/';
-}
-
 // if (
 //   window.location.hostname.endsWith('.icp0.io') ||
 //   window.location.hostname.endsWith('.ic0.app')
@@ -24,3 +19,10 @@ if (canisterId && url.port === String(localPort)) {
   // Rewrite to localhost subdomain
   window.location.href = `http://${canisterId}.localhost:${localPort}?${url.searchParams}`;
 }
+
+const agent = Actor.agentOf(getBackend());
+if (getNetwork() === 'ic') {
+  (agent as any)._host = 'https://icp-api.io/';
+}
+
+console.log(import.meta.env.VITE_ENV);
