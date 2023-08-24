@@ -4,11 +4,13 @@
 
 ---
 
-This starter project is currently in early beta testing. Please feel free to [open an issue](https://github.com/dfinity/ic-eth-starter/issues) to report a bug or request a feature. Thanks!
+Designed for experienced Web3 developers, this starter project uses an IC canister to verify the ownership of Ethereum NFTs, with support for both the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) and [Goerli](https://goerli.net/) testnets in addition to the Ethereum mainnet.
+
+This repository is in early beta testing; please feel free to [open an issue](https://github.com/dfinity/ic-eth-starter/issues) for a bug report or feature request. Thanks!
 
 ## [🌐  View Deployed Dapp](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/)
 
-## Create a New Project
+## 🚀 Create a New Project
 
 Make sure that [Node.js](https://nodejs.org/en/) `>= 16.x`, [`dfx`](https://internetcomputer.org/docs/current/developer-docs/build/install-upgrade-remove) `>= 0.12.x`, and the latest version of [Rust](https://www.rust-lang.org/tools/install) are installed on your system.
 
@@ -30,11 +32,9 @@ npm start # Start the development server
 
 When ready, run `dfx deploy --network ic` to deploy your application to the Internet Computer.
 
-## Ethereum Testnets
+## 🔌 Prepare a Testnet Wallet
 
-This advanced starter project makes it possible for an IC canister to verify the ownership of Ethereum NFTs. Both the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) and [Goerli](https://goerli.net/) testnets are supported in addition to the Ethereum mainnet. 
-
-Here is our recommended way to acquire tokens and NFTs on the Sepolia testnet:
+Here is one way to acquire tokens and NFTs on the Sepolia testnet:
 
 - Install [MetaMask](https://metamask.io/) and create a new wallet for testing purposes
 - Fund your wallet using the [Sepolia Faucet](https://sepoliafaucet.com/) (requires signing up for an [Alchemy](https://www.alchemy.com/) account)
@@ -47,9 +47,9 @@ Here is our recommended way to acquire tokens and NFTs on the Sepolia testnet:
   - In the bottom-right of the page (under "TokenID"), press "#1" to view your newly minted NFT
   - Copy / paste the URL into the [IC 🔗 ETH demo project](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/verify) to verify that you are the owner of the NFT. 
 
-## Technology Stack
+## 🛠️ Technology Stack
 
-**Front-end Dapp:**
+**Front-end Webapp:**
 - [TypeScript](https://www.typescriptlang.org/): JavaScript extended with syntax for types
 - [Vite](https://vitejs.dev/): high-performance tooling for front-end web development
 - [React](https://reactjs.org/): a component-based UI library
@@ -65,7 +65,7 @@ Here is our recommended way to acquire tokens and NFTs on the Sepolia testnet:
 - [Rust](https://www.rust-lang.org/): a secure, high-performance canister programming language
 - [MetaMask](https://metamask.io/): a wallet and browser extension for interacting with Ethereum dapps
 
-## Documentation
+## 📚 Documentation
 
 - [Vite developer docs](https://vitejs.dev/guide/)
 - [React quick start guide](https://react.dev/learn)
@@ -77,7 +77,7 @@ Here is our recommended way to acquire tokens and NFTs on the Sepolia testnet:
 - [Rust canister guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
 - [MetaMask developer docs](https://docs.metamask.io/)
 
-## Tips and Tricks
+## 💡 Tips and Tricks
 
 - Customize your project's code style by editing the `.prettierrc` file and then running `npm run format`.
 - Reduce the latency of update calls by passing the `--emulator` flag to `dfx start`.
