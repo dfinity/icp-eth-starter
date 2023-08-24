@@ -1,13 +1,51 @@
+use ethers_core::abi::{Function, Token};
 use ic_cdk::api::management_canister::http_request::{
-    http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod, TransformContext,
+    http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod, HttpResponse, TransformArgs,
+    TransformContext,
 };
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 
-use crate::util::to_hex;
+use crate::util::{from_hex, to_hex};
 
 const HTTP_CYCLES: u128 = 100_000_000;
 const MAX_RESPONSE_BYTES: u64 = 2048;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcRequest {
+    id: u64,
+    jsonrpc: String,
+    method: String,
+    params: (EthCallParams, String),
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct EthCallParams {
+    to: String,
+    data: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcResult {
+    result: Option<String>,
+    error: Option<JsonRpcError>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcError {
+    code: isize,
+    message: String,
+}
+
+#[macro_export]
+macro_rules! include_abi {
+    ($file:expr $(,)?) => {{
+        match serde_json::from_str::<ethers_core::abi::Contract>(include_str!($file)) {
+            Ok(contract) => contract,
+            Err(err) => panic!("Error loading ABI contract {:?}: {}", $file, err),
+        }
+    }};
+}
 
 thread_local! {
     static NEXT_ID: RefCell<u64> = RefCell::default();
@@ -24,7 +62,7 @@ fn next_id() -> u64 {
 
 fn get_rpc_endpoint(network: &str) -> &'static str {
     match network {
-        "mainnet" => "https://cloudflare-eth.com/v1/mainnet",
+        "mainnet" | "ethereum" => "https://cloudflare-eth.com/v1/mainnet",
         "goerli" => "https://ethereum-goerli.publicnode.com",
         "sepolia" => "https://rpc.sepolia.org",
         _ => panic!("Unsupported network: {}", network),
@@ -32,7 +70,15 @@ fn get_rpc_endpoint(network: &str) -> &'static str {
 }
 
 /// Call an Ethereum smart contract.
-pub async fn call_eth(network: &str, contract_address: String, data: Vec<u8>) -> String {
+pub async fn call_contract(
+    network: &str,
+    contract_address: String,
+    f: &Function,
+    args: &[Token],
+) -> Vec<Token> {
+    let data = f
+        .encode_input(args)
+        .expect("Error while encoding input args");
     let service_url = get_rpc_endpoint(network).to_string();
     let json_rpc_payload = serde_json::to_string(&JsonRpcRequest {
         id: next_id(),
@@ -83,31 +129,17 @@ pub async fn call_eth(network: &str, contract_address: String, data: Vec<u8>) ->
     if let Some(err) = json.error {
         panic!("JSON-RPC error code {}: {}", err.code, err.message);
     }
-    json.result.expect("Unexpected JSON response")
+    let result = from_hex(&json.result.expect("Unexpected JSON response")).unwrap();
+    f.decode_output(&result).expect("Error decoding output")
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcRequest {
-    id: u64,
-    jsonrpc: String,
-    method: String,
-    params: (EthCallParams, String),
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct EthCallParams {
-    to: String,
-    data: String,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcResult {
-    result: Option<String>,
-    error: Option<JsonRpcError>,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcError {
-    code: isize,
-    message: String,
+#[ic_cdk_macros::query(name = "transform")]
+pub fn transform(args: TransformArgs) -> HttpResponse {
+    HttpResponse {
+        status: args.response.status.clone(),
+        body: args.response.body,
+        // Strip headers as they contain the Date which is not necessarily the same
+        // and will prevent consensus on the result.
+        headers: Vec::<HttpHeader>::new(),
+    }
 }
