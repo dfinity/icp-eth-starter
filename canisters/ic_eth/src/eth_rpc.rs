@@ -62,7 +62,7 @@ fn next_id() -> u64 {
 
 fn get_rpc_endpoint(network: &str) -> &'static str {
     match network {
-        "mainnet" => "https://cloudflare-eth.com/v1/mainnet",
+        "mainnet" | "ethereum" => "https://cloudflare-eth.com/v1/mainnet",
         "goerli" => "https://ethereum-goerli.publicnode.com",
         "sepolia" => "https://rpc.sepolia.org",
         _ => panic!("Unsupported network: {}", network),
@@ -132,7 +132,6 @@ pub async fn call_contract(
     let result = from_hex(&json.result.expect("Unexpected JSON response")).unwrap();
     f.decode_output(&result).expect("Error decoding output")
 }
-
 
 #[ic_cdk_macros::query(name = "transform")]
 pub fn transform(args: TransformArgs) -> HttpResponse {
