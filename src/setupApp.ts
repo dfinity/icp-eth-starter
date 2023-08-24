@@ -25,4 +25,4 @@ if (getNetwork() === 'ic') {
   (agent as any)._host = 'https://icp-api.io/';
 }
 
-console.log(import.meta.env.VITE_ENV);
+console.error('>>>>', import.meta.env.VITE_ENV);

@@ -8,8 +8,8 @@ import VerifyPage from './pages/VerifyPage';
 import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/dist/tippy.css';
 import 'twin.macro';
-import './setupApp';
-import './styles/index.scss';
+import '../setupApp';
+import '../styles/index.scss';
 
 export default function App() {
   return (
