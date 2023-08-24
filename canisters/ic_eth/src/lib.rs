@@ -6,11 +6,13 @@ use ethers_core::{
     abi::{self, Contract, Token},
     types::{Address, RecoveryMessage, Signature},
 };
-use ic_cdk::api::management_canister::http_request::{HttpHeader, HttpResponse, TransformArgs};
 use util::to_hex;
 
 mod eth_rpc;
 mod util;
+
+/// Required for HTTPS outcalls.
+pub use eth_rpc::transform;
 
 // Load relevant ABIs (Ethereum equivalent of Candid interfaces)
 thread_local! {
@@ -80,17 +82,5 @@ pub async fn erc1155_balance_of(
     match result.get(0) {
         Some(Token::Uint(n)) => n.as_u64(),
         _ => panic!("Unexpected JSON output"),
-    }
-}
-
-/// Required for HTTP outcalls.
-#[ic_cdk_macros::query(name = "transform")]
-fn transform(args: TransformArgs) -> HttpResponse {
-    HttpResponse {
-        status: args.response.status.clone(),
-        body: args.response.body,
-        // Strip headers as they contain the Date which is not necessarily the same
-        // and will prevent consensus on the result.
-        headers: Vec::<HttpHeader>::new(),
     }
 }

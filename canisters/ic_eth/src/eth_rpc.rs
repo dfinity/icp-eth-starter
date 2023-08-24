@@ -1,6 +1,7 @@
 use ethers_core::abi::{Function, Token};
 use ic_cdk::api::management_canister::http_request::{
-    http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod, TransformContext,
+    http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod, HttpResponse, TransformArgs,
+    TransformContext,
 };
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
@@ -9,6 +10,32 @@ use crate::util::{from_hex, to_hex};
 
 const HTTP_CYCLES: u128 = 100_000_000;
 const MAX_RESPONSE_BYTES: u64 = 2048;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcRequest {
+    id: u64,
+    jsonrpc: String,
+    method: String,
+    params: (EthCallParams, String),
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct EthCallParams {
+    to: String,
+    data: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcResult {
+    result: Option<String>,
+    error: Option<JsonRpcError>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct JsonRpcError {
+    code: isize,
+    message: String,
+}
 
 #[macro_export]
 macro_rules! include_abi {
@@ -106,28 +133,14 @@ pub async fn call_contract(
     f.decode_output(&result).expect("Error decoding output")
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcRequest {
-    id: u64,
-    jsonrpc: String,
-    method: String,
-    params: (EthCallParams, String),
-}
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct EthCallParams {
-    to: String,
-    data: String,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcResult {
-    result: Option<String>,
-    error: Option<JsonRpcError>,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct JsonRpcError {
-    code: isize,
-    message: String,
+#[ic_cdk_macros::query(name = "transform")]
+pub fn transform(args: TransformArgs) -> HttpResponse {
+    HttpResponse {
+        status: args.response.status.clone(),
+        body: args.response.body,
+        // Strip headers as they contain the Date which is not necessarily the same
+        // and will prevent consensus on the result.
+        headers: Vec::<HttpHeader>::new(),
+    }
 }
