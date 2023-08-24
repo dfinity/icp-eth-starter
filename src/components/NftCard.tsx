@@ -39,7 +39,18 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
         )}
         <div tw="space-y-2 text-xs sm:text-sm">
           {!!metadata.title && (
-            <div tw="text-base sm:text-xl font-bold">{metadata.title}</div>
+            <Tooltip
+              content={
+                <div tw="space-y-2">
+                  <div tw="text-lg">{metadata.title}</div>
+                  <div>{metadata.description}</div>
+                </div>
+              }
+            >
+              <div tw="text-base sm:text-xl font-bold md:(text-ellipsis overflow-hidden w-[180px] whitespace-nowrap)">
+                {metadata.title}
+              </div>
+            </Tooltip>
           )}
           <div>
             {!!time && <div>{time.toLocaleString()}</div>}
