@@ -133,7 +133,6 @@ pub async fn call_contract(
     f.decode_output(&result).expect("Error decoding output")
 }
 
-
 #[ic_cdk_macros::query(name = "transform")]
 pub fn transform(args: TransformArgs) -> HttpResponse {
     HttpResponse {
