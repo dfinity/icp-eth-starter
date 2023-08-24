@@ -14,8 +14,10 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
   const [metadata] = useNftMetadata(nft.network, nft.contract, nft.tokenId);
 
   const url = `https://${
-    nft.network !== 'mainnet' ? 'testnets.' : ''
-  }opensea.io/assets/${nft.network}/${nft.contract}/${nft.tokenId}`;
+    nft.network === 'mainnet'
+      ? 'opensea.io/assets/ethereum'
+      : `testnets.opensea.io/assets/${nft.network}`
+  }/${nft.contract}/${nft.tokenId}`;
 
   if (!metadata) {
     return null;
