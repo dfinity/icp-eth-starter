@@ -68,7 +68,7 @@ export default function WalletArea() {
     }
     const [, network, contract, tokenId] = groups;
     return {
-      network: network || 'mainnet',
+      network: network || 'ethereum',
       contract,
       tokenId: Number(tokenId),
     };
@@ -84,7 +84,7 @@ export default function WalletArea() {
     }
     const [, network, contract, tokenId] = groups;
     return {
-      network: network || 'mainnet',
+      network: network || 'ethereum',
       contract,
       tokenId: Number(tokenId),
     };
