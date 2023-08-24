@@ -1,7 +1,7 @@
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Hash "mo:base/Hash";
-import System "System";
+import System "lib/System";
 
 module {
 

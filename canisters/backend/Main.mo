@@ -1,8 +1,8 @@
+import System "lib/System";
+
 import Types "Types";
 import Core "Core";
 import State "State";
-
-import System "System";
 import History "History";
 import Snapshot "Snapshot";
 

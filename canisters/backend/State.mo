@@ -1,13 +1,12 @@
 import Types "Types";
-import Relate "Relate";
-import System "System";
 
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Int "mo:base/Int";
-
 import Seq "mo:sequence/Sequence";
 import Stream "mo:sequence/Stream";
+import Relate "lib/Relate";
+import System "lib/System";
 
 module {
 

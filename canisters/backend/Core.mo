@@ -1,13 +1,13 @@
 import Types "Types";
 import State "State";
-import System "System";
-import IcEth "canister:ic_eth";
-import Principal "mo:base/Principal";
-import Nat64 "mo:base/Nat64";
 import History "History";
 import Snapshot "Snapshot";
-import Iter "IterMore";
 
+import Principal "mo:base/Principal";
+import Nat64 "mo:base/Nat64";
+import System "lib/System";
+import Iter "lib/IterMore";
+import IcEth "canister:ic_eth";
 import Seq "mo:sequence/Sequence";
 import Stream "mo:sequence/Stream";
 
