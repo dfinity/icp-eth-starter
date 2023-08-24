@@ -6,6 +6,12 @@ import VerifyPage from './pages/VerifyPage';
 import { MetaMaskProvider } from 'metamask-react';
 import { ToastContainer } from 'react-toastify';
 
+import 'react-toastify/dist/ReactToastify.css';
+import 'tippy.js/dist/tippy.css';
+import 'twin.macro';
+import './setupApp';
+import './styles/index.scss';
+
 export default function App() {
   return (
     <MetaMaskProvider>
