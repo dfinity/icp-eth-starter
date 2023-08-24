@@ -21,10 +21,10 @@
     "postinstall": "mops install"
   },
   "dependencies": {
-    "@dfinity/agent": "^0.18.1",
-    "@dfinity/auth-client": "^0.18.1",
-    "@dfinity/candid": "^0.18.1",
-    "@dfinity/principal": "^0.18.1",
+    "@dfinity/agent": "^0.19.1",
+    "@dfinity/auth-client": "^0.19.1",
+    "@dfinity/candid": "^0.19.1",
+    "@dfinity/principal": "^0.19.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@tippyjs/react": "^4.2.6",
