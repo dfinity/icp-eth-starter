@@ -62,7 +62,7 @@ fn next_id() -> u64 {
 
 fn get_rpc_endpoint(network: &str) -> &'static str {
     match network {
-        "mainnet" => "https://cloudflare-eth.com/v1/mainnet",
+        "mainnet" | "ethereum" => "https://cloudflare-eth.com/v1/mainnet",
         "goerli" => "https://ethereum-goerli.publicnode.com",
         "sepolia" => "https://rpc.sepolia.org",
         _ => panic!("Unsupported network: {}", network),
