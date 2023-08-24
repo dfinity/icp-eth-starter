@@ -1,15 +1,15 @@
-import System "lib/System";
-import Iter "lib/IterMore";
-import Seq "mo:sequence/Sequence";
-import Stream "mo:sequence/Stream";
-
 import Types "Types";
 import State "State";
-import IcEth "canister:ic_eth";
-import Principal "mo:base/Principal";
-import Nat64 "mo:base/Nat64";
 import History "History";
 import Snapshot "Snapshot";
+
+import Principal "mo:base/Principal";
+import Nat64 "mo:base/Nat64";
+import System "lib/System";
+import Iter "lib/IterMore";
+import IcEth "canister:ic_eth";
+import Seq "mo:sequence/Sequence";
+import Stream "mo:sequence/Stream";
 
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State, history : History.History) {
