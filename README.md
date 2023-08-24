@@ -49,7 +49,7 @@ Here is our recommended way to acquire tokens and NFTs on the Sepolia testnet:
 
 ## Technology Stack
 
-**Front-end Webapp:**
+**Front-end Dapp:**
 - [TypeScript](https://www.typescriptlang.org/): JavaScript extended with syntax for types
 - [Vite](https://vitejs.dev/): high-performance tooling for front-end web development
 - [React](https://reactjs.org/): a component-based UI library
