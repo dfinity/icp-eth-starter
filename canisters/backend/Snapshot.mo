@@ -2,8 +2,8 @@ import Types "Types";
 import State "State";
 
 import Int "mo:base/Int";
-import Iter "IterMore";
 import Trie "mo:base/Trie";
+import Iter "lib/IterMore";
 
 module {
   type EthWallet = Types.EthWallet;

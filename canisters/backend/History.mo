@@ -4,8 +4,8 @@ import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import Seq "mo:sequence/Sequence";
 import Stream "mo:sequence/Stream";
+import System "lib/System";
 
-import System "System";
 import Types "Types";
 
 module {
