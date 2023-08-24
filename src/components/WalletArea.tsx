@@ -36,13 +36,19 @@ export default function WalletArea() {
   const [nftUrl, setNftUrl] = useSessionStorage('ic-eth.nft-url', '');
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
   const [isNftValid, setNftValid] = useState<boolean>();
-  const nfts = usePublicNfts();
 
   const address = (ethereum?.selectedAddress as string | undefined) || '';
   const [isAddressVerified, verifyAddress] = useAddressVerified(
     address,
     ethereum,
   );
+
+  const principalString = user?.client.getIdentity().getPrincipal().toString();
+  const nfts = usePublicNfts();
+  const ownedNfts =
+    nfts?.filter(
+      (nft) => nft.principal === principalString || nft.wallet === address,
+    ) || [];
 
   const parseOpenSeaNft = (nftUrl: string) => {
     const groups =
@@ -308,7 +314,7 @@ export default function WalletArea() {
             <>
               <hr tw="my-5" />
               <div tw="text-xl text-gray-600 mb-3">Previously verified:</div>
-              <NftList items={nfts} />
+              <NftList items={ownedNfts} />
             </>
           )}
         </>

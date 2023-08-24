@@ -17,16 +17,20 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
     nft.network === 'sepolia' ? 'testnets.' : ''
   }opensea.io/assets/${nft.network}/${nft.contract}/${nft.tokenId}`;
 
+  console.log(metadata); ///
   if (!metadata) {
     return null;
   }
   return (
     <a
-      tw="p-5 bg-white rounded-3xl space-y-3 drop-shadow-2xl cursor-pointer block"
+      tw="block p-5 bg-white rounded-3xl space-y-3 drop-shadow-2xl cursor-pointer"
       href={url}
       target="_blank"
       rel="noreferrer"
     >
+      {metadata.tokenType === 'NOT_A_CONTRACT' && (
+        <div tw="text-xl opacity-60">(Not found)</div>
+      )}
       <div tw="flex items-center gap-3">
         {!!metadata.media.length && (
           <img
