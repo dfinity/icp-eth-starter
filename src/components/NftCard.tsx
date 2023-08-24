@@ -14,8 +14,10 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
   const [metadata] = useNftMetadata(nft.network, nft.contract, nft.tokenId);
 
   const url = `https://${
-    nft.network !== 'mainnet' ? 'testnets.' : ''
-  }opensea.io/assets/${nft.network}/${nft.contract}/${nft.tokenId}`;
+    nft.network === 'mainnet' || nft.network === 'ethereum'
+      ? 'opensea.io/assets/ethereum'
+      : `testnets.opensea.io/assets/${nft.network}`
+  }/${nft.contract}/${nft.tokenId}`;
 
   if (!metadata) {
     return null;
@@ -29,15 +31,26 @@ export default function NftCard({ nft, principal, time }: NftCardProps) {
     >
       <div tw="flex items-center gap-3">
         {!!metadata.media.length && (
-          <img
-            tw="w-full rounded-2xl max-w-[100px]"
-            alt="NFT preview"
-            src={metadata.media[0].gateway}
-          />
+          <Tooltip
+            content={
+              <div tw="space-y-2">
+                <div tw="text-lg">{metadata.title}</div>
+                <div>{metadata.description}</div>
+              </div>
+            }
+          >
+            <img
+              tw="w-full rounded-2xl max-w-[100px]"
+              alt="NFT preview"
+              src={metadata.media[0].gateway}
+            />
+          </Tooltip>
         )}
         <div tw="space-y-2 text-xs sm:text-sm">
           {!!metadata.title && (
-            <div tw="text-base sm:text-xl font-bold">{metadata.title}</div>
+            <div tw="text-base sm:text-xl font-bold md:(text-ellipsis overflow-hidden w-[180px] whitespace-nowrap)">
+              {metadata.title}
+            </div>
           )}
           <div>
             {!!time && <div>{time.toLocaleString()}</div>}
