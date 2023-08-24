@@ -15,21 +15,10 @@ export function getAlchemyProvider(network: string) {
 export function getAlchemy(network: Network): Alchemy {
   const alchemy = new Alchemy({
     apiKey,
-    // network: Network.ETH_MAINNET,
     network,
   });
   return alchemy;
 }
-
-// export async function useNftsForOwner(
-//   network: string,
-//   owner: string,
-//   page: number,
-// ) {
-//   const alchemy = getAlchemy(network);
-//   const nfts = await alchemy.nft.getNftsForOwner(owner, {});
-//   return nfts;
-// }
 
 export function useNftMetadata(
   network: string,
