@@ -3,7 +3,7 @@ use std::{rc::Rc, str::FromStr};
 use candid::candid_method;
 use eth_rpc::call_contract;
 use ethers_core::{
-    abi::{self, Contract, Token},
+    abi::{Contract, Token},
     types::{Address, RecoveryMessage, Signature},
 };
 use util::to_hex;
@@ -45,7 +45,7 @@ pub async fn erc721_owner_of(network: String, contract_address: String, token_id
         &network,
         contract_address,
         abi.function("ownerOf").unwrap(),
-        &[abi::Token::Uint(token_id.into())],
+        &[Token::Uint(token_id.into())],
     )
     .await;
     match result.get(0) {
@@ -68,14 +68,14 @@ pub async fn erc1155_balance_of(
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
-    let abi = ERC_721.with(Rc::clone);
+    let abi = ERC_1155.with(Rc::clone);
     let result = call_contract(
         &network,
         contract_address,
-        abi.function("ownerOf").unwrap(),
+        abi.function("balanceOf").unwrap(),
         &[
-            abi::Token::Address(owner_address.into()),
-            abi::Token::Uint(token_id.into()),
+            Token::Address(owner_address.into()),
+            Token::Uint(token_id.into()),
         ],
     )
     .await;
