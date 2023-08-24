@@ -4,11 +4,11 @@
 
 ---
 
+## [🌐  View Deployed Dapp](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/)
+
 Designed for experienced Web3 developers, this starter project uses an IC canister to verify the ownership of Ethereum NFTs, with support for both the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) and [Goerli](https://goerli.net/) testnets in addition to the Ethereum mainnet.
 
 This repository is in early beta testing; please feel free to [open an issue](https://github.com/dfinity/ic-eth-starter/issues) for a bug report or feature request. Thanks!
-
-## [🌐  View Deployed Dapp](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/)
 
 ## 🚀 Create a New Project
 
@@ -34,7 +34,7 @@ When ready, run `dfx deploy --network ic` to deploy your application to the Inte
 
 ## 🔌 Prepare a Testnet Wallet
 
-Here is one way to acquire tokens and NFTs on the Sepolia testnet:
+Here is one way to acquire tokens and NFTs on the [Sepolia](https://www.alchemy.com/overviews/sepolia-testnet) testnet:
 
 - Install [MetaMask](https://metamask.io/) and create a new wallet for testing purposes
 - Fund your wallet using the [Sepolia Faucet](https://sepoliafaucet.com/) (requires signing up for an [Alchemy](https://www.alchemy.com/) account)
