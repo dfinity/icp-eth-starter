@@ -10,6 +10,8 @@ Designed for experienced Web3 developers, this starter project uses an IC canist
 
 This repository is in early beta testing; please feel free to [open an issue](https://github.com/dfinity/ic-eth-starter/issues) to report a bug or request a feature. Thanks!
 
+**Note:** this starter project is currently undergoing an internal security review. This message will be removed once the review process is complete.
+
 ## 🚀 Create a New Project
 
 Make sure that [Node.js](https://nodejs.org/en/) `>= 16.x`, [`dfx`](https://internetcomputer.org/docs/current/developer-docs/build/install-upgrade-remove) `>= 0.12.x`, and the latest version of [Rust](https://www.rust-lang.org/tools/install) are installed on your system.
