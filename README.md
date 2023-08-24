@@ -6,11 +6,7 @@
 
 This starter project is currently in early beta testing. Please feel free to [open an issue](https://github.com/dfinity/ic-eth-starter/issues) to report a bug or request a feature. Thanks!
 
-### Get started directly in your browser:
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/dfinity/ic-eth-starter)
-
-[Visit Deployed Webapp](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/)
+## [🌐  View Deployed Dapp](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/)
 
 ## Create a New Project
 
