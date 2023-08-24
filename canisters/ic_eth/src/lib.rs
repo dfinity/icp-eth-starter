@@ -34,7 +34,7 @@ pub fn verify_ecdsa(eth_address: String, message: String, signature: String) -> 
 #[ic_cdk_macros::update]
 #[candid_method]
 pub async fn erc721_owner_of(network: String, contract_address: String, token_id: u64) -> String {
-    // TODO: whitelist / access control
+    // TODO: access control
     // TODO: cycles estimation for HTTP outcalls
 
     let abi = &ERC_721.with(Rc::clone);
