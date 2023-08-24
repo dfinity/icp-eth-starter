@@ -1,4 +1,4 @@
-use ethers_core::abi::{Function, Token};
+use ethers_core::abi::{Contract, FunctionExt, Token};
 use ic_cdk::api::management_canister::http_request::{
     http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod, HttpResponse, TransformArgs,
     TransformContext,
@@ -47,11 +47,10 @@ macro_rules! include_abi {
     }};
 }
 
-thread_local! {
-    static NEXT_ID: RefCell<u64> = RefCell::default();
-}
-
 fn next_id() -> u64 {
+    thread_local! {
+        static NEXT_ID: RefCell<u64> = RefCell::default();
+    }
     NEXT_ID.with(|next_id| {
         let mut next_id = next_id.borrow_mut();
         let id = *next_id;
@@ -73,9 +72,25 @@ fn get_rpc_endpoint(network: &str) -> &'static str {
 pub async fn call_contract(
     network: &str,
     contract_address: String,
-    f: &Function,
+    abi: &Contract,
+    function_name: &str,
     args: &[Token],
 ) -> Vec<Token> {
+    let f = match abi.functions_by_name(function_name).map(|v| &v[..]) {
+        Ok([f]) => f,
+        Ok(fs) => panic!(
+            "Found {} function overloads. Please pass one of the following: {}",
+            fs.len(),
+            fs.iter()
+                .map(|f| format!("{:?}", f.abi_signature()))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
+        Err(_) => abi
+            .functions()
+            .find(|f| function_name == f.abi_signature())
+            .expect("Function not found"),
+    };
     let data = f
         .encode_input(args)
         .expect("Error while encoding input args");
@@ -140,6 +155,6 @@ pub fn transform(args: TransformArgs) -> HttpResponse {
         body: args.response.body,
         // Strip headers as they contain the Date which is not necessarily the same
         // and will prevent consensus on the result.
-        headers: Vec::<HttpHeader>::new(),
+        headers: Vec::new(),
     }
 }
