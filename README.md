@@ -63,6 +63,7 @@ Here is one way to acquire tokens and NFTs on the [Sepolia](https://www.alchemy.
 
 **Ethereum Integration:**
 - [Rust](https://www.rust-lang.org/): a secure, high-performance canister programming language
+- [ethers-core](https://github.com/gakonst/ethers-rs): a popular Rust library for working with Ethereum data structures
 - [MetaMask](https://metamask.io/): a wallet and browser extension for interacting with Ethereum dapps
 
 ## 📚 Documentation
