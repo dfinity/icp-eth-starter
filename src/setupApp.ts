@@ -11,18 +11,16 @@ export const applicationName = 'IC + ETH';
 //   window.location.hostname = 'custom.hostname.org';
 // }
 
-const localPort = 4943;
+const dfxPort = 4943;
 const url = new URL(window.location.href);
 const canisterId = url.searchParams.get('canisterId');
-if (canisterId && url.port === String(localPort)) {
+if (canisterId && url.port === String(dfxPort)) {
   url.searchParams.delete('canisterId');
   // Rewrite to localhost subdomain
-  window.location.href = `http://${canisterId}.localhost:${localPort}?${url.searchParams}`;
+  window.location.href = `http://${canisterId}.localhost:${dfxPort}?${url.searchParams}`;
 }
 
 const agent = Actor.agentOf(getBackend());
 if (getNetwork() === 'ic') {
   (agent as any)._host = 'https://icp-api.io/';
 }
-
-console.error('>>>>', import.meta.env.VITE_ENV);
