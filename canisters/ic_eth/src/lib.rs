@@ -11,9 +11,6 @@ use util::to_hex;
 mod eth_rpc;
 mod util;
 
-/// Required for HTTPS outcalls.
-pub use eth_rpc::transform;
-
 // Load relevant ABIs (Ethereum equivalent of Candid interfaces)
 thread_local! {
     static ERC_721: Rc<Contract> = Rc::new(include_abi!("../abi/erc721.json"));
