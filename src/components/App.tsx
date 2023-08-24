@@ -1,9 +1,9 @@
+import { MetaMaskProvider } from 'metamask-react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import Navbar from './Navbar';
 import HomePage from './pages/HomePage';
 import VerifyPage from './pages/VerifyPage';
-import { MetaMaskProvider } from 'metamask-react';
-import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/dist/tippy.css';
