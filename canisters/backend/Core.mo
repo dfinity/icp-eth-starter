@@ -105,9 +105,9 @@ module {
       Iter.toArray(nfts);
     };
 
-    public func filterAddress(caller : Principal, address : Types.Address.Address) : async Bool {
+    public func setAddressFiltered(caller : Principal, address : Types.Address.Address, filtered : Bool) : async Bool {
       assert caller == installer;
-      let log = logger.Begin(caller, #filterAddress(address));
+      let log = logger.Begin(caller, #setAddressFiltered(address, filtered));
       state.filteredAddresses.put(address);
       log.okWith(true);
     };
