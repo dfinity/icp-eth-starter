@@ -49,6 +49,11 @@ shared ({ caller = installer }) actor class Main() {
     core.getNfts(caller);
   };
 
+  /// Hides all NFTs with the given smart contract or wallet address.
+  public shared ({ caller }) func filterAddress(address : Types.Address.Address) : async Bool {
+    await core.filterAddress(address);
+  };
+
   /// Retrieve the full log for this canister.
   public query ({ caller }) func getHistory() : async ?[History.Event] {
     core.getHistory(caller);

@@ -38,8 +38,8 @@ module {
       //
       principals : Relate.Stable.Map<Principal, CreateSuccess>;
       ethWallets : Relate.Stable.Map<EthWallet, CreateSuccess>;
-
       ethNfts : Relate.Stable.Map<NftId, Nft>;
+      filteredAddresses : Relate.Stable.Map<Address.Address, ()>;
 
       //
       // Relations
@@ -57,6 +57,7 @@ module {
         principals = Relate.Stable.emptyMap();
         ethWallets = Relate.Stable.emptyMap();
         ethNfts = Relate.Stable.emptyMap();
+        filteredAddresses = Relate.Stable.emptyMap();
 
         walletSignsPrincipal = Relate.Stable.emptyTernRel();
         walletOwnsNft = Relate.Stable.emptyTernRel();
