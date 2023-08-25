@@ -108,7 +108,11 @@ module {
     public func setAddressFiltered(caller : Principal, address : Types.Address.Address, filtered : Bool) : async Bool {
       assert caller == installer;
       let log = logger.Begin(caller, #setAddressFiltered(address, filtered));
-      state.filteredAddresses.put(address);
+      if (filtered) {
+        state.filteredAddresses.put(address);
+      } else {
+        state.filteredAddresses.remove(address);
+      };
       log.okWith(true);
     };
 

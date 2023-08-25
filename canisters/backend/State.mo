@@ -153,7 +153,7 @@ module {
             case (#addNft(e)) {
               if (
                 not filteredAddresses.has(e.nft.contract) and not filteredAddresses.has(e.nft.owner)
-              ) ?#addNft(e) else null;
+              ) ? #addNft(e) else null;
             };
             case (e) ?e;
           };
