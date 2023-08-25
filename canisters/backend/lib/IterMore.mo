@@ -70,7 +70,7 @@ module {
     };
   };
 
-  public func mapFilter<X, Y>(xs : Iter<X>, f : X -> ?Y) : Iter<Y> {
+  public func filterMap<X, Y>(xs : Iter<X>, f : X -> ?Y) : Iter<Y> {
     object {
       public func next() : ?Y {
         loop {

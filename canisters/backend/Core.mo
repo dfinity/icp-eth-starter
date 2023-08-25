@@ -91,7 +91,7 @@ module {
     };
 
     public func getNfts(caller : Principal) : [Types.Nft.Nft] {
-      let nfts = Iter.mapFilter<Types.PublicEvent, Types.Nft.Nft>(
+      let nfts = Iter.filterMap<Types.PublicEvent, Types.Nft.Nft>(
         state.getPublicHistory(),
         func(e : Types.PublicEvent) : ?Types.Nft.Nft {
           switch (e) {
@@ -103,6 +103,17 @@ module {
         },
       );
       Iter.toArray(nfts);
+    };
+
+    public func setAddressFiltered(caller : Principal, address : Types.Address.Address, filtered : Bool) : async Bool {
+      assert caller == installer;
+      let log = logger.Begin(caller, #setAddressFiltered(address, filtered));
+      if (filtered) {
+        state.filteredAddresses.put(address);
+      } else {
+        state.filteredAddresses.remove(address);
+      };
+      log.okWith(true);
     };
 
     public func getPublicHistory(caller : Principal) : [Types.PublicEvent] {
