@@ -51,7 +51,7 @@ shared ({ caller = installer }) actor class Main() {
 
   /// Hides all NFTs with the given smart contract or wallet address.
   public shared ({ caller }) func filterAddress(address : Types.Address.Address) : async Bool {
-    await core.filterAddress(address);
+    await core.filterAddress(caller, address);
   };
 
   /// Retrieve the full log for this canister.
