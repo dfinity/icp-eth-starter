@@ -81,6 +81,8 @@ module {
 
     public let ethNfts = Relate.OO.Map<NftId, Nft>(state.ethNfts, NftId.hash, NftId.equal);
 
+    public let filteredAddresses = Relate.OO.UnRel<Address.Address>(state.filteredAddresses, Address.hash, Address.equal);
+
     public let walletSignsPrincipal = Relate.OO.TernRel<EthWallet, Principal, SignatureCheckSuccess>(
       state.walletSignsPrincipal,
       (Address.hash, Principal.hash),

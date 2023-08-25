@@ -107,7 +107,7 @@ module {
 
     public func filterAddress(caller : Principal, address : Types.Address.Address) : async Bool {
       let log = logger.Begin(caller, #filterAddress(address));
-      state.filteredAddresses.put(address, ());
+      state.filteredAddresses.put(address);
       log.okWith(true);
     };
 
