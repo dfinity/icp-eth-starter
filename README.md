@@ -14,7 +14,7 @@ This repository is in early beta testing; please feel free to [open an issue](ht
 
 ## 🎬 Create a New Project
 
-Make sure that [Node.js](https://nodejs.org/en/) `>= 16.x`, [`dfx`](https://internetcomputer.org/docs/current/developer-docs/build/install-upgrade-remove) `>= 0.12.x`, and the latest version of [Rust](https://www.rust-lang.org/tools/install) are installed on your system.
+Make sure that [Node.js](https://nodejs.org/en/) `>= 16`, [`dfx`](https://internetcomputer.org/docs/current/developer-docs/build/install-upgrade-remove) `>= 0.14`, and the latest version of [Rust](https://www.rust-lang.org/tools/install) are installed on your system.
 
 Set up Rust canister development with the following command:
 
