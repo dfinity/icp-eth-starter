@@ -5,6 +5,7 @@ import Principal "mo:base/Principal";
 import Int "mo:base/Int";
 import Seq "mo:sequence/Sequence";
 import Stream "mo:sequence/Stream";
+import Iter_ "lib/IterMore";
 import Relate "lib/Relate";
 import System "lib/System";
 
@@ -145,7 +146,19 @@ module {
     };
 
     public func getPublicHistory() : Iter.Iter<Types.PublicEvent> {
-      Seq.iter(state.publicHistory.events, #bwd);
+      Iter_.filterMap<Types.PublicEvent, Types.PublicEvent>(
+        Seq.iter(state.publicHistory.events, #bwd),
+        func(e : Types.PublicEvent) : ?Types.PublicEvent {
+          switch (e) {
+            case (#addNft(e)) {
+              if (
+                not filteredAddresses.has(e.nft.contract) and not filteredAddresses.has(e.nft.owner)
+              ) ?#addNft(e) else null;
+            };
+            case (e) ?e;
+          };
+        },
+      );
     };
 
   };
