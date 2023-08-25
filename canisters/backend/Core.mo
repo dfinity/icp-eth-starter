@@ -91,12 +91,18 @@ module {
     };
 
     public func getNfts(caller : Principal) : [Types.Nft.Nft] {
-      let nfts = Iter.mapFilter<Types.PublicEvent, Types.Nft.Nft>(
+      let nfts = Iter.filterMap<Types.PublicEvent, Types.Nft.Nft>(
         state.getPublicHistory(),
         func(e : Types.PublicEvent) : ?Types.Nft.Nft {
           switch (e) {
             case (#addNft(e)) {
-              if (e.principal == caller) ?e.nft else null;
+              if (
+                e.principal == caller and (
+                  not state.filteredAddresses.has(e.nft.contract)
+                ) and (
+                  not state.filteredAddresses.has(e.nft.owner)
+                )
+              ) ?e.nft else null;
             };
             case _ null;
           };
