@@ -589,9 +589,9 @@ dependencies = [
 
 [[package]]
 name = "ic-eth"
-version = "0.0.2"
+version = "0.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "851ee02f1c326c262735ded622baff9829bcfde6cc37637af3db5223db12b6d0"
+checksum = "a5652ec22ecb43ae1b159a21d786583d64f3bb5d463962f42fa5b7537c5de6d1"
 dependencies = [
  "ethers-core",
  "hex",

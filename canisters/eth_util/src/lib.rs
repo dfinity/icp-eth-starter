@@ -4,9 +4,8 @@ use candid::candid_method;
 use ic_eth::core::{
     abi::{Contract, Token},
     types::{Address, RecoveryMessage, Signature},
-
-use ic_eth;;::call_contract;
-use ic_eth::util::to_hex;
+};
+use ic_eth::{call_contract, include_abi, utils::to_hex};
 
 const HTTP_CYCLES: u128 = 100_000_000;
 const MAX_RESPONSE_BYTES: u64 = 1000;
@@ -76,13 +75,13 @@ pub async fn erc1155_balance_of(
     // TODO: use `candid::Nat` in place of `u64`
 
     let owner_address =
-        ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
+        ic_eth::core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
     let abi = &ERC_1155.with(Rc::clone);
     let result = call_contract(
         get_rpc_endpoint(&network),
         contract_address,
-        *abi,
+        abi,
         "balanceOf",
         &[
             Token::Address(owner_address.into()),
