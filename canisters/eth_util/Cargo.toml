@@ -1,5 +1,5 @@
 [package]
-name = "ic_eth"
+name = "eth_util"
 version = "0.0.0"
 description = "Rust utility canister"
 authors = ["DFINITY Foundation"]
@@ -12,9 +12,6 @@ crate-type = ["cdylib"]
 candid = "0.9"
 ic-cdk = "0.10"
 ic-cdk-macros = "0.7"
-url = "2.3"
+ic-eth = "0.0"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-hex = "0.4"
-ethers-core = "2.0"
-getrandom = { version = "0.2", features = ["custom"] }

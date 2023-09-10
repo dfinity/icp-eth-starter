@@ -1,5 +1,4 @@
 {
-  "dfx": "0.14.3",
   "canisters": {
     "frontend": {
       "dependencies": ["backend", "internet_identity"],
@@ -10,14 +9,14 @@
       "source": ["dist/"]
     },
     "backend": {
-      "dependencies": ["ic_eth"],
+      "dependencies": ["eth_util"],
       "type": "motoko",
       "main": "canisters/backend/Main.mo"
     },
-    "ic_eth": {
+    "eth_util": {
       "type": "rust",
-      "candid": "canisters/ic_eth/ic_eth.did",
-      "package": "ic_eth"
+      "candid": "canisters/eth_util/eth_util.did",
+      "package": "eth_util"
     },
     "internet_identity": {
       "type": "custom",

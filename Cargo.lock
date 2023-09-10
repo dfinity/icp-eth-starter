@@ -371,6 +371,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "eth_util"
+version = "0.0.0"
+dependencies = [
+ "candid",
+ "ic-cdk",
+ "ic-cdk-macros",
+ "ic-eth",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "ethabi"
 version = "18.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -576,18 +588,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "ic0"
-version = "0.18.11"
+name = "ic-eth"
+version = "0.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "576c539151d4769fb4d1a0c25c4108dd18facd04c5695b02cf2d226ab4e43aa5"
-
-[[package]]
-name = "ic_eth"
-version = "0.0.0"
+checksum = "851ee02f1c326c262735ded622baff9829bcfde6cc37637af3db5223db12b6d0"
 dependencies = [
- "candid",
  "ethers-core",
- "getrandom",
  "hex",
  "ic-cdk",
  "ic-cdk-macros",
@@ -595,6 +601,12 @@ dependencies = [
  "serde_json",
  "url",
 ]
+
+[[package]]
+name = "ic0"
+version = "0.18.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "576c539151d4769fb4d1a0c25c4108dd18facd04c5695b02cf2d226ab4e43aa5"
 
 [[package]]
 name = "idna"
