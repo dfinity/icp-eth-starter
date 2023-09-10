@@ -7,7 +7,7 @@ import Principal "mo:base/Principal";
 import Nat64 "mo:base/Nat64";
 import System "lib/System";
 import Iter "lib/IterMore";
-import IcEth "canister:ic_eth";
+import EthUtil "canister:eth_util";
 import Seq "mo:sequence/Sequence";
 import Stream "mo:sequence/Stream";
 
@@ -39,7 +39,7 @@ module {
 
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
       let log = logger.Begin(caller, #connectEthWallet(wallet, signedPrincipal));
-      let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
+      let checkOutcome = await EthUtil.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
       log.internal(#verifyEcdsaOutcome(checkOutcome));
       if (checkOutcome) {
         ignore (state.putWalletSignsPrincipal(wallet, caller, signedPrincipal));
@@ -58,11 +58,11 @@ module {
         case (?_) {
           switch (nft.tokenType) {
             case (#erc721) {
-              let owner = await IcEth.erc721_owner_of(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
+              let owner = await EthUtil.erc721_owner_of(nft.network, nft.contract, Nat64.fromNat(nft.tokenId));
               owner == nft.owner;
             };
             case (#erc1155) {
-              let balance = await IcEth.erc1155_balance_of(nft.network, nft.contract, nft.owner, Nat64.fromNat(nft.tokenId));
+              let balance = await EthUtil.erc1155_balance_of(nft.network, nft.contract, nft.owner, Nat64.fromNat(nft.tokenId));
               balance > 0;
             };
           };
