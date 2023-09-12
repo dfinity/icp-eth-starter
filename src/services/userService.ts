@@ -26,7 +26,12 @@ export const USER_STORE = makeObservable<User | null | undefined>();
 const localIdentityProvider = `http://localhost:4943?canisterId=${process.env.INTERNET_IDENTITY_CANISTER_ID}`;
 
 const clientPromise = window.indexedDB
-  ? AuthClient.create()
+  ? AuthClient.create({
+      idleOptions: {
+        disableIdle: true,
+        disableDefaultIdleCallback: true,
+      },
+    })
   : Promise.resolve(undefined);
 
 const loginIC = async (
