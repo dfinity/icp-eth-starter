@@ -60,9 +60,7 @@ pub async fn erc1155_balance_of(
     contract_address: String,
     owner_address: String,
     token_id: u64,
-) -> u64 {
-    // TODO: use `candid::Nat` in place of `u64`
-
+) -> u128 {
     let owner_address =
         ethers_core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
@@ -79,7 +77,7 @@ pub async fn erc1155_balance_of(
     )
     .await;
     match result.get(0) {
-        Some(Token::Uint(n)) => n.as_u64(),
+        Some(Token::Uint(n)) => n.as_u128(),
         _ => panic!("Unexpected result"),
     }
 }
