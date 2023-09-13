@@ -72,8 +72,6 @@ pub async fn erc1155_balance_of(
     owner_address: String,
     token_id: u64,
 ) -> u128 {
-    // TODO: use `candid::Nat` in place of `u64`
-
     let owner_address =
         ic_eth::core::types::Address::from_str(&owner_address).expect("Invalid owner address");
 
