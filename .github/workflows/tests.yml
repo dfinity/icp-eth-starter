@@ -32,8 +32,7 @@ jobs:
       run: rustup target add wasm32-unknown-unknown
     - uses: Swatinem/rust-cache@v2
     - name: Install dfx
-      run: |
-        echo y | bash -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+      uses: dfinity/setup-dfx@main
     - name: Start dfx
       run: |
         dfx cache install
