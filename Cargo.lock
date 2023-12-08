@@ -144,9 +144,9 @@ dependencies = [
 
 [[package]]
 name = "candid"
-version = "0.9.2"
+version = "0.9.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73f6dd83439943085a6d03503f55c3c9329052a2ad815d24a0c1a0ce6147690e"
+checksum = "07c109aab46c1937be5901201d83c40d77b5e58dca3ad748ef618f95a627a877"
 dependencies = [
  "anyhow",
  "binread",
@@ -171,9 +171,9 @@ dependencies = [
 
 [[package]]
 name = "candid_derive"
-version = "0.6.2"
+version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "810b3bd60244f282090652ffc7c30a9d23892e72dfe443e46ee55569044f7dd5"
+checksum = "158403ea38fab5904ae47a5d67eb7047650a91681407f5ccbcbcabc4f4ffb489"
 dependencies = [
  "lazy_static",
  "proc-macro2",
