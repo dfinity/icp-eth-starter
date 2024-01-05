@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import tw from 'twin.macro';
-import icpLogo from '../assets/icp.png';
+import icpLogo from '../assets/icp.webp';
 import { useBreakpoint } from '../hooks/utils/useBreakpoint';
 import useIdentity from '../services/userService';
 import LoginArea from './LoginArea';
