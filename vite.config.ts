@@ -5,7 +5,6 @@ import react from '@vitejs/plugin-react';
 import { spawnSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { imagetools } from 'vite-imagetools';
 
 const localNetwork = 'local';
 const network = process.env['DFX_NETWORK'] || localNetwork;
@@ -44,7 +43,6 @@ export default defineConfig({
         ignore: ['\x00commonjsHelpers.js'], // Fix build error (ben-rogerson/babel-plugin-twin#9)
       },
     }),
-    imagetools(),
   ],
   define: {
     'import.meta.env.DFX_NETWORK': JSON.stringify(process.env.DFX_NETWORK),
