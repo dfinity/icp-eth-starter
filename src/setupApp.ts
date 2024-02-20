@@ -1,7 +1,7 @@
 import { Actor } from '@dfinity/agent';
 import { getBackend, getNetwork } from './services/backendService';
 
-export const applicationName = 'ICP + ETH';
+export const applicationName = 'ICP + Ethereum';
 
 // if (
 //   window.location.hostname.endsWith('.icp0.io') ||
