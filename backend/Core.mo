@@ -39,7 +39,7 @@ module {
 
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
       let log = logger.Begin(caller, #connectEthWallet(wallet, signedPrincipal));
-      let checkOutcome = await Rust.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
+      let checkOutcome = await Rust.ecdsa_verify(wallet, Principal.toText caller, signedPrincipal);
       log.internal(#verifyEcdsaOutcome(checkOutcome));
       if (checkOutcome) {
         ignore (state.putWalletSignsPrincipal(wallet, caller, signedPrincipal));

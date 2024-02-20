@@ -593,9 +593,9 @@ dependencies = [
 
 [[package]]
 name = "icp-eth"
-version = "0.0.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af69183cf8fa53a4498e812db4ec3ea77f31a724d2106ee3e816beb6323d427c"
+checksum = "3fcae148171bc9effc3f325805eb58fc197fe468ab019dd2fdc545c944eb420c"
 dependencies = [
  "candid",
  "canpack",
@@ -733,7 +733,7 @@ checksum = "523dc4f511e55ab87b694dc30d0f820d60906ef06413f93d4d7a1385599cc149"
 
 [[package]]
 name = "motoko_rust"
-version = "0.0.1"
+version = "0.0.0"
 dependencies = [
  "candid",
  "ic-cdk",
