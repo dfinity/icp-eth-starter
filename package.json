@@ -14,11 +14,11 @@
     "test:mo": "mops test",
     "test:rs": "cargo test",
     "test:ts": "vitest run",
-    "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\" \"canisters/backend/**/*.mo\"",
+    "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\" \"backend/**/*.mo\"",
     "sources": "mops sources",
     "prepare": "husky install",
     "precommit": "lint-staged",
-    "postinstall": "mops install"
+    "postinstall": "canpack"
   },
   "dependencies": {
     "@dfinity/agent": "^0.19.2",
@@ -29,6 +29,7 @@
     "@emotion/styled": "^11.11.0",
     "@tippyjs/react": "^4.2.6",
     "alchemy-sdk": "^2.9.2",
+    "canpack": "^0.2.2",
     "ethers": "^6.6.7",
     "metamask-react": "^2.6.0",
     "react": "^18.2.0",

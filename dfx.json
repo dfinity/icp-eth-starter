@@ -1,17 +1,24 @@
 {
   "canisters": {
     "frontend": {
-      "dependencies": ["backend", "internet_identity"],
+      "dependencies": [
+        "backend",
+        "internet_identity"
+      ],
       "type": "assets",
       "frontend": {
         "entrypoint": "dist/index.html"
       },
-      "source": ["dist/"]
+      "source": [
+        "dist/"
+      ]
     },
     "backend": {
-      "dependencies": ["ic_eth"],
+      "dependencies": [
+        "motoko_rust"
+      ],
       "type": "motoko",
-      "main": "canisters/backend/Main.mo"
+      "main": "backend/Main.mo"
     },
     "internet_identity": {
       "type": "custom",
@@ -24,11 +31,12 @@
       },
       "frontend": {}
     },
-    "ic_eth": {
+    "motoko_rust": {
       "type": "rust",
-      "package": "ic_eth",
-      "candid": "canisters/ic_eth/ic_eth.did",
-      "gzip": true
+      "package": "motoko_rust",
+      "candid": ".canpack/motoko_rust/service.did",
+      "gzip": true,
+      "canpack": true
     }
   },
   "defaults": {
