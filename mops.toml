@@ -1,6 +1,3 @@
 [dependencies]
 base = "0.9.3"
 sequence = "https://github.com/matthewhammer/motoko-sequence#366c419"
-
-[rust-dependencies]
-icp-eth = "0.0.1"

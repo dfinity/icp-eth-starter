@@ -18,7 +18,7 @@
     "sources": "mops sources",
     "prepare": "husky install",
     "precommit": "lint-staged",
-    "postinstall": "canpack"
+    "postinstall": "mops install"
   },
   "dependencies": {
     "@dfinity/agent": "^0.19.2",
@@ -49,7 +49,6 @@
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.14",
     "babel-plugin-twin": "^1.1.0",
-    "canpack": "^0.2",
     "cross-env": "^7.0.3",
     "cross-fetch": "^4.0.0",
     "esbuild": "^0.18.17",
