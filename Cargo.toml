@@ -1,7 +1,6 @@
 [profile.release]
-debug = false
 lto = true
-opt-level = "z"
+opt-level = "s"
 
 [workspace]
 resolver = "2"

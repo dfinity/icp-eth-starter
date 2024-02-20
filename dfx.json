@@ -31,12 +31,11 @@
       },
       "frontend": {}
     },
-    "motoko_rust": {
+    "ic_eth": {
       "type": "rust",
-      "package": "motoko_rust",
-      "candid": ".canpack/motoko_rust/service.did",
-      "gzip": true,
-      "canpack": true
+      "package": "ic_eth",
+      "candid": "canisters/ic_eth/service.did",
+      "gzip": true
     }
   },
   "defaults": {
