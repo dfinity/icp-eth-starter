@@ -62,7 +62,7 @@ Here is one way to acquire tokens and NFTs on the [Sepolia](https://www.alchemy.
 - [Motoko](https://github.com/dfinity/motoko#readme): a safe and simple programming language for the Internet Computer
 - [Mops](https://mops.one): an on-chain community package manager for Motoko
 - [mo-dev](https://github.com/dfinity/motoko-dev-server#readme): a live reload development server for Motoko
-- [Canpack](https://github.com/rvanasa/canpack#readme): call Rust functions from Motoko
+- [Canpack](https://github.com/rvanasa/canpack#readme): call Rust functions from Motoko using a generated canister
 
 **Ethereum Integration:**
 - [Rust](https://www.rust-lang.org/): a secure, high-performance canister programming language
