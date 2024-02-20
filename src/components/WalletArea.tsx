@@ -36,8 +36,22 @@ export default function WalletArea() {
   const [nftUrl, setNftUrl] = useSessionStorage('ic-eth.nft-url', '');
   const [nftResult, setNftResult] = useState<{ nft: Nft } | { err: string }>();
   const [isNftValid, setNftValid] = useState<boolean>();
+  const [accounts, setAccounts] = useState<string[]>();
 
-  const address = (ethereum?.selectedAddress as string | undefined) || '';
+  useEffect(() => {
+    ethereum
+      .request({ method: 'eth_accounts' })
+      .then((accounts: string[]) => setAccounts(accounts))
+      .catch((err: Error) =>
+        handleError(
+          err,
+          'Error while retrieving Ethereum accounts! Please check the console for more information.',
+        ),
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const address = accounts?.[0] || '';
   const [isAddressVerified, verifyAddress] = useAddressVerified(
     address,
     ethereum,
