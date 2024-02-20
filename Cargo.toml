@@ -5,4 +5,4 @@ opt-level = "z"
 
 [workspace]
 resolver = "2"
-members = ["canisters/motoko_rust"]
+members = ["canisters/ic_eth"]
