@@ -1,4 +1,4 @@
-# ICP 🔗 ETH (Beta)
+# ICP 🔗 Ethereum (Beta)
 
 > #### Interact with the [Ethereum](https://ethereum.org/) blockchain from the [Internet Computer](https://internetcomputer.org/).
 
@@ -47,7 +47,7 @@ Here is one way to acquire tokens and NFTs on the [Sepolia](https://www.alchemy.
   - Press "Deploy" and then "Mint" (may take a few seconds)
   - Press "Watch all NFTs" and in the MetaMask prompt, click the link with text "Test Dapp NFTs #1"
   - In the bottom-right of the page (under "TokenID"), press "#1" to view your newly minted NFT
-  - Copy / paste the URL into the [ICP 🔗 ETH demo project](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/verify) to verify that you are the owner of the NFT. 
+  - Copy / paste the URL into the [ICP 🔗 Ethereum demo project](https://xm3ir-rqaaa-aaaap-abhqq-cai.icp0.io/verify) to verify that you are the owner of the NFT. 
 
 ## 🛠️ Technology Stack
 
@@ -62,6 +62,7 @@ Here is one way to acquire tokens and NFTs on the [Sepolia](https://www.alchemy.
 - [Motoko](https://github.com/dfinity/motoko#readme): a safe and simple programming language for the Internet Computer
 - [Mops](https://mops.one): an on-chain community package manager for Motoko
 - [mo-dev](https://github.com/dfinity/motoko-dev-server#readme): a live reload development server for Motoko
+- [Canpack](https://github.com/rvanasa/canpack#readme): call Rust functions from Motoko
 
 **Ethereum Integration:**
 - [Rust](https://www.rust-lang.org/): a secure, high-performance canister programming language
