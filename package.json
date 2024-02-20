@@ -18,7 +18,7 @@
     "sources": "mops sources",
     "prepare": "husky install",
     "precommit": "lint-staged",
-    "postinstall": "mops install"
+    "postinstall": "canpack"
   },
   "dependencies": {
     "@dfinity/agent": "^0.19.2",
