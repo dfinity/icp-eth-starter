@@ -13,11 +13,6 @@
       "type": "motoko",
       "main": "canisters/backend/Main.mo"
     },
-    "ic_eth": {
-      "type": "rust",
-      "candid": "canisters/ic_eth/ic_eth.did",
-      "package": "ic_eth"
-    },
     "internet_identity": {
       "type": "custom",
       "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
@@ -28,6 +23,12 @@
         }
       },
       "frontend": {}
+    },
+    "ic_eth": {
+      "type": "rust",
+      "package": "ic_eth",
+      "candid": "canisters/ic_eth/ic_eth.did",
+      "gzip": true
     }
   },
   "defaults": {
