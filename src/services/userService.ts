@@ -23,7 +23,7 @@ export interface UserDetail {
 
 export const USER_STORE = makeObservable<User | null | undefined>();
 
-const localIdentityProvider = `http://${process.env.INTERNET_IDENTITY_CANISTER_ID}.localhost:4943`;
+const localIdentityProvider = `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:4943`;
 
 const clientPromise = window.indexedDB
   ? AuthClient.create({

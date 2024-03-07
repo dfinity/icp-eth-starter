@@ -49,7 +49,7 @@ export default defineConfig({
     // Expose canister IDs provided by `dfx deploy`
     ...Object.fromEntries(
       Object.entries(canisterIds).map(([name, ids]: any) => [
-        `process.env.${name.toUpperCase()}_CANISTER_ID`,
+        `process.env.CANISTER_ID_${name.toUpperCase()}`,
         JSON.stringify(ids[network] || ids[localNetwork]),
       ]),
     ),
