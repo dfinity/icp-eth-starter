@@ -4,4 +4,4 @@ opt-level = "s"
 
 [workspace]
 resolver = "2"
-members = ["canisters/ic_eth"]
+members = [".canpack/motoko_rust"]
