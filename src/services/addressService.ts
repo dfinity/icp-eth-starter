@@ -4,7 +4,6 @@ import { handleError, handlePromise } from '../utils/handlers';
 import makeObservable from '../utils/makeObservable';
 import { getBackend } from './backendService';
 import { USER_STORE } from './userService';
-import { applicationName } from '../setupApp';
 
 export const ADDRESSES_STORE = makeObservable<string[] | null>();
 
@@ -50,7 +49,7 @@ async function verifyAddress(address: string, ethereum: any): Promise<boolean> {
     return false;
   }
   const principal = user.client.getIdentity().getPrincipal().toString();
-  const message = `${applicationName}\n${principal}`;
+  const message = `Authorized ICP principal: ${principal}`;
   const signature = await ethereum.request({
     method: 'personal_sign',
     params: [`0x${toHex(message)}`, address],

@@ -33,7 +33,8 @@ module {
 
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
       let log = logger.Begin(caller, #connectEthWallet(wallet, signedPrincipal));
-      let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
+      let message = "Authorized ICP principal: " # Principal.toText(caller);
+      let checkOutcome = await IcEth.verify_ecdsa(wallet, message, signedPrincipal);
       log.internal(#verifyEcdsaOutcome(checkOutcome));
       if (checkOutcome) {
         ignore (state.putWalletSignsPrincipal(wallet, caller, signedPrincipal));
