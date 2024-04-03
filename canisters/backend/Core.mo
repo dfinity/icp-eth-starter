@@ -8,18 +8,12 @@ import Nat64 "mo:base/Nat64";
 import System "lib/System";
 import Iter "lib/IterMore";
 import IcEth "canister:ic_eth";
-import Seq "mo:sequence/Sequence";
-import Stream "mo:sequence/Stream";
 
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State, history : History.History) {
 
     let state = State.OOOf(sys, _state);
     public let logger = History.Logger(sys, history);
-
-    func unreachable() : None {
-      do { assert false; loop {} };
-    };
 
     public func login(caller : Principal) : Types.Resp.Login {
       let log = logger.Begin(caller, #login);
@@ -116,7 +110,7 @@ module {
       log.okWith(true);
     };
 
-    public func getPublicHistory(caller : Principal) : [Types.PublicEvent] {
+    public func getPublicHistory(_caller : Principal) : [Types.PublicEvent] {
       Iter.toArray(state.getPublicHistory());
     };
 

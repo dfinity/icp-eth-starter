@@ -1,5 +1,3 @@
-import Error "mo:base/Error";
-import Cycles "mo:base/ExperimentalCycles";
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import Seq "mo:sequence/Sequence";
