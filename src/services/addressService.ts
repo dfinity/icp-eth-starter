@@ -49,7 +49,7 @@ async function verifyAddress(address: string, ethereum: any): Promise<boolean> {
     return false;
   }
   const principal = user.client.getIdentity().getPrincipal().toString();
-  const message = principal; // TODO: human-readable message?
+  const message = `Associated ICP principal: ${principal}`;
   const signature = await ethereum.request({
     method: 'personal_sign',
     params: [`0x${toHex(message)}`, address],

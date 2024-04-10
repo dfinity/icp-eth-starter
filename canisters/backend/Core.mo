@@ -8,18 +8,12 @@ import Nat64 "mo:base/Nat64";
 import System "lib/System";
 import Iter "lib/IterMore";
 import IcEth "canister:ic_eth";
-import Seq "mo:sequence/Sequence";
-import Stream "mo:sequence/Stream";
 
 module {
   public class Core(installer : Principal, sys : System.System, _state : State.Stable.State, history : History.History) {
 
     let state = State.OOOf(sys, _state);
     public let logger = History.Logger(sys, history);
-
-    func unreachable() : None {
-      do { assert false; loop {} };
-    };
 
     public func login(caller : Principal) : Types.Resp.Login {
       let log = logger.Begin(caller, #login);
@@ -39,7 +33,8 @@ module {
 
     public func connectEthWallet(caller : Principal, wallet : Types.EthWallet, signedPrincipal : Types.SignedPrincipal) : async Types.Resp.ConnectEthWallet {
       let log = logger.Begin(caller, #connectEthWallet(wallet, signedPrincipal));
-      let checkOutcome = await IcEth.verify_ecdsa(wallet, Principal.toText caller, signedPrincipal);
+      let message = "Associated ICP principal: " # Principal.toText(caller);
+      let checkOutcome = await IcEth.verify_ecdsa(wallet, message, signedPrincipal);
       log.internal(#verifyEcdsaOutcome(checkOutcome));
       if (checkOutcome) {
         ignore (state.putWalletSignsPrincipal(wallet, caller, signedPrincipal));
@@ -116,7 +111,7 @@ module {
       log.okWith(true);
     };
 
-    public func getPublicHistory(caller : Principal) : [Types.PublicEvent] {
+    public func getPublicHistory(_caller : Principal) : [Types.PublicEvent] {
       Iter.toArray(state.getPublicHistory());
     };
 
