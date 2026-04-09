@@ -22,17 +22,17 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3.9.1
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - name: Set up Rust
       run: rustup target add wasm32-unknown-unknown
-    - uses: Swatinem/rust-cache@v2
+    - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
     - name: Install dfx
-      uses: dfinity/setup-dfx@main
+      uses: dfinity/setup-dfx@e50c04f104ee4285ec010f10609483cf41e4d365 # main
     - name: Start dfx
       run: |
         dfx cache install
